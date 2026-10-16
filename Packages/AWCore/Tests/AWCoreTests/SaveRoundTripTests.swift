@@ -116,7 +116,7 @@ final class SaveRoundTripTests: XCTestCase {
         }
         let x = trim(a), y = trim(b)
         guard x != y else { return }
-        let i = zip(x, y).firstIndex { $0 != $1 } ?? min(x.count, y.count)
+        let i = (0..<min(x.count, y.count)).first { x[$0] != y[$0] } ?? min(x.count, y.count)
         let around: ([UInt8]) -> String = { s in
             String(decoding: s[max(0, i - 80)..<min(s.count, i + 80)], as: UTF8.self)
         }

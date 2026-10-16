@@ -50,7 +50,7 @@ public actor SaveStore {
         pending = Task {
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled else { return }
-            try? await self.flush()
+            try? self.flush()  // the task runs on this actor, so no await
         }
     }
 
