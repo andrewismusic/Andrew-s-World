@@ -1,9 +1,11 @@
 # Milestone 2 proposal: file layout and audio engine
 
-Status: **proposal, waiting for review.** Nothing here is built yet.
+Status: **approved, not started.** Decisions are recorded at the end.
 
 Milestone 2 (from the handoff): render loop, drums and bass, sequencer with swing and triplets, transport.
-*Done when* the first Farm demo song (Old School Hip-Hop) plays in time with the prototype.
+*Done when* the first Farm demo song (Old School Hip-Hop) plays in time with the prototype and sounds recognisably
+like it. The prototype's sound was never dialled in, so it is a starting point, not a target to match exactly:
+the engine is built to be easy to tune.
 
 ## File layout
 
@@ -142,14 +144,17 @@ The prototype's sequencer, minus its browser workarounds:
 - **Parity:** `tools/parity/render-prototype.js` runs the prototype's own `drumHit()` / `synthHit()` against an
   `OfflineAudioContext` in Chromium to render the first bars of Old School Hip-Hop (drums and bass solo). The Swift
   test renders the same bars and compares onset times (within 1 ms), per-voice loudness (within 1.5 dB) and
-  spectral centroid. Safari remains the ear test.
+  spectral centroid. Your ears are the final test.
 
-## Decisions I need from you before starting
+## Decisions (agreed)
 
-1. **C++ for the DSP** (recommended), behind a plain C header, versus Swift with unsafe buffers. C++ keeps ARC and
-   the Swift runtime out of the render callback, and its biquad, compressor and convolution code ports directly
-   from WebKit's Web Audio sources.
-2. **Background audio:** should playback continue with the screen locked? It's cheap to turn on now; it affects App
-   Review and the session setup.
-3. **Reverb in M2 or M3?** I'd include the shared delay and reverb in M2, because the demo's kit and bass sends are
-   part of how "in time with the prototype" sounds; glue stays in M3.
+1. **Swift for the app and UI, C++ for the DSP**, in one Xcode project, joined by a plain C header. The C++ core
+   stays platform-neutral (Accelerate behind a small interface with a portable fallback), so it can also be built,
+   tested and rendered to WAV off a Mac, e.g. in the cloud container Claude works in.
+2. **Background audio on**: playback continues with the screen locked (`UIBackgroundModes: audio`), with
+   lock-screen play/stop. Easy to turn off later.
+3. **Shared delay and reverb in M2**; glue in M3.
+4. **Character, not exact parity.** DSP is written from the published formulas (Web Audio spec, RBJ cookbook)
+   rather than ported from browser source code, so there is no licence question. Prototype renders are a reference
+   for ear and for catching mistakes (wrong timing, a voice 20 dB off), not an acceptance test. Sound parameters live
+   in one place so tuning is quick, and an offline render tool makes before/after comparisons easy.

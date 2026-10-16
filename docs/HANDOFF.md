@@ -10,7 +10,7 @@ This doc hands the Andrew's World prototype (v13, a single 3,300-line HTML file)
 
 1. Put the prototype file in the new repo as `reference/fractal-groovebox.html`. Never ship it; it is a spec you can run.
 2. Paste the starter prompt (last section) into Claude Code from the repo root.
-3. Work milestone by milestone (Port plan). Each milestone ends with a side-by-side check against the prototype open in Safari.
+3. Work milestone by milestone (Port plan). Each milestone ends with a side-by-side check against the prototype open in a browser.
 4. Keep this doc as the source of design rules. Update it when a decision changes.
 
 Get the latest prototype from the artifact (Download as HTML) before starting; the version in the repo should match what you last approved.
@@ -226,4 +226,4 @@ Follow the 'Interaction rules and design preferences' section as requirements. A
 of each milestone, list what to compare side by side with the prototype and stop for my review.
 ```
 
-To get `demo-save.json`, open the prototype, run `copy(JSON.stringify(state))` in Safari's Web Inspector console, and paste it into the file.
+To get `demo-save.json`, open the prototype, run `copy(JSON.stringify(state))` in the browser's developer console, and paste it into the file.

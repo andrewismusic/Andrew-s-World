@@ -16,4 +16,4 @@ node tools/fixtures/js-format-cases.js
 ```
 
 Your own save goes in `reference/demo-save.json` (in the prototype, run `copy(JSON.stringify(state))` in
-Safari's Web Inspector console and paste it into the file). `testReferenceDemoSaveRoundTrips` picks it up.
+the browser's developer console and paste it into the file). `testReferenceDemoSaveRoundTrips` picks it up.
