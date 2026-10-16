@@ -1,0 +1,10 @@
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.build/
+.swiftpm/
+Packages/AWCore/.swiftpm/
+*.ipa
+*.dSYM.zip
+node_modules/
