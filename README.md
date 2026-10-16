@@ -1,7 +1,7 @@
 # Andrew's World (iOS)
 
 A native iOS port of the Andrew's World groovebox prototype. `docs/HANDOFF.md` is the brief and
-`reference/fractal-groovebox.html` is the reference implementation (open it in Safari to compare; never ship it).
+`reference/fractal-groovebox.html` is the reference implementation (open it in a browser to compare; never ship it).
 
 ## Layout
 
