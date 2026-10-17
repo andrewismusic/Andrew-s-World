@@ -35,20 +35,25 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   - **Pattern grids stay flat and crisp**: square cells and hard furrow lines, so the notes read first.
   - **Zoom rail on the left.**
   - **Panes are light and neutral** (parchment, dark ink), so the playing area keeps the contrast. Strong colour in
-    the pane is only for what matters in the current mode: pink for locks, red for play and record, gold for on.
+    the pane is only for what matters in the current mode: pink for locks, red for play and record, coin yellow
+    (#ffc818) for on and selected.
+  - **Sand and parchment carry a faint pixel grain**, sparse enough that text over it stays clean.
   - **Buttons are raised blocks** like the song tiles: outline, top highlight, bottom shadow. "On" changes the face
     colour and drops the shadow, so nothing moves.
-  - **Two slider styles:** a block slider (groove, wood fill, gripped handle) for continuous settings, and a strip of
-    square LEDs for levels and amounts.
+  - **Block sliders** (groove, wood fill, gripped handle) for settings. A locked setting turns pink and keeps a dark
+    notch at the value it would have without the lock.
+  - **LED meters only for audio levels** (mix, master). Dragging sets how many lights can glow; the sound passing
+    through lights them green, then yellow and orange near the top. No outlines, even spacing.
   - **All sprites have pixel outlines**, logs and fins included.
-  - **Font:** a pixel font with plain, straight letterforms (the comparison sheet is on the style page).
+  - **Fonts:** Silkscreen for titles, labels and buttons; Jersey 15 for values, body text and dialogue.
   - **Lanes are terrain:** drums are tilled soil, bass is vine logs on grass, chords are the sea, lead is a meadow.
   - **Every drum voice has its own crop, named by the producer's shorthand,** so the row labels are just letters:
-    K kohlrabi, SN snow pea, CP corn, RM radish, CH chili, OH onion, TM tomato, PC pumpkin.
-  - **Note colours by pitch class,** the same in every octave: C yellow, D green, E blue, F pink, G black, A red,
-    B brown. Chord creatures vary by chord type. Bass logs stay one look, since bass is mono.
-  - **Crops show their sound.** At the note level the crop is drawn large and its look follows its settings (a
-    brighter clap is corn with more husk peeled back); the small grid sprites carry the same states.
+    K kale, SN snap pea, C corn, R radish, CH chili, OH onion, TM tomato, PC pumpkin.
+  - **Note colours by pitch class,** the same in every octave: C bright yellow, D green, E royal blue, F hot pink,
+    G dark grey, A red, B brown. Note names sit right next to the grid; no separate key. Chord creatures vary by chord type. Bass logs stay one look, since bass is mono.
+  - **Crops show their sound, with no captions.** Several visual traits each follow a setting and combine freely;
+    for the clap: decay sets height, tone peels the husk, tune sets ripeness (colour), drive brings pests. At the
+    note level the crop is drawn large; the 8-pixel grid sprites carry the same traits in miniature.
   - **Characters** walk the map at the song and part levels, where there is room. While you sequence they wait on
     the sand, off the grid; a "!" means they have something to say, and tapping opens the dialogue. They never
     cover notes or move a control.
