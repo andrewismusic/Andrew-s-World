@@ -29,6 +29,20 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   Not Super Mario World, which blends styles instead of holding one identity.
 - The colour space doesn't have to be NES-authentic; use what serves the look.
 - A pixel font throughout.
+- From the first style page (Light World direction chosen over the NES one):
+  - **Sand is the ground; grass patches are where you play.** No black backgrounds.
+  - **No textures behind text.** Grid lines and patterns stay inside the playing areas.
+  - **Pattern grids stay flat and crisp**: square cells and hard furrow lines, so the notes read first.
+  - **Zoom rail on the left.**
+  - **Sliders:** rounded track, green fill, cream handle.
+  - **Lanes are terrain:** drums are tilled soil, bass is vine logs on grass, chords are the sea, lead is a meadow.
+  - **Every drum voice has its own crop:** kick pumpkin, snare cabbage, clap corn, rim radish, closed hat wheat,
+    open hat sunflower, tom eggplant, perc strawberry.
+  - **Lead flowers are coloured by scale degree,** the same in every octave. Chord creatures vary by chord type.
+    Bass logs stay one look, since bass is mono.
+  - **Characters** walk the map at the song and part levels, where there is room. While you sequence they wait on
+    the sand, off the grid; a "!" means they have something to say, and tapping opens the dialogue. They never
+    cover notes or move a control.
 
 ### Solucan: dark sci-fi
 
