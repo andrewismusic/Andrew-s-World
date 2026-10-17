@@ -16,7 +16,7 @@ A native iOS port of the Andrew's World groovebox prototype. `docs/HANDOFF.md` i
 
 ## Build and test
 
-Open `AndrewsWorld.xcodeproj` in Xcode 16 or later and run the AndrewsWorld scheme (⌘R), or test it (⌘U).
+Open `AndrewsWorld.xcodeproj` in Xcode 16 or later and run the AndrewsWorld scheme (⌘R), or run the core tests with `swift test` (below).
 From a terminal:
 
 ```sh
