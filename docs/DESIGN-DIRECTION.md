@@ -34,12 +34,21 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   - **No textures behind text.** Grid lines and patterns stay inside the playing areas.
   - **Pattern grids stay flat and crisp**: square cells and hard furrow lines, so the notes read first.
   - **Zoom rail on the left.**
-  - **Sliders:** rounded track, green fill, cream handle.
+  - **Panes are light and neutral** (parchment, dark ink), so the playing area keeps the contrast. Strong colour in
+    the pane is only for what matters in the current mode: pink for locks, red for play and record, gold for on.
+  - **Buttons are raised blocks** like the song tiles: outline, top highlight, bottom shadow. "On" changes the face
+    colour and drops the shadow, so nothing moves.
+  - **Two slider styles:** a block slider (groove, wood fill, gripped handle) for continuous settings, and a strip of
+    square LEDs for levels and amounts.
+  - **All sprites have pixel outlines**, logs and fins included.
+  - **Font:** a pixel font with plain, straight letterforms (the comparison sheet is on the style page).
   - **Lanes are terrain:** drums are tilled soil, bass is vine logs on grass, chords are the sea, lead is a meadow.
-  - **Every drum voice has its own crop:** kick pumpkin, snare cabbage, clap corn, rim radish, closed hat wheat,
-    open hat sunflower, tom eggplant, perc strawberry.
-  - **Lead flowers are coloured by scale degree,** the same in every octave. Chord creatures vary by chord type.
-    Bass logs stay one look, since bass is mono.
+  - **Every drum voice has its own crop, named by the producer's shorthand,** so the row labels are just letters:
+    K kohlrabi, SN snow pea, CP corn, RM radish, CH chili, OH onion, TM tomato, PC pumpkin.
+  - **Note colours by pitch class,** the same in every octave: C yellow, D green, E blue, F pink, G black, A red,
+    B brown. Chord creatures vary by chord type. Bass logs stay one look, since bass is mono.
+  - **Crops show their sound.** At the note level the crop is drawn large and its look follows its settings (a
+    brighter clap is corn with more husk peeled back); the small grid sprites carry the same states.
   - **Characters** walk the map at the song and part levels, where there is room. While you sequence they wait on
     the sand, off the grid; a "!" means they have something to say, and tapping opens the dialogue. They never
     cover notes or move a control.
