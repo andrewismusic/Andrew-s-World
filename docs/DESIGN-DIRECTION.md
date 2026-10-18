@@ -83,3 +83,25 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
 - **Haptics:** a vibration matching rocket take-off and landing; something subtle on the zoom slider; more where it
   makes the experience better.
 - **Reference style only.** All art, fonts and sounds are original; nothing is copied from the references.
+
+## Composition workflow (decided in the Farm web build)
+
+- **Drums:** notes have no length. Tapping plants a hit; dragging across empty ground plants a hit on every cell you
+  pass. Dragging a hit moves it.
+- **No triplet grid.** Bars are straight sixteenths; triplet feels come from ratcheting a note at 1/24. Older triplet
+  bars convert to the nearest sixteenths.
+- **The pattern view stays on the bar you chose** while the part keeps playing; a marker shows which bar is playing.
+  Loop still holds playback to the one bar.
+- **Melodic notes can run past the bar line** into the bars after it: an arrow marks where a note continues, and the
+  next bar shows its tail, faded.
+- **Bars are added and duplicated at the track level only**, where you can see what happens; the pattern level has no
+  plus or duplicate.
+- **Randomizing notes:** an empty bar gets a fresh pattern; a bar with notes is reworked around them. Some notes go,
+  some move to another pitch at the same moment, some move to another step, and a few new ones join. A bigger roll
+  changes more.
+- **Randomizing locks:** a bigger roll locks more notes and more settings and moves them further; at the top it can
+  set any value.
+- **Locked notes have a pink outline.** Each track at the track level shows how many locks it carries, counting its
+  notes' locks.
+- **Zooming into a note keeps its surface**: bark for a log, rind for a pumpkin, and so on.
+- **LFO critters keep their size**: the mushroom grows out of the log and back in time with its LFO.
