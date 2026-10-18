@@ -14,6 +14,11 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
 - **Laboratory is home.** It sits on the main planet: the player's home studio. You explore other planets to collect
   things (sounds, stems, songs you make there, perhaps abilities) and bring them back to the studio to finish them.
 - **Blocks is set aside for now.**
+- **Tools from Andrew's other apps** (a chord generator, an XY-pad drum machine, a breakbeat mangler, and more to
+  come) live in locations. In the game they take the look of the world they're in, not their standalone app's look,
+  and they can be pared down: song structure, for example, is handled by the game, so a tool's own song mode goes.
+- **Where unlocked things can be used is still open.** The leaning: big locations like Farm stay where they are and
+  you travel to them; smaller finds (an effect, a tool) can come home, or live in a backpack you carry everywhere.
 
 ## Planets and their hero locations
 
