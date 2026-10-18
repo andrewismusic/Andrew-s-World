@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A0000000000000000000012 /* AWCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000011 /* AWCore */; };
+		0A0000000000000000000014 /* AWAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000013 /* AWAudio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0000000000000000000012 /* AWCore in Frameworks */,
+				0A0000000000000000000014 /* AWAudio in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = AndrewsWorld;
 			packageProductDependencies = (
 				0A0000000000000000000011 /* AWCore */,
+				0A0000000000000000000013 /* AWAudio */,
 			);
 			productName = AndrewsWorld;
 			productReference = 0A0000000000000000000004 /* AndrewsWorld.app */;
@@ -202,6 +205,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Andrew's World";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -232,6 +236,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Andrew's World";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -289,6 +294,10 @@
 		0A0000000000000000000011 /* AWCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AWCore;
+		};
+		0A0000000000000000000013 /* AWAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AWAudio;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

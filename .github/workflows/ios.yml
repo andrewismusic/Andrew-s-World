@@ -15,8 +15,14 @@ jobs:
       - name: Toolchain
         run: xcodebuild -version && swift --version
 
-      - name: Core tests (macOS, no simulator)
+      - name: Core and engine tests (macOS, no simulator)
         run: swift test --package-path Packages/AWCore
+
+      - name: Native engine tests (CMake)
+        run: |
+          cmake -S Packages/AWCore/Sources/AWDSP -B build/awdsp
+          cmake --build build/awdsp -j 4
+          ctest --test-dir build/awdsp --output-on-failure
 
       - name: Build app (iOS Simulator)
         run: |

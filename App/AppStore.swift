@@ -1,9 +1,11 @@
+import AWAudio
 import AWCore
 import Foundation
 import Observation
 
 /// The one store the app hangs off. Views read `state`; every edit goes through `update` so it gets saved.
-/// (Undo snapshots join it in milestone 5; the audio thread will get immutable snapshots in milestone 2.)
+/// Every change is also posted to the sound engine, which builds its own snapshot off the main thread.
+/// (Undo snapshots join it in milestone 5.)
 @Observable
 @MainActor
 final class AppStore {
@@ -12,6 +14,9 @@ final class AppStore {
     var notice: String?
     /// The state before the last import, so an import can be undone without asking first.
     private(set) var beforeImport: AppState?
+
+    /// Play, stop and the playhead.
+    let transport = Transport()
 
     @ObservationIgnored private let saves: SaveStore?
 
@@ -24,11 +29,13 @@ final class AppStore {
         guard let saves else {
             notice = "Couldn't open the app's storage folder."
             state = try? DefaultState.load()
+            if let state { transport.post(state) }
             return
         }
         do {
             let (s, outcome) = try await saves.load()
             state = s
+            transport.post(s)
             if case .recovered(let backup, _) = outcome {
                 notice = "Your last save couldn't be read, so the demo songs are loaded. The old file was kept as \(backup.lastPathComponent)."
             }
@@ -45,7 +52,9 @@ final class AppStore {
     }
 
     private func save() {
-        guard let saves, let state else { return }
+        guard let state else { return }
+        transport.post(state)
+        guard let saves else { return }
         Task { await saves.scheduleSave(state) }
     }
 
