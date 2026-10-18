@@ -14,10 +14,13 @@ Status: **built; in review.** Decisions are recorded at the end, and what change
   synth are the first modules; tools from other apps arrive the same way.
 - **Chords, lead and the track buildings came along early.** They share code with bass, and the demo songs use
   the buildings, so leaving them out made the songs sound wrong. Glue and Prism are still milestone 3.
-- **Parity, measured:** `tools/parity/render-prototype.js` renders a song from the prototype in Chromium and
+- **The demo songs are not a target.** The sound engine is still to be refined and new demos will be composed, so
+  matching the old demos is not a goal from here on. The parity tools stay because they are useful for catching
+  mistakes (wrong timing, a voice far too loud), not as a check to pass.
+- **Parity, measured (for the record):** `tools/parity/render-prototype.js` renders a song from the prototype in Chromium and
   `aw-render` renders it natively; `tools/parity/compare.py` compares them bar by bar. Old School Hip-Hop is within
   0.1 dB per bar and 1–3% in brightness; each track solo is within 0.5 dB. The other Farm songs are within about
-  0.5 dB overall and up to ~10% brighter natively, mostly in the chords and reverb, worth an ear check.
+  0.5 dB overall and up to ~10% brighter natively.
 - **One deliberate match of a browser quirk:** Chromium's 2× oversampled shaper delays its output by 128 samples,
   and the Mill mixes that with the dry signal, which makes a comb. That is part of how the Mill sounds, so the
   native Mill delays its wet path the same amount.
