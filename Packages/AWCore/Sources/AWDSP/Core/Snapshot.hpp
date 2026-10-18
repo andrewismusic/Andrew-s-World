@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Params.hpp"
+#include "Samples.hpp"
 #include "../DSP/Convolver.hpp"
 #include "../Modules/Buildings.hpp"
 
@@ -35,6 +36,9 @@ struct NoteEvent {
     RampMode rampMode;
     uint32_t params; // offset of this note's resolved parameter block in SongSnap::params
     int32_t ramp;    // offset of its ramp targets (NaN where a parameter doesn't ramp), or -1
+    uint8_t slot;
+    bool triplet;
+    uint16_t part;
 };
 
 struct BarSnap {
@@ -52,6 +56,9 @@ struct PartSnap {
     int length = 1; // bars: the longest lane
     /// Each track's building settings in this part: [slot][building slot][parameter].
     float fx[4][3][3] = {};
+    /// Each lane's own resolved sound, for notes played live: offset into SongSnap::params (drums: 8 rows in a row),
+    /// or -1 where the slot has no engine.
+    int32_t laneParams[4] = {-1, -1, -1, -1};
 };
 
 struct SpaceSettings {
@@ -78,6 +85,8 @@ struct SongSnap {
     MasterSettings master;
     bool audible[4] = {true, true, true, true};
     BuildingType fx[4][3] = {};
+    /// Drum rows replaced by a collected sound: the song's "samples" object, {"<slot>.<row>": "<sample id>"}.
+    const Sample *drumSamples[4][8] = {};
     std::shared_ptr<const ReverbIR> reverb;
 };
 
@@ -93,7 +102,7 @@ namespace json { struct Value; }
 /// thread-safe, and never used on the audio thread.
 class SnapshotBuilder {
 public:
-    explicit SnapshotBuilder(double sampleRate) : sampleRate_(sampleRate) {}
+    SnapshotBuilder(double sampleRate, const SampleBank &samples) : sampleRate_(sampleRate), samples_(samples) {}
     /// Returns nullptr if the JSON can't be read.
     std::unique_ptr<LocationSnap> build(const std::string &locationJSON, const std::string &masterJSON);
 
@@ -103,6 +112,7 @@ private:
     std::shared_ptr<const ReverbIR> reverbFor(float size, float damp);
 
     double sampleRate_;
+    const SampleBank &samples_;
     struct Cached {
         std::string key;
         std::shared_ptr<const SongSnap> song;

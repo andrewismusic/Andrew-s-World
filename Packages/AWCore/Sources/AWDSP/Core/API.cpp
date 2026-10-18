@@ -62,6 +62,69 @@ aw_playhead aw_engine_playhead(const aw_engine *e) {
     return p;
 }
 
+void aw_engine_play_count_in(aw_engine *e, aw_context c, int32_t bars) {
+    if (!e) return;
+    aw::Command cmd{aw::Command::Type::Play, toContext(c)};
+    cmd.a = bars;
+    e->engine.post(cmd);
+}
+
+void aw_engine_cancel_cue(aw_engine *e) {
+    if (e) e->engine.post({aw::Command::Type::Cue, {0, -1, 0, 0, false}});
+}
+
+void aw_engine_audition(aw_engine *e, int32_t note_id) {
+    if (!e) return;
+    aw::Command cmd{aw::Command::Type::Audition, {}};
+    cmd.a = note_id;
+    e->engine.post(cmd);
+}
+
+void aw_engine_live_on(aw_engine *e, int32_t id, int32_t song, int32_t part, int32_t slot, int32_t pitch) {
+    if (!e) return;
+    aw::Command cmd{aw::Command::Type::LiveOn, {0, song, part, 0, false}};
+    cmd.a = id;
+    cmd.b = slot;
+    cmd.c = pitch;
+    e->engine.post(cmd);
+}
+
+void aw_engine_live_off(aw_engine *e, int32_t id) {
+    if (!e) return;
+    aw::Command cmd{aw::Command::Type::LiveOff, {}};
+    cmd.a = id;
+    e->engine.post(cmd);
+}
+
+void aw_engine_metronome(aw_engine *e, int32_t on, int32_t ticks, float volume) {
+    if (!e) return;
+    aw::Command cmd{aw::Command::Type::Metronome, {}};
+    cmd.a = on;
+    cmd.b = ticks;
+    cmd.f = volume;
+    e->engine.post(cmd);
+}
+
+void aw_engine_add_sample(aw_engine *e, const char *id, const float *data, int32_t frames, double rate) {
+    if (e && id && data && frames > 0 && rate > 0) e->engine.addSample(id, data, (size_t)frames, rate);
+}
+
+int32_t aw_engine_take_ticks(aw_engine *e, aw_tick_event *out, int32_t capacity) {
+    if (!e) return 0;
+    int32_t n = 0;
+    aw::TickEvent t;
+    while (n < capacity && e->engine.ticks.pop(t)) out[n++] = {t.time, t.song, t.part, t.bar, t.tick, t.barTicks, 0};
+    return n;
+}
+
+int32_t aw_engine_take_notes(aw_engine *e, aw_note_event *out, int32_t capacity) {
+    if (!e) return 0;
+    int32_t n = 0;
+    aw::StartedNote s;
+    while (n < capacity && e->engine.started.pop(s)) out[n++] = {s.time, s.duration, s.id, s.slot, s.pitch, 0};
+    return n;
+}
+
 int32_t aw_engine_take_started_notes(aw_engine *e, int32_t *ids, int32_t capacity) {
     if (!e) return 0;
     int32_t n = 0;

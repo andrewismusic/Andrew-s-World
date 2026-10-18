@@ -242,7 +242,8 @@ static void testLevels() {
 static void testSnapshotReuse() {
     std::string save = awtest::readFile(savePath), loc, master;
     if (!awtest::locationText(save, 0, loc, master)) return;
-    aw::SnapshotBuilder b(48000);
+    aw::SampleBank bank;
+    aw::SnapshotBuilder b(48000, bank);
     auto a = b.build(loc, master);
     auto c = b.build(loc, master);
     CHECK(a && c && a->songs.size() == 8, "songs");
@@ -254,6 +255,47 @@ static void testSnapshotReuse() {
     }
 }
 
+static void testLiveAndSamples() {
+    // a kick row replaced by a collected sound: a 50 ms 1 kHz tone
+    std::string bars = "[{\"notes\":[" + note(1, 0, 0) + "]}]";
+    std::string loc = tinySong(120, 0, bars);
+    loc.insert(loc.find("\"fx\":"), "\"samples\":{\"0.0\":\"tone\"},");
+    aw::Engine e(48000);
+    std::vector<float> tone(2400);
+    for (size_t i = 0; i < tone.size(); ++i) tone[i] = 0.5f * (float)std::sin(2 * M_PI * 1000 * i / 48000.0);
+    e.addSample("tone", tone.data(), tone.size(), 48000);
+    CHECK(e.setLocation(loc, "{\"locks\":{}}"), "setLocation with samples");
+    aw::Command a{aw::Command::Type::Audition, {}};
+    a.a = 1;
+    e.post(a);
+    std::vector<float> L(4800), R(4800);
+    e.render(4800, L.data(), R.data());
+    // zero crossings in the first 40 ms show the sample's 1 kHz, not a kick's ~50 Hz
+    int crossings = 0;
+    for (int i = 1; i < 1920; ++i) crossings += (L[i - 1] < 0) != (L[i] < 0);
+    CHECK(crossings > 60, "%d zero crossings", crossings);
+
+    // a held bass note keeps sounding until released
+    std::string save = awtest::readFile(savePath), farm, master;
+    if (!awtest::locationText(save, 0, farm, master)) return;
+    aw::Engine f(48000);
+    f.setLocation(farm, master);
+    aw::Command on{aw::Command::Type::LiveOn, {0, 0, 1, 0, false}};
+    on.a = 7; on.b = 1; on.c = 7;
+    f.post(on);
+    std::vector<float> l(48000), r(48000);
+    f.render(48000, l.data(), r.data());
+    double held = 0;
+    for (int i = 40000; i < 48000; ++i) held = std::fmax(held, std::fabs(l[i]));
+    aw::Command off{aw::Command::Type::LiveOff, {}};
+    off.a = 7;
+    f.post(off);
+    f.render(48000, l.data(), r.data());
+    double after = 0;
+    for (int i = 40000; i < 48000; ++i) after = std::fmax(after, std::fabs(l[i]));
+    CHECK(held > 0.01 && after < held * 0.1, "held %g, after release %g", held, after);
+}
+
 int main(int argc, char **argv) {
     savePath = argc > 1 ? argv[1] : "../AWCore/Resources/DefaultState.json";
     testAutomation();
@@ -263,6 +305,7 @@ int main(int argc, char **argv) {
     testSnapshotReuse();
     testDemoSong();
     testLevels();
+    testLiveAndSamples();
     std::printf("%d checks, %d failed\n", checks, failures);
     return failures ? 1 : 0;
 }

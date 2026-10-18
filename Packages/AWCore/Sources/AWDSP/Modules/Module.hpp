@@ -32,6 +32,8 @@ struct NoteStart {
     int pitch;       // scale step, or drum row
     const float *params;
     const Music *music;
+    /// Drums only: a collected sound that replaces this row's voice.
+    const Sample *sample = nullptr;
 };
 
 class Module {
@@ -40,6 +42,12 @@ public:
     /// Called at the start of every block with the block's time, before any start().
     virtual void beginBlock(double now) { (void)now; }
     virtual void start(const NoteStart &note) = 0;
+    /// A note held until release() (live playing). Returns a token for release, or 0 if the note can't be held.
+    virtual uint32_t startHeld(const NoteStart &note) {
+        start(note);
+        return 0;
+    }
+    virtual void release(uint32_t token, double t) { (void)token; (void)t; }
     /// Adds the block [t0, t0 + frames·dt) into the bus.
     virtual void render(double t0, int frames, const TrackBus &bus) = 0;
     /// Transport stopped: forget per-song memory (glide), let sounding notes ring out.

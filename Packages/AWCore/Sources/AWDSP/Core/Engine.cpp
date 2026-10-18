@@ -1,5 +1,7 @@
 #include "Engine.hpp"
 
+#include "../DSP/Common.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <cstring>
@@ -26,7 +28,7 @@ int barSteps(const Music &mu, bool triplet) { return triplet ? (mu.ts * mu.tpb) 
 
 } // namespace
 
-Engine::Engine(double sampleRate) : builder_(sampleRate) {
+Engine::Engine(double sampleRate) : builder_(sampleRate, samples_) {
     env_.sampleRate = sampleRate;
     env_.dt = 1.0 / sampleRate;
     tables_.build(sampleRate);
@@ -106,6 +108,14 @@ void Engine::handle(const Command &c) {
         int L = ctx_.level;
         pos_ = {ctx_.song, L >= 1 ? ctx_.part : 0, L >= 3 ? ctx_.bar : 0, 0};
         nextT_ = now_;
+        if (c.a > 0) {
+            // count-in: one bar of clicks before the music starts
+            clampPosition();
+            const Music &mu = current_->songs[pos_.s]->parts[pos_.c].music;
+            double beat = 60.0 / mu.bpm * mu.tpb / kTicksPerQuarter;
+            for (int b = 0; b < mu.ts * c.a; ++b) addClick(now_ + b * beat, b % mu.ts == 0 ? 2 : 1);
+            nextT_ = now_ + mu.ts * c.a * beat;
+        }
         cued_ = false;
         pendingCount_ = 0;
         for (int s = 0; s < 4; ++s)
@@ -123,8 +133,103 @@ void Engine::handle(const Command &c) {
         break;
     case Command::Type::Cue:
         cue_ = {c.context.song, c.context.part, c.context.bar, 0};
-        cued_ = true;
+        cued_ = c.context.song >= 0;
         break;
+    case Command::Type::Audition:
+        audition(c.a);
+        break;
+    case Command::Type::LiveOn:
+        startLive(c);
+        break;
+    case Command::Type::LiveOff:
+        stopLive(c.a);
+        break;
+    case Command::Type::Metronome:
+        metronome_ = c.a != 0;
+        metronomeRate_ = std::max(1, c.b);
+        metronomeVolume_ = c.f;
+        break;
+    }
+}
+
+void Engine::audition(int32_t noteId) {
+    if (!current_ || current_->songs.empty()) return;
+    int s = std::clamp(ctx_.song, 0, (int)current_->songs.size() - 1);
+    const SongSnap &so = *current_->songs[s];
+    for (const NoteEvent &nt : so.notes) {
+        if (nt.id != noteId) continue;
+        Module *m = moduleFor(nt.slot);
+        if (!m || nt.part >= so.parts.size()) return;
+        const PartSnap &part = so.parts[nt.part];
+        double sd = 60.0 / part.music.bpm / kTicksPerQuarter * (nt.triplet ? 2 : 3);
+        const Sample *smp = current_->engines[nt.slot] == EngineKind::Drums ? so.drumSamples[nt.slot][std::clamp((int)nt.pitch, 0, 7)] : nullptr;
+        m->start({now_, nt.len * sd, nt.pitch, &so.params[nt.params], &part.music, smp});
+        return;
+    }
+}
+
+void Engine::startLive(const Command &c) {
+    if (!current_ || current_->songs.empty()) return;
+    stopLive(c.a);
+    int s = std::clamp(c.context.song, 0, (int)current_->songs.size() - 1);
+    const SongSnap &so = *current_->songs[s];
+    if (so.parts.empty()) return;
+    const PartSnap &part = so.parts[std::clamp(c.context.part, 0, (int)so.parts.size() - 1)];
+    int slot = std::clamp(c.b, 0, 3);
+    Module *m = moduleFor(slot);
+    if (!m || part.laneParams[slot] < 0) return;
+    bool drums = current_->engines[slot] == EngineKind::Drums;
+    int row = drums ? std::clamp(c.c, 0, 7) : 0;
+    const float *params = &so.params[part.laneParams[slot] + row * paramCount(current_->engines[slot])];
+    uint32_t token = m->startHeld({now_, 60, c.c, params, &part.music, drums ? so.drumSamples[slot][row] : nullptr});
+    for (auto &l : live_)
+        if (l.id < 0) {
+            l = {c.a, slot, token};
+            break;
+        }
+}
+
+void Engine::stopLive(int32_t id) {
+    for (auto &l : live_)
+        if (l.id == id) {
+            if (Module *m = moduleFor(l.slot)) m->release(l.token, now_);
+            l.id = -1;
+        }
+}
+
+void Engine::addClick(double t, int accent) {
+    for (auto &c : clicks_)
+        if (c.time < 0) {
+            c = {t, accent};
+            return;
+        }
+}
+
+// the prototype's "wood" metronome: a short sine knock with a little band-passed noise, straight to the output
+void Engine::renderClicks(float *L, float *R, int n) {
+    const double dt = env_.dt;
+    for (auto &c : clicks_) {
+        if (c.time < 0 || c.time >= now_ + n * dt) continue;
+        for (auto &s : sounding_)
+            if (s.start < 0 || now_ - s.start > .1) {
+                s = {c.time, c.accent};
+                break;
+            }
+        c.time = -1;
+    }
+    for (auto &s : sounding_) {
+        if (s.start < 0) continue;
+        float v = metronomeVolume_ * metronomeVolume_ * (s.accent == 2 ? 1.f : s.accent ? .75f : .5f) * .9f;
+        double f = s.accent == 2 ? 1250 : s.accent ? 1050 : 880;
+        for (int i = 0; i < n; ++i) {
+            double age = now_ + i * dt - s.start;
+            if (age < 0 || age > .08) continue;
+            float env = age < .001 ? (float)(age / .001) : (float)std::exp(-(age - .001) / .018);
+            float y = ((float)std::sin(kTwoPi * f * age) + rng_.bipolar() * .15f) * env * v;
+            L[i] += y;
+            R[i] += y;
+        }
+        if (now_ + n * dt - s.start > .08) s.start = -1;
     }
 }
 
@@ -222,7 +327,8 @@ void Engine::playNote(int slot, const PartSnap &part, const NoteEvent &nt, doubl
     float prob = base[drums ? (int)dp::pr : (int)sp::pr];
     if (rng_.uniform() >= prob) return;
     double dur = nt.len * sd;
-    StartedNote sn{nt.id, (int16_t)slot, nt.pitch, t};
+    const Sample *smp = drums ? so.drumSamples[slot][std::clamp((int)nt.pitch, 0, 7)] : nullptr;
+    StartedNote sn{nt.id, (int16_t)slot, nt.pitch, t, dur};
     started.push(sn);
     if (log) log->push_back(sn);
     int count = 1;
@@ -232,7 +338,7 @@ void Engine::playNote(int slot, const PartSnap &part, const NoteEvent &nt, doubl
         count = std::max(1, (int)std::ceil(nt.len / stepLen - 1e-6));
     }
     if (count <= 1) {
-        m->start({t, dur, nt.pitch, base, &part.music});
+        m->start({t, dur, nt.pitch, base, &part.music, smp});
         return;
     }
     int cnt = std::min(count, 48);
@@ -256,6 +362,7 @@ void Engine::playNote(int slot, const PartSnap &part, const NoteEvent &nt, doubl
         p.pitch = nt.pitch;
         p.id = nt.id;
         p.music = part.music;
+        p.sample = smp;
     }
 }
 
@@ -264,7 +371,7 @@ void Engine::flushPending(double until) {
     for (int i = 0; i < pendingCount_; ++i) {
         Pending &p = pend_[i];
         if (p.time < until) {
-            if (Module *m = moduleFor(p.slot)) m->start({p.time, p.duration, p.pitch, p.params, &p.music});
+            if (Module *m = moduleFor(p.slot)) m->start({p.time, p.duration, p.pitch, p.params, &p.music, p.sample});
         } else {
             if (k != i) pend_[k] = pend_[i];
             ++k;
@@ -283,6 +390,8 @@ void Engine::scheduleTick(double t0, double td) {
         buildFx(so);
     }
     if (pos_.tk % 3 == 0) applyFx(so, se, t0);
+    if (metronome_ && pos_.tk % metronomeRate_ == 0) addClick(t0, pos_.tk == 0 ? 2 : pos_.tk % mu.tpb == 0 ? 1 : 0);
+    ticks.push({t0, pos_.s, pos_.c, pos_.p, pos_.tk, mu.barTicks()});
     for (int ti = 0; ti < 4; ++ti) {
         if (!so.audible[ti]) continue;
         const LaneSnap &lane = se.lanes[ti];
@@ -411,6 +520,7 @@ void Engine::renderBlock(int n, float *outL, float *outR) {
         outL[i] = saturate_(l) * volume_;
         outR[i] = saturate_(r) * volume_;
     }
+    renderClicks(outL, outR, n);
 
     frames_ += n;
     now_ = frames_ * dt;

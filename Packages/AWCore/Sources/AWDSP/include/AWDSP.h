@@ -62,6 +62,39 @@ aw_playhead aw_engine_playhead(const aw_engine *engine);
 /// Ids of notes that started sounding since the last call, newest last. Returns how many were written.
 int32_t aw_engine_take_started_notes(aw_engine *engine, int32_t *ids, int32_t capacity);
 
+/// Starts playback with a count-in of `count_in_bars` bars of clicks (0 for none).
+void aw_engine_play_count_in(aw_engine *engine, aw_context context, int32_t count_in_bars);
+/// Cancels a cue.
+void aw_engine_cancel_cue(aw_engine *engine);
+
+/// Plays one note of the current song now, as it would sound in the song.
+void aw_engine_audition(aw_engine *engine, int32_t note_id);
+/// Holds a note from a keyboard until aw_engine_live_off with the same id. `pitch` is a scale step, or a drum row.
+void aw_engine_live_on(aw_engine *engine, int32_t id, int32_t song, int32_t part, int32_t slot, int32_t pitch);
+void aw_engine_live_off(aw_engine *engine, int32_t id);
+
+/// Metronome: on or off, a click every `ticks` clock ticks (12 a quarter note), volume 0–1.
+void aw_engine_metronome(aw_engine *engine, int32_t on, int32_t ticks, float volume);
+
+/// Adds a collected sound (mono) under an id; songs refer to it by id. Call from the song-data thread.
+void aw_engine_add_sample(aw_engine *engine, const char *id, const float *data, int32_t frames, double sample_rate);
+
+typedef struct aw_tick_event {
+    double time;
+    int32_t song, part, bar, tick, bar_ticks, reserved;
+} aw_tick_event;
+
+typedef struct aw_note_event {
+    double time;
+    double duration;
+    int32_t id, slot, pitch, reserved;
+} aw_note_event;
+
+/// Clock ticks and note starts scheduled since the last call, with their exact times on the engine clock
+/// (seconds since the engine was created). Each returns how many it wrote.
+int32_t aw_engine_take_ticks(aw_engine *engine, aw_tick_event *out, int32_t capacity);
+int32_t aw_engine_take_notes(aw_engine *engine, aw_note_event *out, int32_t capacity);
+
 #ifdef __cplusplus
 }
 #endif

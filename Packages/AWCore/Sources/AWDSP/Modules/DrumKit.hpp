@@ -44,9 +44,13 @@ struct DrumVoice {
     float sqFreq[4] = {}, sqGain = 0;
     bool squares = false;
     bool hasOsc = false, hasNoise = false, hasNoise2 = false;
+    // a collected sound in place of the synthesised voice
+    const Sample *sample = nullptr;
+    double samplePos = 0, sampleStep = 1;
+    Automation sampleGain;
     RNG rng;
 
-    void trigger(const RenderEnv &e, int row, double t, const float *o);
+    void trigger(const RenderEnv &e, int row, double t, const float *o, const Sample *sample);
     void choke(double t);
     void render(double t0, int frames, const TrackBus &bus);
 };

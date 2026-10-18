@@ -16,7 +16,7 @@ void envelope(Automation &p, double t, float peak, double tau, double a = .001) 
 
 } // namespace
 
-void DrumVoice::trigger(const RenderEnv &e, int r, double t, const float *o) {
+void DrumVoice::trigger(const RenderEnv &e, int r, double t, const float *o, const Sample *smp) {
     env = &e;
     row = r;
     active = true;
@@ -28,7 +28,7 @@ void DrumVoice::trigger(const RenderEnv &e, int r, double t, const float *o) {
     float amp = o[dp::lv] * o[dp::lv] * 1.25f * o[dp::klv] * o[dp::klv] * 1.25f * .8f;
     end = t + dec * 5 + .15;
 
-    for (Automation *a : {&level, &freq, &gain, &noiseGain, &n2freq, &n2gain}) {
+    for (Automation *a : {&level, &freq, &gain, &noiseGain, &n2freq, &n2gain, &sampleGain}) {
         a->reset(0);
         a->setSampleTime(e.dt);
     }
@@ -47,6 +47,18 @@ void DrumVoice::trigger(const RenderEnv &e, int r, double t, const float *o) {
     n1b.clear();
     n2.clear();
     n2cf = -1;
+
+    sample = smp;
+    if (sample) {
+        // TUNE repitches (an octave each way), DECAY holds then fades, TONE and the kit's settings work as usual
+        samplePos = 0;
+        sampleStep = sample->rate / sr * ratio;
+        double hold = .02 * std::pow(200.0, (double)o[dp::dc]);
+        sampleGain.setValueAtTime(1, t);
+        sampleGain.setTargetAtTime(0, t + hold, hold * .3 + .005);
+        end = t + std::min((double)sample->data.size() / sample->rate / ratio, hold * 3 + .05) + .02;
+        return;
+    }
 
     switch (r) {
     case 0: { // kick: a sine that drops to its pitch, plus a click of noise when punchy
@@ -173,6 +185,17 @@ void DrumVoice::render(double t0, int frames, const TrackBus &bus) {
             return;
         }
         float x = 0;
+        if (sample) {
+            size_t i0 = (size_t)samplePos;
+            const std::vector<float> &d = sample->data;
+            if (i0 + 1 >= d.size()) {
+                active = false;
+                return;
+            }
+            float fr = (float)(samplePos - i0);
+            x = (d[i0] + (d[i0 + 1] - d[i0]) * fr) * sampleGain.step(t, dt);
+            samplePos += sampleStep;
+        }
         if (hasOsc) {
             float f = freq.step(t, dt), g = gain.step(t, dt);
             if (t < end) {
@@ -233,7 +256,7 @@ void DrumKit::start(const NoteStart &n) {
             if (voices_[i].end < voices_[pick].end) pick = i;
     }
     voices_[pick].rng = RNG(seed_ = seed_ * 1664525u + 1013904223u);
-    voices_[pick].trigger(env_, row, n.time, n.params);
+    voices_[pick].trigger(env_, row, n.time, n.params, n.sample);
     last_[row] = pick;
 }
 

@@ -287,6 +287,28 @@ void SynthModule::start(const NoteStart &n) {
     pool_.admit(h, now_, n.time);
 }
 
+uint32_t SynthModule::startHeld(const NoteStart &n) {
+    start(n);
+    // the newest voice of this module is the one just started
+    SynthPool::Handle h{-1, 0};
+    double latest = -1;
+    for (int i = 0; i < SynthPool::kVoices; ++i) {
+        SynthVoice &v = pool_.voices[i];
+        if (v.active && v.owner == this && v.start == n.time && v.start > latest) {
+            latest = v.start;
+            h = {i, v.generation};
+        }
+    }
+    if (h.index < 0) return 0;
+    return (uint32_t)(h.index + 1) | (h.generation << 8);
+}
+
+void SynthModule::release(uint32_t token, double t) {
+    if (!token) return;
+    SynthPool::Handle h{(int)(token & 0xFF) - 1, token >> 8};
+    if (SynthVoice *v = pool_.get(h)) v->release(t, false);
+}
+
 void SynthModule::render(double t0, int frames, const TrackBus &bus) {
     for (auto &v : pool_.voices)
         if (v.active && v.owner == this) v.render(t0, frames, bus);

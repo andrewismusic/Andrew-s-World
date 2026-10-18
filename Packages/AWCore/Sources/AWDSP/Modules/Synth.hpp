@@ -98,6 +98,8 @@ class SynthModule : public Module {
 public:
     SynthModule(const RenderEnv &env, SynthPool &pool, EngineKind engine) : env_(env), pool_(pool), engine_(engine) {}
     void start(const NoteStart &note) override;
+    uint32_t startHeld(const NoteStart &note) override;
+    void release(uint32_t token, double t) override;
     void render(double t0, int frames, const TrackBus &bus) override;
     void stopped() override;
     void panic() override;

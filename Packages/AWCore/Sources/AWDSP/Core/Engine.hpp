@@ -22,8 +22,16 @@ struct Context {
 };
 
 struct Command {
-    enum class Type { Play, Stop, SetContext, Cue } type;
+    enum class Type { Play, Stop, SetContext, Cue, Audition, LiveOn, LiveOff, Metronome } type;
     Context context;
+    /// Play: count-in bars. Audition: the note id. LiveOn/LiveOff: the live note's id. Metronome: on (0/1).
+    int32_t a = 0;
+    /// LiveOn: slot. Metronome: clock ticks between clicks.
+    int32_t b = 0;
+    /// LiveOn: pitch.
+    int32_t c = 0;
+    /// Metronome: volume 0–1.
+    float f = 0;
 };
 
 /// One note start, logged with its exact time, for tests and the UI.
@@ -31,6 +39,13 @@ struct StartedNote {
     int32_t id;
     int16_t slot, pitch;
     double time;
+    double duration = 0;
+};
+
+/// One clock tick as it was scheduled, for the playhead and for recording onto the nearest step.
+struct TickEvent {
+    double time;
+    int32_t song, part, bar, tick, barTicks;
 };
 
 class Engine {
@@ -55,6 +70,10 @@ public:
     } playhead;
 
     SPSCQueue<StartedNote, 1024> started;
+    SPSCQueue<TickEvent, 1024> ticks;
+
+    // song-data thread: collected sounds
+    void addSample(const std::string &id, const float *data, size_t frames, double rate) { samples_.add(id, data, frames, rate); }
     /// When set (tests), every note start is also written here; read only once rendering is done.
     std::vector<StartedNote> *log = nullptr;
 
@@ -77,6 +96,7 @@ private:
 
     RenderEnv env_;
     Wavetables tables_;
+    SampleBank samples_;
     double now_ = 0; // start of the current block
     uint64_t frames_ = 0;
     RNG rng_{0xC0FFEEu};
@@ -100,11 +120,35 @@ private:
     Pos cue_;
     Context ctx_;
     double nextT_ = 0;
+    // live notes from a keyboard: id → module token
+    struct Live {
+        int32_t id = -1;
+        int slot = 0;
+        uint32_t token = 0;
+    } live_[16];
+    void startLive(const Command &c);
+    void stopLive(int32_t id);
+    void audition(int32_t noteId);
+    // metronome and count-in
+    bool metronome_ = false;
+    int metronomeRate_ = 12;
+    float metronomeVolume_ = .6f;
+    struct Click {
+        double time = -1;
+        int accent = 0;
+    } clicks_[8];
+    void addClick(double t, int accent);
+    void renderClicks(float *L, float *R, int n);
+    struct Sounding {
+        double start = -1;
+        int accent = 0;
+    } sounding_[4];
     struct Pending {
         double time, duration;
         int slot, pitch;
         int32_t id;
         Music music;
+        const Sample *sample;
         float params[sp::count];
     };
     static constexpr int kPending = 256;

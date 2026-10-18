@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <unordered_map>
 
 #include "../DSP/Noise.hpp"
@@ -127,6 +128,14 @@ std::shared_ptr<const SongSnap> SnapshotBuilder::buildSong(const json::Value &so
         }
     }
 
+    if (const json::Value *smp = song.get("samples"); smp && smp->isObject())
+        for (auto &kv : smp->object) {
+            size_t dot = kv.first.find('.');
+            if (dot == std::string::npos || !kv.second.isString()) continue;
+            int s = std::atoi(kv.first.c_str()), r = std::atoi(kv.first.c_str() + dot + 1);
+            if (s >= 0 && s < 4 && r >= 0 && r < 8 && engines[s] == EngineKind::Drums) out->drumSamples[s][r] = samples_.find(kv.second.string);
+        }
+
     if (const json::Value *fx = song.get("fx"); fx && fx->isArray())
         for (int s = 0; s < 4 && s < (int)fx->array.size(); ++s) {
             const json::Value &row = fx->array[s];
@@ -173,6 +182,10 @@ std::shared_ptr<const SongSnap> SnapshotBuilder::buildSong(const json::Value &so
                     laneBlock[r] = paramDefaults(e, r);
                     for (auto &p : paramTable(e, r)) laneBlock[r][p.index] = lc.value(std::to_string(s) + "." + p.key, p.def);
                 }
+            if (plays) {
+                ps.laneParams[s] = (int32_t)out->params.size();
+                for (int r = 0; r < rows; ++r) out->params.insert(out->params.end(), laneBlock[r].begin(), laneBlock[r].end());
+            }
             float laneRatchet = lc.global("rat.rt");
             for (int i = 0; i < 3; ++i) {
                 BuildingType bt = out->fx[s][i];
@@ -196,6 +209,9 @@ std::shared_ptr<const SongSnap> SnapshotBuilder::buildSong(const json::Value &so
                         ev.step = (int16_t)n.num("step", 0);
                         ev.pitch = (int16_t)n.num("pitch", 0);
                         ev.len = (int16_t)std::max(1.0, n.num("len", 1));
+                        ev.slot = (uint8_t)s;
+                        ev.triplet = bs.triplet;
+                        ev.part = (uint16_t)out->parts.size();
                         int row = e == EngineKind::Drums ? std::clamp((int)ev.pitch, 0, 7) : 0;
                         auto &index = keys[s].index[row];
                         ev.params = (uint32_t)out->params.size();
@@ -248,7 +264,7 @@ std::unique_ptr<LocationSnap> SnapshotBuilder::build(const std::string &location
 
     std::vector<Cached> next;
     for (auto &song : songs->array) {
-        std::string key = snap->skin + "\n" + masterJSON + "\n" + locationJSON.substr(song.begin, song.end - song.begin);
+        std::string key = std::to_string(samples_.generation()) + "\n" + snap->skin + "\n" + masterJSON + "\n" + locationJSON.substr(song.begin, song.end - song.begin);
         std::shared_ptr<const SongSnap> built;
         for (auto &c : cache_)
             if (c.key == key) { built = c.song; break; }
