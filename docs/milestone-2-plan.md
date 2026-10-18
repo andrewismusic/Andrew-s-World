@@ -1,6 +1,30 @@
 # Milestone 2 proposal: file layout and audio engine
 
-Status: **approved, not started.** Decisions are recorded at the end.
+Status: **built; in review.** Decisions are recorded at the end, and what changed during the build is in
+"As built" just below.
+
+## As built
+
+- **Song data reaches the engine as JSON, and the snapshot builder is C++.** The app encodes the current location
+  and the master node exactly as the save writes them and posts them to `aw_engine_set_location`; the C++ builder
+  resolves every lock and caches songs by their text. One implementation serves the app, the native tests and the
+  offline renderer, and it builds and runs off a Mac. (The plan had the builder in Swift.)
+- **The module contract** (`Sources/AWDSP/Modules/Module.hpp`): a module receives note starts with resolved
+  parameters at exact times and adds into its track bus and the shared sends. Farm's drums and the bass/chords/lead
+  synth are the first modules; tools from other apps arrive the same way.
+- **Chords, lead and the track buildings came along early.** They share code with bass, and the demo songs use
+  the buildings, so leaving them out made the songs sound wrong. Glue and Prism are still milestone 3.
+- **Parity, measured:** `tools/parity/render-prototype.js` renders a song from the prototype in Chromium and
+  `aw-render` renders it natively; `tools/parity/compare.py` compares them bar by bar. Old School Hip-Hop is within
+  0.1 dB per bar and 1–3% in brightness; each track solo is within 0.5 dB. The other Farm songs are within about
+  0.5 dB overall and up to ~10% brighter natively, mostly in the chords and reverb, worth an ear check.
+- **One deliberate match of a browser quirk:** Chromium's 2× oversampled shaper delays its output by 128 samples,
+  and the Mill mixes that with the dry signal, which makes a comb. That is part of how the Mill sounds, so the
+  native Mill delays its wet path the same amount.
+- **Pan law:** equal power with unity in the centre (the prototype skips the panner at centre, so any pan at all
+  drops 3 dB there; natively a hard pan is 3 dB up on one side instead).
+- **The 25 ms timer, look-ahead and Safari workarounds are gone:** notes start on their exact sample.
+
 
 Milestone 2 (from the handoff): render loop, drums and bass, sequencer with swing and triplets, transport.
 *Done when* the first Farm demo song (Old School Hip-Hop) plays in time with the prototype and sounds recognisably
