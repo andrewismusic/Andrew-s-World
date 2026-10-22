@@ -250,7 +250,7 @@ body:not([data-skin="farm"]) .lab.rowl{color:rgba(255,255,255,.5)}
 @keyframes wig{from{transform:rotate(-12deg) translateY(0)}to{transform:rotate(12deg) translateY(calc(var(--amp,4px) * -.6))}}
 
 /* note view: lives inside the note it belongs to */
-.nv{position:absolute;inset:4%;display:flex;flex-direction:column;gap:8px;padding:10px 12px;overflow:hidden;transform-origin:50% 50%}
+.nv{image-rendering:auto;position:absolute;inset:4%;display:flex;flex-direction:column;gap:8px;padding:10px 12px;overflow:hidden;transform-origin:50% 50%}
 body[data-skin="farm"] .nv{border:2.5px solid var(--edge);border-radius:18px;background:rgba(255,251,241,.9);box-shadow:0 5px 0 var(--edge)}
 body[data-skin="classic"] .nv{border-radius:10px;background:rgba(10,8,20,.4);color:#fff}
 body[data-skin="cockpit"] .nv,body[data-skin="solucan"] .nv{border:1px solid rgba(255,255,255,.16);border-radius:3px;background:rgba(5,8,11,.6)}
@@ -657,6 +657,8 @@ body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!impor
 .eng-fail{position:fixed;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;padding:12px 14px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--card);color:var(--ink);font-weight:700}
 
 .bagbox{width:min(480px,100%)}
+.pan-ghost{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.pan-ghost>*{position:absolute;inset:0}
 /* the backpack is always to hand: a brown pixel pack in the top bar, bigger than the icon buttons and not boxed in */
 .bagb{width:42px;height:42px;padding:0;border:0;background:none;box-shadow:none;flex:0 0 42px;display:grid;place-items:center;cursor:pointer;filter:drop-shadow(0 2px 0 rgba(58,45,39,.35));transition:transform .15s}
 .bagb svg{width:38px;height:auto;display:block;image-rendering:pixelated}
@@ -743,8 +745,19 @@ body:not([data-skin="farm"]) .slot.full{background:var(--card);box-shadow:none;b
 .sl-ar{position:absolute;top:50%;height:2px;background:rgba(255,255,255,.7)}
 .fxv{position:absolute;inset:0;z-index:14;display:flex;flex-direction:column;gap:14px;padding:18px 20px;background:var(--card);overflow:auto;will-change:transform}
 body[data-skin="farm"] .fxv{background:radial-gradient(ellipse at 20% 0%,#fff8e4,transparent 60%),#f6efdc}
-.fxv-x{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;border:var(--bw) solid var(--edge);background:var(--card);font:700 20px/1 var(--f-disp);color:var(--ink);box-shadow:var(--sh)}
-.fxv-h{display:flex;align-items:center;gap:14px;padding-right:44px}
+.fxv-x{display:grid;place-items:center;position:absolute;left:12px;top:12px;width:36px;height:36px;border-radius:50%;border:var(--bw) solid var(--edge);background:var(--card);font:700 20px/1 var(--f-disp);color:var(--ink);box-shadow:var(--sh)}
+.fxv-h{display:flex;align-items:center;gap:14px;padding-left:44px}
+/* the building's wall: a pixel texture under a band of roof, with the controls as plaques on it */
+body[data-skin="farm"] .fxv{background:linear-gradient(var(--roof) 0 64px,var(--trim) 64px 68px,transparent 68px),var(--wall) 0 0/48px 48px;image-rendering:pixelated;padding-top:12px}
+body[data-skin="farm"] .fxv>*{image-rendering:auto}
+body[data-skin="farm"] .fxv-h{min-height:44px}
+body[data-skin="farm"] .fxv-h b,body[data-skin="farm"] .fxv-h span{color:#fff;text-shadow:2px 0 0 #3a2d27,-2px 0 0 #3a2d27,0 2px 0 #3a2d27,0 -2px 0 #3a2d27}
+body[data-skin="farm"] .fxv-h span{text-shadow:1px 0 0 #3a2d27,-1px 0 0 #3a2d27,0 1px 0 #3a2d27,0 -1px 0 #3a2d27}
+body[data-skin="farm"] .fxv-p{margin-top:10px}
+body[data-skin="farm"] .fxv-p .hfd{padding:8px 12px 10px;border:2.5px solid #3a2d27;border-radius:6px;box-shadow:0 4px 0 #3a2d27;
+  background:radial-gradient(circle at 7px 7px,#7a5a3a 0 2px,transparent 2.5px),radial-gradient(circle at calc(100% - 7px) 7px,#7a5a3a 0 2px,transparent 2.5px),radial-gradient(circle at 7px calc(100% - 7px),#7a5a3a 0 2px,transparent 2.5px),radial-gradient(circle at calc(100% - 7px) calc(100% - 7px),#7a5a3a 0 2px,transparent 2.5px),#fce0a8}
+body[data-skin="farm"] .fxv-p .hfd-s{margin-top:-6px}
+body[data-skin="farm"] .fxv-a .key,body[data-skin="farm"] .fxv-b{background:#fff8e4}
 .fxv-h b{display:block;font:700 22px var(--f-disp)}
 .fxv-h span{font:600 12.5px var(--f-ui);color:var(--mute)}
 .fxv-ic{width:64px;height:64px;flex:0 0 64px}.fxv-ic svg{width:100%;height:100%;display:block}
@@ -802,13 +815,13 @@ body[data-skin="farm"] .crop.e-chords.q6{--hd:var(--sp-head6);--tl:var(--sp-tail
 body[data-skin="farm"] .crop:not(.top){background-image:none!important;border-radius:2px}
 body[data-skin="farm"] .crop.e-bass:not(.top){background-color:#ac7c00!important}
 body[data-skin="farm"] .crop.e-lead:not(.top){background-color:#f878f8!important}
-body[data-skin="farm"] .crop.e-chords.q0:not(.top){background-color:#7c7c7c!important}
-body[data-skin="farm"] .crop.e-chords.q1:not(.top){background-color:#0058f8!important}
+body[data-skin="farm"] .crop.e-chords.q0:not(.top){background-color:#ac7c00!important}
+body[data-skin="farm"] .crop.e-chords.q1:not(.top){background-color:#fcfcfc!important}
 body[data-skin="farm"] .crop.e-chords.q2:not(.top){background-color:#d8803a!important}
-body[data-skin="farm"] .crop.e-chords.q3:not(.top){background-color:#3c7cf8!important}
+body[data-skin="farm"] .crop.e-chords.q3:not(.top){background-color:#7c7c7c!important}
 body[data-skin="farm"] .crop.e-chords.q4:not(.top){background-color:#383838!important}
-body[data-skin="farm"] .crop.e-chords.q5:not(.top){background-color:#9c9c9c!important}
-body[data-skin="farm"] .crop.e-chords.q6:not(.top){background-color:#6844fc!important}
+body[data-skin="farm"] .crop.e-chords.q5:not(.top){background-color:#bcbcbc!important}
+body[data-skin="farm"] .crop.e-chords.q6:not(.top){background-color:#b8b8f8!important}
 
 body[data-skin="farm"] .top.crop.rat::after{content:"";display:block;position:absolute;left:0;right:0;bottom:-3px;height:3px;background:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px calc(100% / var(--r)))}
 body[data-skin="farm"] .top.crop.hit{transform:scale(1.12);filter:brightness(1.3) drop-shadow(0 0 3px #fff)!important;box-shadow:none!important}
@@ -1525,13 +1538,21 @@ const laneFill=s=>skin==='classic'?`hsl(${EH1[DEF_ENG[s]]} 45% 24%)`:skin==='coc
 const barFill=(s,b)=>skin==='classic'?`hsl(${EH1[DEF_ENG[s]]} 55% ${b%2?30:27}%)`:skin==='cockpit'?`oklch(${b%2?.26:.24} .028 ${EH2[DEF_ENG[s]]})`:skin==='solucan'?`oklch(${b%2?.15:.13} .022 ${EH3[DEF_ENG[s]]})`:(FARM_BAR[DEF_ENG[s]]||FARM_BAR.drums)[b%2];
 /* how a note looks beyond its colour: chord notes become fish by chord type, lead notes a row of flowers */
 function noteLook(ch,slot,eng,nt){if(eng==='chords')return ' q'+Math.round(rv(ch,slot+'.chords.ch').v*6);if(eng==='lead')return ' p'+(nt.id%4);return ''}
-function noteSurface(eng){const nt=curNote(),q=nt&&eng==='chords'?Math.round(rv(noteChain(),sel[2]+'.chords.ch').v*6):0,pe=nt?PETAL[nt.id%4]:PETAL[0];
-  if(eng==='bass')return 'var(--sp-grain) 0 0/128px 64px repeat,#ac7c00';
-  if(eng==='drums')return 'repeating-linear-gradient(90deg,#f87800 0 34px,#fca044 34px 40px,#f87800 40px 70px,#a84800 70px 76px),#f87800';
-  if(eng==='chords')return `var(--sp-body${q}) 0 0/48px 120px repeat,${SEA[q].A}`;
-  if(eng==='lead')return `radial-gradient(circle at 50% 50%,#f8b800 0 10px,transparent 11px) 0 0/64px 64px,radial-gradient(ellipse at 50% 50%,${pe} 0 26px,transparent 27px) 0 0/64px 64px,color-mix(in srgb,${pe} 70%,#fff)`;
-  return engCol(eng)}
-function fillOf(path,eng){const n=path.length;if(!n)return 'transparent';if(n>=4&&skin==='farm')return noteSurface(eng||DEF_ENG[path[2]]);const song=state.songs[path[0]];if(n===1)return songFill(song);if(n===2)return secFill(song.sections[path[1]]);if(n===3)return barFill(path[2],sel[4]);return engCol(eng||DEF_ENG[path[2]])}
+/* Zooming into a note is like leaning in with a magnifying glass: the note view's ground is the note's own sprite (the
+   log, pumpkin, ducks or flower) in its own field, and it grows smoothly from exactly the size it had in the bar.
+   The sprite's on-screen size follows the zoom's area scale, and is set per frame in the layer's own (stretched)
+   units so the pixels stay square. Style rule: every zoom should feel like moving closer to the thing you tapped. */
+const NOTE_SPR={drums:[['pumpkin',12,10,'center','no-repeat','fit']],bass:[['logend',7,10,'right center','no-repeat'],['bark',8,10,'left center','repeat-x']],
+  lead:[['flower',10,10,'left center','no-repeat'],['vine',8,10,'left center','repeat-x']],chords:[['head',13,10,'right center','no-repeat'],['tail',4,10,'left center','no-repeat'],['body',8,10,'left center','repeat-x']]};
+function noteBg(el,Wd,Hd){const eng=curEng(),r=selRect(3),nt=curNote();if(skin!=='farm'||!r||!nt||!NOTE_SPR[eng])return;
+  const fw=stage.clientWidth,fh=stage.clientHeight,k=Math.sqrt((Wd*Hd)/(r.w*r.h)),Hp=r.h*fh,Wp=r.w*fw;
+  const q=eng==='chords'?Math.round(rv(noteChain(),sel[2]+'.chords.ch').v*6):0,name=n=>n==='flower'?'flower'+(nt.id%4):n==='head'||n==='tail'||n==='body'?n+q:n;
+  const L=NOTE_SPR[eng];el.style.backgroundColor=barFill(sel[2],sel[4]);
+  el.style.backgroundImage=L.map(l=>`var(--sp-${name(l[0])})`).join(',');
+  el.style.backgroundRepeat=L.map(l=>l[4]).join(',');el.style.backgroundPosition=L.map(l=>l[3]).join(',');
+  el.style.backgroundSize=L.map(([n,w,h,,,fit])=>{const th=(fit?Math.min(Hp,Wp*h/w):Hp)*k;return `${(th*w/h/Wd).toFixed(2)}px ${(th/Hd).toFixed(2)}px`}).join(',');
+  el.style.imageRendering='pixelated'}
+function fillOf(path,eng){const n=path.length;if(!n)return 'transparent';if(n>=4&&skin==='farm')return barFill(path[2],sel[4]);const song=state.songs[path[0]];if(n===1)return songFill(song);if(n===2)return secFill(song.sections[path[1]]);if(n===3)return barFill(path[2],sel[4]);return engCol(eng||DEF_ENG[path[2]])}
 const stage=$('#stage'),A=$('#A'),B=$('#B'),TL=$('#T');
 /* sections flow like words in a paragraph: up to four rows, a bar is a fixed width, a section that does not fit wraps to the next row */
 /* pages: the library shows up to 12 songs at a time; a song shows as many parts as fit in four rows of 16 bars */
@@ -1603,7 +1624,11 @@ const SPR={
   shroom:['..KKKK..','.KRWRRK.','KRRRRWRK','KWRRRRRK','.KKKKKK.','..KTTK..','..KTTK..','..KKKK..'],
   bee:['.KK.KK.','KWWKWWK','.KYKYK.','KYKYKYK','.KYKYK.','..K.K..'],
   butterfly:['KK.....KK','KPPK.KPPK','KPYPKPYPK','.KPPKPPK.','.KPPKPPK.','KPPK.KPPK','KK.....KK'],
-  pollen:['.Y.','YyY','.Y.']
+  pollen:['.Y.','YyY','.Y.'],
+  dkHead:['.......KKKK..','......KHHHHK.','......KHHKHOO','......KHHHHKK','.K...KKHHHK..','KAK.KAAAAAK..','KAAKAAaaaAAK.','KAAAAaaaaaAK.','.KAAAAAAAAK..','llKKKKKKKKlll'],
+  dkBody:['........','........','........','....KKK.','...KYKYO','.K.KYYYK','KYKYYYYK','KYYYYYYK','.KKKKKK.','l......l'],
+  dkTail:['....','....','....','....','....','....','....','..l.','.l..','l.ll'],
+  feather:['AAAAaAAA','AAAaAAAA','AAaAAAAA','AaAAAAaA','aAAAAaAA','AAAAaAAA','AAAaAAAa','AAaAAAaA']
 };
 /* faces: 16×16 portraits; the eyes are a separate layer so they can blink */
 const FACE={
@@ -1615,15 +1640,18 @@ const FACE={
   patti:{bg:'#f8b8f8',rows:['xxxxxRRxRRxxxxxx','xxxxRRRRRRRxPPxx','xxxxKKKKKKKPPPxx','xxxKWWWWWWWKPxxx','xxKWWWWWWWWWKxxx','xKWWKKWWWKKWWKxx','xKWWKKWWWKKWWKxx','xKWPWWYYYWWPWKxx','xKWWWYYYYYWWWKxx','xKWWWWRRWWWWWKxx','xxKWWWWRWWWWKxxx','xKWWWWWWWWWWWKKK','KWWKWWWWWWWKKSSK','KWWWKWWWWWWKSKSK','xKWWWWWWWWWKKSSK','xxKKKKKKKKKKxKKx'],eyes:{rows:[5,6],cols:[[4,5],[9,10]],under:'W'}}
 };
 const facePix=w=>{const f=FACE[w];return pix(f.rows,{x:f.bg},{eyes:f.eyes,bg:f.bg})};
-/* chord types decide the animal: triads, 7ths and 9ths are sharks; sus, power and octave chords are whales */
-const SEA=[{k:'sh',A:'#7c7c7c',a:'#fcfcfc'},{k:'sh',A:'#0058f8',a:'#a4e4fc'},{k:'sh',A:'#d8803a',a:'#fce0a8'},{k:'wh',A:'#0058f8',a:'#a4e4fc'},{k:'wh',A:'#383838',a:'#fcfcfc'},{k:'wh',A:'#7c7c7c',a:'#bcbcbc'},{k:'wh',A:'#6844fc',a:'#b8b8f8'}];
+/* chords are ducks on the pond: a mother duck leads, and a longer chord is simply more ducklings paddling behind her,
+   so a note looks natural at any length. The chord type decides the breed (mallard, white, brown, teal, black,
+   red-head, violet). */
+const SEA=[{k:'dk',H:'#00a800',A:'#ac7c00',a:'#fce0a8',Y:'#f8b800'},{k:'dk',H:'#fcfcfc',A:'#fcfcfc',a:'#bcbcbc',Y:'#fce0a8'},{k:'dk',H:'#503000',A:'#d8803a',a:'#fce0a8',Y:'#f8b800'},
+  {k:'dk',H:'#0058f8',A:'#7c7c7c',a:'#bcbcbc',Y:'#fce0a8'},{k:'dk',H:'#383838',A:'#383838',a:'#7c7c7c',Y:'#bcbcbc'},{k:'dk',H:'#d82800',A:'#bcbcbc',a:'#fcfcfc',Y:'#f8b800'},{k:'dk',H:'#6844fc',A:'#b8b8f8',a:'#fcfcfc',Y:'#fce0a8'}];
 const PETAL=['#f878f8','#f8b800','#fcfcfc','#b8b8f8'];
 /* the note and tree sprites become CSS custom properties, so stylesheets can use them as backgrounds */
 (function(){const r=document.documentElement.style,set=(n,s)=>r.setProperty('--sp-'+n,svgURL(s));
   set('grain',pix(['NNnNNNNNNNNNnNNN','NNNNNnNNNNNNNNNN','nNNNNNNNNnNNNNNn','NNNnNNNNNNNNNNNN','NNNNNNnNNNNNnNNN','NnNNNNNNNNNNNNNN','NNNNNnNNNNnNNNNN','NNNNNNNNNNNNNNnN'],{}));
   set('pumpkin',pix(SPR.pumpkin,{}));set('vine',pix(SPR.vine,{}));set('bark',pix(SPR.bark,{}));set('logend',pix(SPR.logend,{}));
   PETAL.forEach((c,i)=>set('flower'+i,pix(SPR.flower,{P:c})));
-  SEA.forEach((q,i)=>{const pl={A:q.A,a:q.a};set('tail'+i,pix(SPR[q.k+'Tail'],pl));set('body'+i,pix(SPR[q.k+'Body'],pl));set('head'+i,pix(SPR[q.k+'Head'],pl))})})();
+  SEA.forEach((q,i)=>{const pl={A:q.A,a:q.a,H:q.H,Y:q.Y};set('tail'+i,pix(SPR[q.k+'Tail'],pl));set('body'+i,pix(SPR[q.k+'Body'],pl));set('head'+i,pix(SPR[q.k+'Head'],pl))})})();
 const TREE_SVG=[pix(SPR.tree,{}),pix(SPR.pine,{})];
 
 /* ================= overlay items (text that never stretches) ================= */
@@ -2023,8 +2051,8 @@ function selRect(L){const fw=stage.clientWidth||800,fh=stage.clientHeight||500;
 function buildLayers(L){
   built=L;dirty=false;pend=[];setGutter();if(L>=2){computeVis();focusRollV()}
   const bgOf=l=>l===-1?SPACE_BG:l===0?worldBg(state.wsel):fillOf(sel.slice(0,l));
-  A.innerHTML=viewHTML(L,'A');A.style.background=bgOf(L);A.style.borderRadius='';
-  if(L<maxZ()){B.innerHTML=viewHTML(L+1,'B');B.style.background=bgOf(L+1)}else{B.innerHTML='';B.style.background='transparent'}
+  A.innerHTML=viewHTML(L,'A');A.style.background=bgOf(L);A.style.imageRendering='';A.style.borderRadius='';if(L===4)noteBg(A,1,1);
+  if(L<maxZ()){B.innerHTML=viewHTML(L+1,'B');B.style.background=bgOf(L+1);B.style.imageRendering=''}else{B.innerHTML='';B.style.background='transparent'}
   viewL=L;buildItems();lastActive=new Set();updatePlayVisuals(true);
 }
 const smooth=(a,b,x)=>{const t=clamp01((x-a)/(b-a));return t*t*(3-2*t)};
@@ -2047,7 +2075,7 @@ function applyZoom(){
   B.style.setProperty('--det',det.toFixed(3));
   /* the song's outline thickens as we zoom in, so the square-ish corners of the part view never cover it */
   if(L===0&&skin==='farm'){const el=A.querySelector(`.b.farm.top[data-i="${sel[0]}"]`);if(el){const k=Math.min(sx,sy),rA=22*k,rB=selRadius(0,r.w*fw,r.h*fh)*(1-t),ex=Math.max(0,.45*(rA-rB))/k;el.style.boxShadow=`0 0 0 3px #f6e1a8,0 0 0 ${(5+ex).toFixed(1)}px var(--edge)`}}
-  if(L===3){const nv=B.querySelector('.nv');if(nv){const k=Math.min(Wd,Hd);nv.style.transform=`scale(${k/Wd},${k/Hd})`}tB={vis:false}}
+  if(L===3){noteBg(B,Wd,Hd);const nv=B.querySelector('.nv');if(nv){const k=Math.min(Wd,Hd);nv.style.transform=`scale(${k/Wd},${k/Hd})`;nv.style.opacity=smooth(.4,.92,t).toFixed(3)}tB={vis:false}}
   else tB={tx:x*fw,ty:y*fh,sx:Wd,sy:Hd,s:Math.min(Wd,Hd),op:det,vis:true};
   B.style.visibility='visible';A.style.pointerEvents='none';
   placeItems();
@@ -2139,7 +2167,7 @@ function launch(){if(launching)return;launching=true;const h=$('#hatch');rocketE
     setTimeout(()=>{infoW=-1;const pp=planetOf(state.wsel);planet.sw=null;if(pp!==planet.pi){planet.pi=pp;const g=REG[state.worlds[state.wsel].skin];planet.lat=g.lat;planet.lon=g.lon}faceWorld(state.wsel);zoomTimed(-1,CLIMB_MS,()=>{launching=false;renderPager()})},CLIMB*1000)},LIFT*1000)}
 const ROCKET_SVG=pix(SPR.rocket,{}).replace('<svg ','<svg class="rk" aria-hidden="true" ');
 function landOn(i){if(launching||planet.sw)return;landPressSfx();if(i!==state.wsel){const k=infoW;selectWorld(i);infoW=k}faceWorld(i);landSfx();buzz(30);setTimeout(()=>zoomTimed(0,DESC_MS,()=>buzz([60,40,120])),DESC_DELAY*1000)}
-const WINFO={farm:{cls:'Agrarian · Temperate',focus:'Playful, cute, video-game music',eng:'Drums, bass, chords, lead (with additive partials)',climate:'Mild seasons, gentle rain, long golden evenings',res:'Crops, timber, fresh water',life:'Farmers, frogs, bees, and whales in the irrigation'},
+const WINFO={farm:{cls:'Agrarian · Temperate',focus:'Playful, cute, video-game music',eng:'Drums, bass, chords, lead (with additive partials)',climate:'Mild seasons, gentle rain, long golden evenings',res:'Crops, timber, fresh water',life:'Farmers, frogs, bees, and ducks on every pond'},
   classic:{cls:'Urban',focus:'Bold electronic, any style',eng:'Drums, bass, chords, prism',climate:'Warm nights under a neon haze',res:'Power, concrete, radio signal',life:'Night owls and the night shift'},
   cockpit:{cls:'Arid · Hostile',focus:'Precise, technical, minimal',eng:'Drums, bass, chords, lead',climate:'Bone dry outside, filtered air within',res:'Rare isotopes, clean power, sealed archives',life:'Classified'},
   solucan:{cls:'Barren · Shadowed',focus:'Dark, gritty, eaten-away rhythms',eng:'Drums, bass, chords, prism',climate:'Cold dust storms in the shade of the rings',res:'Obsidian, ring ice, worm silk',life:'Purple burrowing worms. They eat notes.'}};
@@ -2669,12 +2697,18 @@ function renderPager(){const st=pageState();$('#pgL').disabled=!st||st.i<=0;$('#
 function placeBarPos(){const on=z>2.5&&z<3.5&&!!curSong();barPos.hidden=!on;if(!on)return;barPos.style.opacity=clamp01(1-Math.abs(z-3)*2.4).toFixed(2);const pb=playing&&cur&&cur.s===sel[0]&&cur.c===sel[1]&&cur.p!==sel[4]?` · ▶ ${cur.p+1}`:'';barPos.textContent=`${sel[4]+1} / ${secLen(curSec())}`+(ui.loop?' ⟲':'')+pb}
 /* a track shorter than its part has silence at the end; paging there gives it empty bars to plant in */
 function padLane(lane,n){while(lane.bars.length<n)lane.bars.push({notes:[]})}
-function pageBar(d){const n=secLen(curSec()),b=clampi(sel[4]+d,0,n-1);if(b===sel[4])return;padLane(curLane(),b+1);sel[4]=b;sel[3]=null;ui.lsel.clear();uis('tab');changed()}
+/* paging is a sideways walk across the farm: the old view slides out as the new one slides in */
+function panTo(dir,fn){if(RM||!settled()||!dir){fn();return}const fw=stage.clientWidth,ghost=document.createElement('div');ghost.className='pan-ghost';ghost.setAttribute('aria-hidden','true');
+  const a=A.cloneNode(true),t=TL.cloneNode(true);a.removeAttribute('id');t.removeAttribute('id');t.style.cssText='position:absolute;inset:0;overflow:hidden;pointer-events:none';ghost.append(a,t);stage.insertBefore(ghost,B);
+  fn();const o={duration:380,easing:'cubic-bezier(.3,.7,.2,1)'};
+  ghost.animate([{transform:'translateX(0)'},{transform:`translateX(${-dir*fw}px)`}],o).onfinish=()=>ghost.remove();
+  for(const el of [A,TL])el.animate([{transform:`translateX(${dir*fw}px)`},{transform:'translateX(0)'}],o)}
+function pageBar(d){const n=secLen(curSec()),b=clampi(sel[4]+d,0,n-1);if(b===sel[4])return;panTo(d,()=>{padLane(curLane(),b+1);sel[4]=b;sel[3]=null;ui.lsel.clear();uis('tab');changed()})}
 function pageGo(d){const L=Lnow(),st=pageState();if(!st||!settled())return;const i=st.i+d;if(i<0||i>=st.n)return;ensureAudio();
   if(L<0){switchPlanet(i);return}
-  if(L===0){selectAt(0,i*SPP);uis('tab')}
-  else if(L===1){selectAt(1,secPages(curSong())[i][0]);uis('tab')}
-  else if(L===2){closeFx(true);ui.l2=i;uis('tab');changed()}
+  if(L===0)panTo(d,()=>{selectAt(0,i*SPP);uis('tab')});
+  else if(L===1)panTo(d,()=>{selectAt(1,secPages(curSong())[i][0]);uis('tab')});
+  else if(L===2){closeFx(true);panTo(d,()=>{ui.l2=i;uis('tab');changed()})}
   else if(L===3)pageBar(d);
   else{sel[3]=i;uis('tab');changed();audition()}}
 $('#pgL').onclick=()=>pageGo(-1);$('#pgR').onclick=()=>pageGo(1);
@@ -2690,8 +2724,18 @@ function fxGridHTML(){const song=curSong(),lr=laneRects();return lr.map((r,s)=>{
   return `<div class="b plot fxl l-${DEF_ENG[s]}" style="${pct(r)};background-color:${laneFill(s)}"><i class="tx"></i><div class="in">${slots}</div></div>`}).join('')}
 const fxv=document.createElement('div');fxv.className='fxv';fxv.hidden=true;stage.appendChild(fxv);
 function fxKeys(){const{s,i}=ui.fx,t=curSong().fx[s][i];return t?BLD[t].params.map(q=>`${s}.fx${i}.${t}.${q[0]}`):[]}
-function fxHTML(){const{s,i}=ui.fx,song=curSong(),t=song.fx[s][i],tr=sc(ELAB[DEF_ENG[s]]);
-  const x='<button class="fxv-x" data-fxx aria-label="Close the effect">×</button>';
+/* opening an effect zooms you up to its building: its wall fills the view and the controls are plaques fixed to it.
+   The magnifier in the corner zooms back out to the track view. */
+const FX_WALL={mill:{t:['SSSSSSSs','SSSSSSSs','SSSSSSSs','ssssssss','SSSsSSSS','SSSsSSSS','SSSsSSSS','ssssssss'],p:{S:'#c9c2b4',s:'#8a8170'},roof:'#f2c46b',trim:'#3a2d27'},
+  well:{t:['bbbbbbbB','bbbbbbbB','bbbbbbbB','BBBBBBBB','bbbBbbbb','bbbBbbbb','bbbBbbbb','BBBBBBBB'],p:{b:'#a9b4bf',B:'#6d7884'},roof:'#e0584f',trim:'#3a2d27'},
+  windmill:{t:['WWWWWWWS','WWWWWWWS','WWWWWWWS','WWWWWWWS','WWWWWWWS','WWWWWWWS','WWWWWWWS','WWWWWWWS'],p:{W:'#fcfcfc',S:'#c8d2da'},roof:'#8fd3f0',trim:'#3a2d27'},
+  barn:{t:['RRRRRRRr','RRRRRRRr','RRRRRRRr','RRRRRRRr','RRRRRRRr','RRRRRRRr','RRRRRRRr','RRRRRRRr'],p:{R:'#d9534f',r:'#a8322e'},roof:'#7a1f1c',trim:'#fcfcfc'},
+  plot:{t:['NNNNNNNN','NNnNNNNN','NNNNNNnN','NNNNNNNN','NnNNNNNN','NNNNnNNN','NNNNNNNN','NNNNNNNn'],p:{N:'#c98f5a',n:'#a06c3d'},roof:'#7cbf52',trim:'#3a2d27'}};
+for(const k in FX_WALL)FX_WALL[k].url=svgURL(pix(FX_WALL[k].t,FX_WALL[k].p));
+const ZOOM_OUT='<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 13l5 5M5.8 8.5h5.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+function fxHTML(){const{s,i}=ui.fx,song=curSong(),t=song.fx[s][i],tr=sc(ELAB[DEF_ENG[s]]),w=FX_WALL[t||'plot'];
+  fxv.style.setProperty('--wall',w.url);fxv.style.setProperty('--roof',w.roof);fxv.style.setProperty('--trim',w.trim);fxv.dataset.b=t||'plot';
+  const x=`<button class="fxv-x" data-fxx aria-label="Zoom out to the track view" title="Zoom out">${ZOOM_OUT}</button>`;
   if(!t)return x+`<div class="fxv-h"><div><b>${tr} · ${sc('Plot')} ${i+1}</b><span>${sc('Pick something to build here')}</span></div></div><div class="fxv-pick">${BLD_ORDER.map(b=>`<button class="fxv-b" data-build="${b}"><i>${BLD_ICON[b]}</i><b>${esc(sc(BLD[b].name))}</b><span>${BLD[b].full}</span></button>`).join('')}</div>`;
   return x+`<div class="fxv-h"><i class="fxv-ic">${BLD_ICON[t]}</i><div><b>${esc(sc(BLD[t].name))}</b><span>${BLD[t].full} · ${tr} · ${sc('Plot')} ${i+1}</span></div></div>
   <div class="fxv-p">${fxKeys().map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(pdef(k).label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${pdef(k).label}"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span><span class="hfd-s"></span></div>`).join('')}</div>
@@ -2699,7 +2743,7 @@ function fxHTML(){const{s,i}=ui.fx,song=curSong(),t=song.fx[s][i],tr=sc(ELAB[DEF
 function refreshFx(){if(!ui.fx)return;fxv.querySelectorAll('.hfd').forEach(h=>{const k=h.dataset.k,f=fdState(k,2);h.querySelector('.hfd-f').style.width=(f.v*100)+'%';h.querySelector('.hfd-k').style.left=(f.v*100)+'%';h.querySelector('.hfd-v').textContent=fmt(k,f.v);const[src]=srcText(k,f);const s=h.querySelector('.hfd-s');s.textContent=src;h.classList.toggle('lk',f.here)})}
 function openFx(s,i,el){ui.fx={s,i};fxv.innerHTML=fxHTML();refreshFx();fxv.hidden=false;uis('in');
   const sr=stage.getBoundingClientRect(),r=el.getBoundingClientRect(),W=sr.width,Hh=sr.height;
-  fxv.style.transition='none';fxv.style.transformOrigin='0 0';fxv.style.opacity='.2';fxv.style.transform=`translate(${r.left-sr.left}px,${r.top-sr.top}px) scale(${r.width/W},${r.height/Hh})`;fxv._from=fxv.style.transform;
+  fxv.style.transition='none';fxv.style.transformOrigin='0 0';fxv.style.opacity='.6';fxv.style.transform=`translate(${r.left-sr.left}px,${r.top-sr.top}px) scale(${r.width/W},${r.height/Hh})`;fxv._from=fxv.style.transform;
   void fxv.offsetWidth;fxv.style.transition=RM?'none':'transform .32s cubic-bezier(.2,.8,.2,1),opacity .2s';fxv.style.transform='none';fxv.style.opacity='1'}
 function closeFx(instant,then){if(!ui.fx){then&&then();return}ui.fx=null;
   if(instant||RM){fxv.hidden=true;fxv.innerHTML='';then&&then();return}uis('out');
