@@ -60,6 +60,8 @@ public:
 
     // song-data thread
     bool setLocation(const std::string &locationJSON, const std::string &masterJSON);
+    /// One song of the location posted last, after an edit.
+    bool setSong(int index, const std::string &songJSON);
 
     // transport thread
     void post(const Command &c) { commands_.push(c); }
@@ -87,11 +89,14 @@ private:
     void playNote(int slot, const PartSnap &part, const NoteEvent &note, double t, double sd);
     void advance();
     void clampPosition();
-    void applySpace(const SongSnap &song, const Music &mu, double t);
+    void applySpace(const SongSnap &song, const Music &mu, double t, bool barStart);
+    const SongSnap *spaceFrom_ = nullptr;
+    int spaceBpm_ = 0;
     void applyMaster(const SongSnap &song);
     void flushPending(double until);
     Module *moduleFor(int slot);
     void retire(LocationSnap *s);
+    void retargetVoices();
     void collect();
 
     RenderEnv env_;

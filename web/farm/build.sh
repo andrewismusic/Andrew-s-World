@@ -5,7 +5,7 @@ set -e
 here=$(cd "$(dirname "$0")" && pwd)
 dsp="$here/../../Packages/AWCore/Sources/AWDSP"
 exports=""
-for f in create destroy render set_location play play_count_in stop set_context cue cancel_cue audition live_on live_off \
+for f in create destroy render set_location set_song play play_count_in stop set_context cue cancel_cue audition live_on live_off \
          metronome add_sample take_ticks take_notes playhead; do
   exports="$exports,--export=aw_engine_$f"
 done

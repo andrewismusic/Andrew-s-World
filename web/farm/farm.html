@@ -230,7 +230,7 @@ body[data-skin="cockpit"] .lab,body[data-skin="solucan"] .lab{font:700 10px/1.3 
 body[data-skin="farm"] .lab.big{font-size:26px}
 body:not([data-skin="farm"]) .lab.big{font-size:15px}
 .lab.nl{font-size:10px!important;line-height:1!important;color:rgba(20,14,10,.8)!important;text-shadow:none!important;padding:0;letter-spacing:0!important}
-.lab.rowl{font-size:10px!important;padding:1px 3px}
+.lab.rowl{font-size:10px!important;padding:1px 2px;letter-spacing:0!important}
 body:not([data-skin="farm"]) .lab.rowl{color:rgba(255,255,255,.5)}
 .lab .bld{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-left:4px}
 .lab .bld svg{width:100%;height:100%;display:block}
@@ -578,6 +578,21 @@ body[data-skin="station"] .spt{display:flex}
 .fd.gl .fd-ex{color:var(--lock)}
 .pempty{flex:1;display:grid;place-items:center;text-align:center;padding:20px;font:600 13px/1.4 var(--f-ui);color:var(--mute)}
 /* library page */
+.nm-head{display:flex;align-items:center;gap:6px;min-width:0;height:32px}
+.nm-n{min-width:0;flex:0 1 auto;font:700 18px/1.2 var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+body:not([data-skin="farm"]) .nm-n{font-size:14px;letter-spacing:.04em}
+.nm-n input{width:min(260px,52vw);height:32px;padding:0 9px;border-radius:9px;border:2px solid var(--sel);background:var(--card);color:var(--ink);font:600 15px var(--f-disp)}
+.nm-head .ib{flex:0 0 32px;height:32px}
+.nm-facts{font:600 11.5px/1.3 var(--f-ui);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:-3px}
+.slide[data-l="0"] .hsl{height:100%;justify-content:space-evenly;gap:6px;padding:0 2px}
+.slide[data-l="1"] .mx .fd{height:100%;grid-template-rows:auto minmax(60px,1fr) auto auto;align-content:stretch}
+.slide[data-l="1"] .mx .fd-track{height:100%}
+.slide[data-l="1"] .mx .fd-src{display:none}
+.mx-ms{display:flex;gap:4px;justify-content:center}
+.mx-ms .mod{height:22px;min-width:30px;padding:0 6px;font:700 10px var(--f-disp)}
+.mx-ms .mod.on{background:var(--sel);color:var(--on);border-color:var(--edge)}
+.mx-ms .mod[data-mute].on{background:var(--force)}
+.mx-h b{text-align:center}
 .lib{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,34%);gap:14px;height:100%;align-items:center}
 .hsl{display:flex;flex-direction:column;gap:16px;min-width:0}
 .hfd{display:grid;grid-template-columns:72px minmax(0,1fr) 62px;align-items:center;gap:10px}
@@ -629,18 +644,24 @@ body[data-skin="farm"] .mbox{border-width:2.5px;box-shadow:0 5px 0 var(--edge),0
 .mx-x{width:32px;height:32px;border-radius:50%;font:700 18px/1 var(--f-disp);background:var(--well)}
 .mbody{display:flex;flex-direction:column;gap:12px}
 /* backpack */
-/* notes that carry locks get a pink outline; notes that run past the bar line show an arrow; tails from the bar before are faded */
+/* notes that carry locks are hatched in pink (like an empty bar's hatching); notes that run past the bar line show an
+   arrow; tails from the bars before are faded, and their end can be dragged */
 .crop.ls,body[data-skin="farm"] .top.crop.ls{outline:2px dashed var(--sel);outline-offset:2px;border-radius:3px;background-color:color-mix(in srgb,var(--sel) 22%,transparent)!important}
-.crop.lk{outline:2px solid var(--lock);outline-offset:1px;border-radius:3px}
-.crop.lk:not(.top){outline-width:1px;outline-offset:0}
+.crop .lkx{position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:3;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--lock) 85%,transparent) 0 2.5px,transparent 2.5px 6px);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--lock) 70%,transparent)}
+.crop:not(.top) .lkx{background:repeating-linear-gradient(135deg,var(--lock) 0 1.5px,transparent 1.5px 4px);box-shadow:none}
 .crop .cont{position:absolute;right:16%;top:50%;width:10px;height:13px;margin-top:-6.5px;z-index:5;pointer-events:none}.crop .cont svg{display:block;width:100%;height:100%}
-.crop.tail{opacity:.4;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
+.crop.tail{opacity:.45;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
 /* a drum crop is drawn whole inside its step */
 body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!important;background-position:center center,left center!important}
 
 .eng-fail{position:fixed;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;padding:12px 14px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--card);color:var(--ink);font-weight:700}
 
 .bagbox{width:min(480px,100%)}
+/* the backpack is always to hand: a brown pixel pack in the top bar, bigger than the icon buttons and not boxed in */
+.bagb{width:42px;height:42px;padding:0;border:0;background:none;box-shadow:none;flex:0 0 42px;display:grid;place-items:center;cursor:pointer;filter:drop-shadow(0 2px 0 rgba(58,45,39,.35));transition:transform .15s}
+.bagb svg{width:38px;height:auto;display:block;image-rendering:pixelated}
+.bagb:hover{transform:translateY(-2px) rotate(-4deg)}.bagb:active{transform:translateY(1px) scale(.95)}
+.bagb:focus-visible{outline:2px solid var(--sel);outline-offset:2px;border-radius:8px}
 .bag-sec{display:flex;flex-direction:column;gap:8px}
 .bag-sec h3{margin:0;font:700 13px var(--f-disp);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
 .bag-item{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--well)}
@@ -863,7 +884,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
 <div class="app">
   <header class="top">
     <div class="brand"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><span class="bt">Andrew’s World</span></div>
-    <button class="ib bagb" id="bag" aria-label="Backpack" title="Backpack"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.2V3.4A2.5 2.5 0 0 1 8 1h0a2.5 2.5 0 0 1 2.5 2.4v.8" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="2.4" y="4.2" width="11.2" height="10.3" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 9.2h6M8 9.2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button><button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="ib" id="redo" aria-label="Redo" title="Redo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M9.5 3l3 3-3 3M12 6H5.5a3.5 3.5 0 0 0 0 7H8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="ag dz">
       <div class="dsl" data-a="rsound" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Sound</span><span class="dk"></span></div>
@@ -875,7 +896,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
     <div class="ro" id="swing" tabindex="0" role="slider" aria-label="Swing" data-k="g.sw"><span>SWING</span><b id="swingV">50%</b></div>
     <button class="ro" id="keyR" aria-haspopup="listbox" aria-label="Key" data-k="g.key"><span>KEY</span><b id="keyV">C</b></button>
     <button class="ro wide" id="scaleR" aria-haspopup="listbox" aria-label="Scale" data-k="g.sc"><span>SCALE</span><b id="scaleV">Minor</b></button>
-    <button class="ib" id="gear" aria-label="Preferences" title="Preferences"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.2l1.2.2.4 1.6 1.2.6 1.5-.8 1.6 1.6-.8 1.5.6 1.2 1.6.4.2 1.2-.2 1.2-1.6.4-.6 1.2.8 1.5-1.6 1.6-1.5-.8-1.2.6-.4 1.6-1.2.2-1.2-.2-.4-1.6-1.2-.6-1.5.8-1.6-1.6.8-1.5-.6-1.2-1.6-.4L1.2 8l.2-1.2 1.6-.4.6-1.2-.8-1.5 1.6-1.6 1.5.8 1.2-.6.4-1.6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    <button class="ib" id="gear" aria-label="Preferences" title="Preferences"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.30 8.00L15.10 8.00M11.75 11.75L13.02 13.02M8.00 13.30L8.00 15.10M4.25 11.75L2.98 13.02M2.70 8.00L0.90 8.00M4.25 4.25L2.98 2.98M8.00 2.70L8.00 0.90M11.75 4.25L13.02 2.98" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/></svg></button>
   </header>
 
   <div class="spt" id="spt" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><b>ANDREW’S <span class="w2">WORLD</span></b></div>
@@ -1412,7 +1433,7 @@ if(!Array.isArray(state.sel))state.sel=[0,1,0,null,0];untrip(state);
 state.worlds.forEach(w=>{if(w.name==='Classic'||w.name==='Cockpit')w.name=WORLDS[w.skin].name});
 const sel=state.sel;
 /* the native engine's and the cloud copy's state (their code is further down) */
-const aw={node:null,ready:false,failed:'',queue:[],ctxKey:'',metroKey:'',syncT:0,dirty:true,nextLive:1,wsel:-1};
+const aw={node:null,ready:false,failed:'',queue:[],ctxKey:'',metroKey:'',syncT:0,liveT:0,dirty:true,nextLive:1,wsel:-1,sent:null};
 const cloud={db:null,col:'',ready:false,edited:false,written:new Map(),t:0,busy:false};
 let saveT;function save(){awSync();cloudSave();clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}},400)}
 const hist=[],fut=[];
@@ -1488,6 +1509,7 @@ const VFARM=['Kick','Snare','Clap','Rim','Closed hat','Open hat','Tom','Perc'];
 function sc(s){if(skin!=='farm'||s==null)return s;s=String(s);if(!/[A-Z]{2}/.test(s))return s;let first=true;
   return s.replace(/[A-Za-z][A-Za-z']*/g,w=>{if(KEEP.has(w)&&w.length<=3&&w!=='ADD'){first=false;return w}const out=first?w[0].toUpperCase()+w.slice(1).toLowerCase():w.toLowerCase();first=false;return out})}
 const vName=v=>skin==='farm'?VFARM[v]:VOICES[v];
+const vShort=v=>skin==='farm'?['Kick','Snare','Clap','Rim','C hat','O hat','Tom','Perc'][v]:['KICK','SNR','CLAP','RIM','CH','OH','TOM','PERC'][v];
 const scaleName=s=>skin==='farm'?SCALE_NAME[s]:SCALE_NAME[s].toUpperCase();
 function applySkin(){skin=state.worlds[state.wsel].skin;syncEngs(skin);let inSpace=false;try{inSpace=z<-.4}catch(e){}document.body.dataset.skin=inSpace?'station':skin}
 applySkin();
@@ -1513,24 +1535,28 @@ function fillOf(path,eng){const n=path.length;if(!n)return 'transparent';if(n>=4
 const stage=$('#stage'),A=$('#A'),B=$('#B'),TL=$('#T');
 /* sections flow like words in a paragraph: up to four rows, a bar is a fixed width, a section that does not fit wraps to the next row */
 /* pages: the library shows up to 12 songs at a time; a song shows as many parts as fit in four rows of 16 bars */
-const SPP=12,MAXB=8,ROWB=16;
+const SPP=12,MAXB=8,ROWB=8;
 const songPage=()=>Math.floor(sel[0]/SPP);
 const songsOnPage=()=>{const o=songPage()*SPP;return{off:o,n:Math.max(1,Math.min(SPP,state.songs.length-o))}};
 function secPages(song){const pages=[];let cur=[],rows=1,x=0;song.sections.forEach((c,i)=>{const n=Math.min(ROWB,secLen(c));if(x>0&&x+n>ROWB){rows++;x=0}if(rows>4){pages.push(cur);cur=[];rows=1;x=0}cur.push(i);x+=n});if(cur.length)pages.push(cur);return pages.length?pages:[[]]}
 const secPageOf=(song,ci)=>{const p=secPages(song);const i=p.findIndex(a=>a.includes(ci));return i<0?0:i};
 const curSecIdx=()=>{const s=curSong();return secPages(s)[secPageOf(s,sel[1])]};
+/* every page of parts is drawn at the same scale: four rows of eight bars, a bar always the same width, so turning the
+   page never zooms. Parts keep reading order and wrap to the next row when they don't fit. */
 function sectionRects(song,aspect,idx){
-  idx=idx||secPages(song)[0];const secs=idx.map(i=>song.sections[i]),lens=secs.map(secLen),a=1-2*PAD,g=GAP*.8;let best=null;
-  for(let r=1;r<=4;r++){const h=(a-g*(r-1))/r;let lo=0,hi=a;
-    for(let it=0;it<30;it++){const u=(lo+hi)/2;let rows=1,x=0;for(const n of lens){const w=n*u;if(x>0&&x+w>a+1e-9){rows++;x=0}x+=w+g}if(rows<=r&&lens.every(n=>n*u<=a+1e-9))lo=u;else hi=u}
-    const px=lo*aspect/h,score=Math.abs(Math.log(px/.9));if(!best||score<best.score)best={r,u:lo,h,score}}
-  const out=[];let row=0,x=0;for(const n of lens){const w=n*best.u;if(x>0&&x+w>a+1e-9){row++;x=0}out.push({x:PAD+x,y:PAD+row*(best.h+g),w,h:best.h});x+=w+g}
+  idx=idx||secPages(song)[0];const lens=idx.map(i=>secLen(song.sections[i])),a=1-2*PAD,g=GAP*.8,h=(a-g*3)/4,u=(a-g*(ROWB-1))/ROWB;
+  /* a part n bars long takes the room of n bar slots, gaps included, so any parts adding up to eight bars fill a row */
+  const out=[];let row=0,x=0;for(const n of lens){const w=n*u+(n-1)*g;if(x>0&&x+w>a+1e-9){row++;x=0}out.push({x:PAD+x,y:PAD+row*(h+g),w,h});x+=w+g}
   return out}
 const laneRects=()=>{const a=1-2*PAD,h=(a-GAP*3)/4;return[0,1,2,3].map(i=>({x:PAD,y:PAD+i*(h+GAP),w:a,h}))};
 /* cells (bars) inside a lane rect, in the lane's own 0..1 space; every lane uses the section's length so bars line up */
 function cellRects(n){const a=1-2*PAD,g=n>1?Math.min(GAP,.3/n):0,w=(a-g*(n-1))/n;return Array.from({length:n},(_,i)=>({x:PAD+i*(w+g),y:PAD,w,h:a}))}
-function noteRects(notes,eng,steps){const rows=ROWS[eng],a=1-2*PAD,cw=a/steps,rh=a/rows,ins=rh*.12;
-  return notes.map(nt=>{if(nt.step>=steps)return null;const len=Math.max(1,Math.min(nt.len,steps-nt.step)),p=Math.min(nt.pitch,rows-1);return{x:PAD+nt.step*cw+cw*.06,y:PAD+(rows-1-p)*rh+ins,w:len*cw-cw*.12,h:rh-2*ins}})}
+/* inside a bar the grid leaves a gutter on the left for the row names (kick, snare, C3…), so they never cover a step.
+   Every bar uses the same proportions, so a bar on the track view zooms exactly into the pattern view. */
+let PXL=PAD;
+function setGutter(){PXL=clampi(46/(stage.clientWidth||800),PAD,.14)}
+function noteRects(notes,eng,steps){const rows=ROWS[eng],a=1-2*PAD,cw=(1-PXL-PAD)/steps,rh=a/rows,ins=rh*.12;
+  return notes.map(nt=>{if(nt.step>=steps)return null;const len=Math.max(1,Math.min(nt.len,steps-nt.step)),p=Math.min(nt.pitch,rows-1);return{x:PXL+nt.step*cw+cw*.06,y:PAD+(rows-1-p)*rh+ins,w:len*cw-cw*.12,h:rh-2*ins}})}
 function songRects(n){const a=1-2*PAD,asp=(stage.clientWidth||800)/(stage.clientHeight||500);let best=1,bs=1e9;
   for(let c=1;c<=Math.min(n,5);c++){const rw=Math.ceil(n/c),scr=Math.abs(Math.log((asp/c)/(1/rw)/1.6))+(c*rw-n)*.18;if(scr<bs){bs=scr;best=c}}
   const g=GAP*1.6,cols=best,rows=Math.ceil(n/cols),w=(a-g*(cols-1))/cols,h=(a-g*(rows-1))/rows;
@@ -1643,14 +1669,18 @@ function placeItems(){
     let show=!(zooming&&it.lay==='A'&&it.bi!=null&&it.bi===selI&&it.kind!=='selbox'),tf='';
     if(it.kind==='lab'){tf=`translate(${X+5*s}px,${Y+5*s}px) scale(${s})`;el.style.maxWidth=Math.max(0,Wp/s-10)+'px';if(Wp<30*s)show=false}
     else if(it.kind==='nlab'){const o=skin==='farm'?Hp+3*s:7*s;tf=`translate(${X+o}px,${Y+Hp/2-5*s}px) scale(${s})`;el.style.maxWidth=Math.max(0,(Wp-o)/s-4)+'px';if(Wp-o<18*s||Hp<11*s)show=false}
-    else if(it.kind==='row'){tf=`translate(${X+4*s}px,${Y+Hp/2-8*s}px) scale(${s})`}
+    else if(it.kind==='row'){tf=`translate(${X+3*s}px,${Y+Hp/2-8*s}px) scale(${s})`;el.style.maxWidth=Math.max(0,Wp/s-5)+'px'}
     else if(it.kind==='center'){tf=`translate(${X+Wp/2}px,${Y+Hp/2}px) scale(${s}) translate(-50%,-50%)`}
     else if(it.kind==='badge'){tf=`translate(${X+Wp-30*s}px,${Y+6*s}px) scale(${s})`;if(Wp<64*s)show=false}
     else if(it.kind==='corner'){tf=`translate(${X+Wp-8*s}px,${Y+Hp-28*s}px) scale(${s}) translateX(-100%)`}
     else if(it.kind==='selbox'){tf=`translate(${X}px,${Y}px)`;el.style.width=Wp+'px';el.style.height=Hp+'px';if(zooming&&it.lay==='A')el.style.opacity=String(Math.max(0,1-(z-built)*1.6))}
     else if(it.kind==='tree'){const k=Math.min(T.sx,T.sy)*(it.lay==='A'?1:1),tw=it.html?20:28,th=it.html?34:36;tf=`translate(${X-tw/2*k}px,${Y-th*k}px) scale(${k})`;show=true}
-    else if(it.kind==='crit'){const n=it.html.n,lift=it.html.anim==='sprout'?14:(3+9*it.html.g)+n*7;el.style.width=Math.max(17,Wp/s)+'px';el.style.height='17px';tf=`translate(${X}px,${Y-lift*s}px) scale(${s})`;if(Wp<4)show=false}
-    el.style.visibility=show?'visible':'hidden';el.style.transform=tf;if(it.kind!=='selbox'||!zooming)el.style.opacity=T.op==null?1:T.op;
+    else if(it.kind==='crit'){const n=it.html.n,k=it.html.small?.55:1,lift=(it.html.anim==='sprout'?14:(3+9*it.html.g)+n*7)*k;el.style.width=Math.max(17,Wp/s/k)+'px';el.style.height='17px';tf=`translate(${X}px,${Y-lift*s}px) scale(${s*k})`;if(Wp<4)show=false}
+    /* the name of the thing you are zooming into doesn't vanish: it grows with the ground it's written on and slides up
+       out of view, fading as it goes */
+    let fade=null;if(zooming&&it.lay==='A'&&it.bi!=null&&it.bi===selI&&(it.kind==='lab'||it.kind==='nlab')){const t=z-built,g=Math.min(3.2,Math.sqrt(T.sx*T.sy));
+      const ox=it.kind==='lab'?X+5*g:X+(skin==='farm'?Hp+3:7),oy=it.kind==='lab'?Y+5*g:Y+Hp/2-5*g;tf=`translate(${ox}px,${oy-t*t*(22*g+40)}px) scale(${g})`;fade=1-smooth(.35,.95,t);show=fade>.01}
+    el.style.visibility=show?'visible':'hidden';el.style.transform=tf;if(fade!=null)el.style.opacity=fade;else if(it.kind!=='selbox'||!zooming)el.style.opacity=T.op==null?1:T.op;
   }
 }
 
@@ -1658,20 +1688,21 @@ function placeItems(){
 const hasLocks=nt=>Object.keys(nt.locks||{}).some(k=>k!=='rat.rt');
 function noteProb(slot,eng,nt){const k=slot+'.'+(eng==='drums'?`drums.d${clampi(nt.pitch,0,7)}.pr`:eng+'.pr');return nt.locks[k]}
 const CROP={drums:'Pumpkins',bass:'Beets',chords:'Cabbages',lead:'Corn'};
-function bandStyle(rows,ts=4){const a=1-2*PAD,bw=a*2/ts;return `;background-size:${bw*100}% 100%,100% ${a*200/rows}%;background-position:${PAD/(1-bw)*100}% 0,0 ${PAD/(1-a*2/rows)*100}%`}
+function bandStyle(rows,ts=4){const a=1-2*PAD,bw=(1-PXL-PAD)*2/ts;return `;background-size:${bw*100}% 100%,100% ${a*200/rows}%;background-position:${PXL/(1-bw)*100}% 0,0 ${PAD/(1-a*2/rows)*100}%`}
 function bldIcons(song,slot){return (song.fx&&song.fx[slot]||[]).filter(Boolean).map(t=>`<span class="bld" title="${BLD[t].full}">${BLD_ICON[t]}</span>`).join('')}
 const pct=r=>`left:${r.x*100}%;top:${r.y*100}%;width:${r.w*100}%;height:${r.h*100}%`;
 /* small, unlabelled notes inside a bar cell */
 function miniNotes(bar,slot,mu,ch){if(!bar||!bar.notes.length)return '';const eng=DEF_ENG[slot],steps=barSteps(mu,bar),rs=noteRects(bar.notes,eng,steps);
-  return bar.notes.map((n,i)=>rs[i]?`<div class="b crop e-${eng}${ch?noteLook(ch.concat(n),slot,eng,n):''}${hasLocks(n)?' lk':''}" data-nid="${n.id}" style="${pct(rs[i])};background-color:${engCol(eng)};--n:${n.len}"></div>`:'').join('')}
+  return bar.notes.map((n,i)=>rs[i]?`<div class="b crop e-${eng}${ch?noteLook(ch.concat(n),slot,eng,n):''}${hasLocks(n)?' lk':''}" data-nid="${n.id}" style="${pct(rs[i])};background-color:${engCol(eng)};--n:${n.len}">${hasLocks(n)?'<i class="lkx"></i>':''}</div>`:'').join('')}
 /* one lane: its bars as cells across the section's length (missing bars at the end are left as silence) */
-function laneCells(song,ci,sec,slot,deep,frame,top){const n=secLen(sec),cr=cellRects(n),lane=sec.lanes[slot],mu=musAt([state.master,song,sec]),rows=ROWS[DEF_ENG[slot]];let h='';
+function laneCells(song,ci,sec,slot,deep,frame,top){const seenCrit=new Set(),n=secLen(sec),cr=cellRects(n),lane=sec.lanes[slot],mu=musAt([state.master,song,sec]),rows=ROWS[DEF_ENG[slot]];let h='';
   for(let b=0;b<n;b++){const bar=lane.bars[b],r=cr[b],cp=`${state.songs.indexOf(song)}.${ci}.${b}`;
-    if(!bar){h+=`<div class="b cell gone" style="${pct(r)}"></div>`;continue}
+    if(!bar){h+=`<div class="b cell gone" data-bar="${b}" style="${pct(r)}"></div>`;continue}
     const cur=top&&sel[2]===slot&&sel[4]===b;
     h+=`<div class="b cell furrow l-${DEF_ENG[slot]}${cur?' cur':''}${bar.trip?' trip':''}" data-bar="${b}" data-cp="${cp}" style="${pct(r)};background-color:${barFill(slot,b)}${bandStyle(rows,beatLines(mu))}">${deep?miniNotes(bar,slot,mu,[state.master,song,sec,lane]):''}<div class="ph" data-cp="${cp}" hidden></div></div>`;
     if(deep&&top&&viewL===2&&bar.notes.length&&DEF_ENG[slot]!=='drums'){const fr=sub(frame,r),rs=noteRects(bar.notes,DEF_ENG[slot],barSteps(mu,bar)),ch=[state.master,song,sec,lane];
-      bar.notes.forEach((nt,i)=>{if(rs[i])for(const c of crittersFor(ch.concat(nt),slot,DEF_ENG[slot],nt))item('crit',c,sub(fr,rs[i]),{})})}}
+      /* the track view keeps a little of the life: at most one critter of each kind per track, drawn small */
+      bar.notes.forEach((nt,i)=>{if(rs[i])for(const c of crittersFor(ch.concat(nt),slot,DEF_ENG[slot],nt)){if(seenCrit.has(c.type))continue;seenCrit.add(c.type);c.small=true;item('crit',c,sub(fr,rs[i]),{})}})}}
   return h}
 function sectionBlock(song,ci,sec,r,top,frame,deep){
   const lr=laneRects();let inner='';
@@ -1686,10 +1717,10 @@ function viewHTML(L,lay){
   if(L===0){const{off,n}=songsOnPage(),rs=songRects(n);plantTrees(rs,7+off);return state.songs.slice(off,off+n).map((s,j)=>{const i=off+j,mu=musAt([state.master,s]),fr=rs[j];
     item('lab',`${esc(s.name)}<span class="sub">${mu.bpm} bpm · ${NN[mu.key]} ${scaleName(mu.scale)}</span>`,fr,{bi:i});if(sel[0]===i&&lay==='A')item('selbox','',fr,{bi:i});
     return songBlock(s,i,fr,true,fr)}).join('')}
-  if(L===1){const ix=curSecIdx(),rs=sectionRects(song,fw/fh,ix);plantTrees(rs,31+sel[0]*13+(ix[0]||0));return ix.map((ci,j)=>{const c=song.sections[ci];if(sel[1]===ci&&lay==='A')item('selbox','',rs[j],{bi:ci});return sectionBlock(song,ci,c,rs[j],true,rs[j],2)}).join('')}
+  if(L===1){const ix=curSecIdx(),rs=sectionRects(song,fw/fh,ix);plantTrees(rs,31+sel[0]*13+(ix[0]||0));return ix.map((ci,j)=>{const c=song.sections[ci];item('lab',esc(c.name),rs[j],{bi:ci});if(sel[1]===ci&&lay==='A')item('selbox','',rs[j],{bi:ci});return sectionBlock(song,ci,c,rs[j],true,rs[j],2)}).join('')}
   if(L===2&&ui.l2&&lay==='A')return fxGridHTML();
   if(L===2){const sec=curSec(),lr=laneRects();plantTrees(lr,53+sel[1]*7);return lr.map((r,s)=>{
-      item('lab',sc(ELAB[DEF_ENG[s]])+bldIcons(song,s),r,{bi:s});const ln=sec.lanes[s],nl=Object.keys(ln.locks).length+ln.bars.reduce((a,b)=>a+b.notes.reduce((x,nt)=>x+Object.keys(nt.locks||{}).filter(k=>k!=='rat.rt').length,0),0);if(nl)item('badge',nl,r,{bi:s});if(sel[2]===s&&lay==='A')item('selbox','',sub(r,cellRects(secLen(sec))[sel[4]]||FULL),{bi:s});
+      item('lab',sc(ELAB[DEF_ENG[s]])+bldIcons(song,s),r,{bi:s});if(sel[2]===s&&lay==='A')item('selbox','',sub(r,cellRects(secLen(sec))[sel[4]]||FULL),{bi:s});
       return `<div class="b plot top l-${DEF_ENG[s]}${audible(song,s)?'':' mu'}${sel[2]===s?' sel':''}" data-i="${s}" style="${pct(r)};background-color:${laneFill(s)}"><i class="tx"></i><div class="in">${laneCells(song,sel[1],sec,s,true,r,true)}</div></div>`}).join('')}
   if(L===4)return noteViewHTML(noteChain());
   /* L3: one bar of one track, as a roll that scrolls up and down through three octaves */
@@ -1700,12 +1731,12 @@ function viewHTML(L,lay){
     const ri=Math.round((c.locks['rat.rt']||0)*5);if(ri){cls+=' rat';st+=`;--r:${Math.max(1,Math.ceil(c.len/RATE_ST[ri]-1e-6))}`}if(ui.lsel.has(c.id))cls+=' ls';const pr=noteProb(sel[2],eng,c);if(pr!==undefined&&pr<1)cls+=' pr';
     if(!(skin==='farm'&&eng==='drums'))item('nlab',esc(noteName(mu,eng,c.pitch)),r,{bi:i,roll:true});if(sel[3]===i&&lay==='A')item('selbox','',r,{bi:i,roll:true});
     if(viewL===3)for(const cr of crittersFor(ch.concat(c),sel[2],eng,c))item('crit',cr,r,{roll:true,bi:i});
-    blocks+=`<div class="${cls}" data-nid="${c.id}" data-i="${i}" style="${st}">${eng==='drums'?'':'<span class="hl"></span><span class="hr"></span>'}${c.step+c.len>steps?'<i class="cont" aria-hidden="true"><svg viewBox="0 0 8 10"><path d="M1 1l6 4-6 4z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg></i>':''}</div>`});
+    blocks+=`<div class="${cls}" data-nid="${c.id}" data-i="${i}" style="${st}">${hasLocks(c)?'<i class="lkx"></i>':''}${eng==='drums'?'':'<span class="hl"></span><span class="hr"></span>'}${c.step+c.len>steps?'<i class="cont" aria-hidden="true"><svg viewBox="0 0 8 10"><path d="M1 1l6 4-6 4z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg></i>':''}</div>`});
   const lane3=curLane();for(let pb=sel[4]-1;pb>=0;pb--){const pbar=lane3.bars[pb],off=(sel[4]-pb)*steps;if(!pbar)continue;
     pbar.notes.forEach(c=>{const tail=c.step+c.len-off;if(tail<=0||c.step>=steps)return;const r=noteRects([{step:0,len:Math.min(tail,steps),pitch:c.pitch}],eng,steps)[0];
-      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}" aria-hidden="true" style="${pct(r)};background-color:${engCol(eng)}"></div>`})}
+      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}${hasLocks(c)?' lk':''}" data-tb="${pb}" data-tid="${c.id}" aria-hidden="true" title="Drag to change where this note ends" style="${pct(r)};background-color:${engCol(eng)}">${hasLocks(c)?'<i class="lkx"></i>':''}<span class="hr"></span></div>`})}
   let h=`<div class="roll l-${eng}" style="${rollStyle()}${bandStyle(rows,beatLines(mu))}">${gridHTML(eng,steps,mu,bar)}${blocks}<div class="ph" data-cp="${cp}" hidden></div></div>`;
-  const nsc=scLen(mu);for(let p=0;p<rows;p++)if(eng==='drums'||p%nsc===0)item('row',eng==='drums'?vName(p):noteName(mu,eng,p),{x:0,y:PAD+(rows-1-p)*rh,w:.1,h:rh},{rollY:true});
+  const nsc=scLen(mu);for(let p=0;p<rows;p++)if(eng==='drums'||p%nsc===0)item('row',eng==='drums'?vShort(p):noteName(mu,eng,p),{x:0,y:PAD+(rows-1-p)*rh,w:PXL,h:rh},{rollY:true});
   h+=`<div class="mm"${roll.vis>=.999?' hidden':''}><i style="left:${roll.u0*100}%;width:${roll.vis*100}%"></i></div>`;
   h+=`<div class="mmv"${rollV.vis>=.999?' hidden':''}><i style="top:${rollV.v0*100}%;height:${rollV.vis*100}%"></i></div>`;
   const bi=bldIcons(song,sel[2]);if(bi)item('corner',bi,FULL);
@@ -1727,7 +1758,7 @@ function gridHTML(eng,steps,mu,bar){
   const rows=ROWS[eng];let inner='';const per=bar&&bar.trip?6:4;
   const n=scLen(mu);if(eng!=='drums')for(let p=0;p<rows;p++)if(p%n===0)inner+=`<div class="rowhl" style="top:${(rows-1-p)/rows*100}%;height:${100/rows}%"></div>`;
   const nb=beatLines(mu);for(let b=1;b<nb;b++)inner+=`<i class="beat" style="left:${b/nb*100}%"></i>`;
-  return `<div class="grid${bar&&bar.trip?' trip':''}" style="left:${PAD*100}%;top:${PAD*100}%;width:${(1-2*PAD)*100}%;height:${(1-2*PAD)*100}%;background-size:${100/steps}% ${100/rows}%,${200/mu.ts}% 100%,100% ${200/rows}%">${inner}</div>`;
+  return `<div class="grid${bar&&bar.trip?' trip':''}" style="left:${PXL*100}%;top:${PAD*100}%;width:${(1-PXL-PAD)*100}%;height:${(1-2*PAD)*100}%;background-size:${100/steps}% ${100/rows}%,${200/mu.ts}% 100%,100% ${200/rows}%">${inner}</div>`;
 }
 const rollStyle=()=>`left:${-roll.u0/roll.vis*100}%;width:${100/roll.vis}%;top:${-rollV.v0/rollV.vis*100}%;height:${100/rollV.vis}%`;
 function applyRoll(){const r=A.querySelector('.roll');if(r){r.style.left=(-roll.u0/roll.vis*100)+'%';r.style.width=(100/roll.vis)+'%';r.style.top=(-rollV.v0/rollV.vis*100)+'%';r.style.height=(100/rollV.vis)+'%'}
@@ -1770,6 +1801,7 @@ const ICON={
   del:'<svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5M5.8 6v4M8.2 6v4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   ok:'<svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   worms:'<svg width="17" height="17" viewBox="0 0 17 17" aria-hidden="true"><path d="M1.8 11.5c1.4-3 3.3-3 4.7 0s3.3 3 4.7 0 2-3.6 3.4-4.2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="14.9" cy="6.6" r=".9" fill="#fff"/></svg>',
+  piano:'<svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 1v12M10 1v12M14.5 1v12" stroke="currentColor" stroke-width="1.3"/><path d="M4 1h3v6.5H4zM8.5 1h3v6.5h-3zM13 1h3v6.5h-3z" fill="currentColor"/></svg>',
   lasso:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><ellipse cx="8.5" cy="6.5" rx="6" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.6 2"/><path d="M4.4 9.6c-.8 1.4-.4 3 1.1 3.3 1 .2 1.6-.7 1-1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   pen:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 12l.6-2.8L9.5 2.3a1.4 1.4 0 0 1 2 0l.2.2a1.4 1.4 0 0 1 0 2L4.8 11.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
   exp:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.5v7.5M4 6l3 3 3-3M2 10.5v1.5h10v-1.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -1989,7 +2021,7 @@ function selRect(L){const fw=stage.clientWidth||800,fh=stage.clientHeight||500;
     return{x:(r.x-roll.u0)/roll.vis,y:(r.y-rollV.v0)/rollV.vis,w:r.w/roll.vis,h:r.h/rollV.vis}}
   return null}
 function buildLayers(L){
-  built=L;dirty=false;pend=[];if(L>=2){computeVis();focusRollV()}
+  built=L;dirty=false;pend=[];setGutter();if(L>=2){computeVis();focusRollV()}
   const bgOf=l=>l===-1?SPACE_BG:l===0?worldBg(state.wsel):fillOf(sel.slice(0,l));
   A.innerHTML=viewHTML(L,'A');A.style.background=bgOf(L);A.style.borderRadius='';
   if(L<maxZ()){B.innerHTML=viewHTML(L+1,'B');B.style.background=bgOf(L+1)}else{B.innerHTML='';B.style.background='transparent'}
@@ -2027,7 +2059,10 @@ function setZ(v){
   applyZoom();placeRail();
   const bs=z<-.4?'station':skin;if(document.body.dataset.skin!==bs){document.body.dataset.skin=bs;placeTitle();renderMS();renderChar()}if(z>-.001&&infoW>=0)closeInfo();
   if(z<-.2&&playing)stop();if(z<-.5)startAmb();else stopAmb();
-  const R=Math.round(z);if(R!==shownL){const full=shownL===-1;shownL=R;if(R!==2&&ui.l2){ui.l2=0;dirty=true}if(ui.fx)closeFx(true);if(full)renderPanel();else scrollPanel();renderActs();renderTop();renderChar()}
+  const R=Math.round(z);
+  /* moving to another level ends a recording */
+  if(ui.rec&&R!==ui.recL){ui.rec=false;renderTop();refreshPanel()}
+  if(R!==shownL){const full=shownL===-1;shownL=R;if(R!==2&&ui.l2){ui.l2=0;dirty=true}if(ui.fx)closeFx(true);if(full)renderPanel();else scrollPanel();renderActs();renderTop();renderChar()}
   scrollPanel();placeBarPos();
 }
 let animId=null,zTarget=0;
@@ -2207,8 +2242,11 @@ stage.addEventListener('pointerdown',e=>{
     else if(mv)nd=Object.assign(base,{mode:'MMV',v0:rollV.v0,mmH:mv.getBoundingClientRect().height});
     else{
       const g=A.querySelector('.grid');if(!g)return;const gr=g.getBoundingClientRect(),tr=curTrack(),rows=ROWS[curEng()];
-      const steps=curSteps();Object.assign(base,{cw:gr.width/steps,ch:gr.height/rows,rows,steps,gl:gr.left,gt:gr.top,drums:curEng()==='drums',spill:curLane().bars.length-sel[4]});
-      const nb=e.target.closest('.crop.top'),nn=nb&&tr.notes[+nb.dataset.i];
+      const steps=curSteps();Object.assign(base,{cw:gr.width/steps,ch:gr.height/rows,rows,steps,gl:gr.left,gt:gr.top,drums:curEng()==='drums',spill:secLen(curSec())-sel[4],nbar:tr,off:0,off0:0});
+      const nb=e.target.closest('.crop.top'),nn=nb&&tr.notes[+nb.dataset.i],tl=e.target.closest('.crop.tail');
+      /* the tail of a note from an earlier bar: drag it to move where that note ends */
+      if(tl&&!ui.lasso){const pb=+tl.dataset.tb,pbar=curLane().bars[pb],n=pbar&&pbar.notes.find(x=>x.id===+tl.dataset.tid);
+        if(n){nd=Object.assign(base,{mode:'R',note:n,nbar:pbar,off:sel[4]-pb,off0:sel[4]-pb,spill:secLen(curSec())-pb,s0:{step:n.step,pitch:n.pitch,len:n.len}});try{stage.setPointerCapture(e.pointerId)}catch(_){}return}}
       if(ui.lasso&&!(nn&&ui.lsel.has(nn.id)&&!e.target.closest('.hl,.hr'))){const sr=stage.getBoundingClientRect();nd=Object.assign(base,{mode:'LASSO',sr,add:e.shiftKey,tapNote:nn||null})}
       else if(nn&&ui.lsel.has(nn.id)&&ui.lsel.size>1&&!e.target.closest('.hl,.hr')){const grp=tr.notes.filter(n=>ui.lsel.has(n.id));nd=Object.assign(base,{mode:'G',note:nn,grp,g0:grp.map(n=>({step:n.step,pitch:Math.min(n.pitch,rows-1),len:n.len}))})}
       else if(nn)nd=Object.assign(base,{mode:base.drums?'M':e.target.closest('.hl')?'L':e.target.closest('.hr')?'R':'M',note:nn,s0:{step:nn.step,pitch:Math.min(nn.pitch,rows-1),len:nn.len}})
@@ -2248,10 +2286,16 @@ stage.addEventListener('pointermove',e=>{
       if(ch){dirty=true;setZ(z)}return}
     const ds=Math.round(dx/nd.cw),dp=-Math.round(dy/nd.ch),n=nd.note,s0=nd.s0;let st=n.step,pi=n.pitch,le=n.len;
     if(nd.mode==='M'){st=clampi(s0.step+ds,0,nd.steps-Math.min(s0.len,nd.steps));pi=clampi(s0.pitch+dp,0,nd.rows-1)}
-    else if(nd.mode==='R'){le=clampi(s0.len+ds,1,nd.steps*nd.spill-s0.step)}
+    else if(nd.mode==='R'){
+      /* past the bar's edge the view turns to the next bar (and back), and the note's end stays under your finger */
+      const right=nd.gl+nd.steps*nd.cw,nbi=sel[4]-nd.off;
+      if(e.clientX<=right)nd.armF=true;if(e.clientX>=nd.gl)nd.armB=true;
+      if(e.clientX>right+nd.cw*.3&&nd.armF!==false&&!nd.drums&&nbi+nd.off+1<secLen(curSec())){nd.armF=false;nd.off++;padLane(curLane(),sel[4]+2);sel[4]++;sel[3]=null;uis('tab');dirty=true;setZ(z);renderPager()}
+      else if(e.clientX<nd.gl-nd.cw*.3&&nd.armB!==false&&nd.off>0){nd.armB=false;nd.off--;sel[4]--;sel[3]=null;uis('tab');dirty=true;setZ(z);renderPager()}
+      le=clampi(s0.len+ds+(nd.off-nd.off0)*nd.steps,1,nd.steps*nd.spill-s0.step)}
     else{const ns=clampi(s0.step+ds,0,s0.step+s0.len-1);le=s0.step+s0.len-ns;st=ns}
     const first=!nd.shown;nd.shown=true;
-    if(first||st!==n.step||pi!==n.pitch||le!==n.len){const pc=pi!==n.pitch;n.step=st;n.pitch=pi;if(le!==n.len&&nd.mode!=='M')lastLen[curEng()]=le;n.len=le;sel[3]=curTrack().notes.indexOf(n);dirty=true;setZ(z);if(pc||first){ensureAudio();audition()}}
+    if(first||st!==n.step||pi!==n.pitch||le!==n.len){const pc=pi!==n.pitch;n.step=st;n.pitch=pi;if(le!==n.len&&nd.mode!=='M')lastLen[curEng()]=le;n.len=le;const ix=curTrack().notes.indexOf(n);sel[3]=ix>=0?ix:null;dirty=true;setZ(z);if((pc||first)&&ix>=0){ensureAudio();audition()}}
     return;
   }
   if(tap&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)>10)tap=null;
@@ -2279,7 +2323,7 @@ function ptrEnd(e){
     if(!d.moved||!d.box){if(d.tapNote){ui.lsel.has(d.tapNote.id)?ui.lsel.delete(d.tapNote.id):ui.lsel.add(d.tapNote.id)}else ui.lsel.clear()}
     else{if(!d.add)ui.lsel.clear();A.querySelectorAll('.crop.top').forEach(el=>{const r=el.getBoundingClientRect();if(r.right>d.box.l&&r.left<d.box.r&&r.bottom>d.box.t&&r.top<d.box.b){const n=curTrack().notes[+el.dataset.i];if(n)ui.lsel.add(n.id)}})}
     const tr=curTrack(),f=tr.notes.findIndex(n=>ui.lsel.has(n.id));if(f>=0)sel[3]=f;changed();return}
-  if(nd&&e.pointerId===nd.id){const d=nd;nd=null;if(d.moved){if(d.mode==='P'){changed();tap=null;return}if(d.note){const tr=curTrack();sortN(tr.notes);sel[3]=tr.notes.indexOf(d.note);changed()}tap=null;return}}
+  if(nd&&e.pointerId===nd.id){const d=nd;nd=null;if(d.moved){if(d.mode==='P'){changed();tap=null;return}if(d.note){sortN((d.nbar||curTrack()).notes);const i=curTrack().notes.indexOf(d.note);sel[3]=i>=0?i:null;changed()}tap=null;return}}
   if(tap&&e.type==='pointerup')handleTap(tap.target,e);tap=null;
 }
 stage.addEventListener('pointerup',ptrEnd);stage.addEventListener('pointercancel',ptrEnd);
@@ -2302,7 +2346,7 @@ function handleTap(target,e){
   }
   if(L===2&&ui.l2){const sl=target.closest&&target.closest('[data-fx]');if(sl){const[s,i]=sl.dataset.fx.split('.').map(Number);sel[2]=s;openFx(s,i,sl)}return}
   if(!top)return;const i=+top.dataset.i;
-  if(L===2){const cell=target.closest('.cell[data-bar]'),b=cell?+cell.dataset.bar:sel[4];
+  if(L===2){const cell=target.closest('.cell[data-bar]'),b=cell?+cell.dataset.bar:sel[4];padLane(curSec().lanes[i],b+1);
     if(sel[2]===i&&b===sel[4]){zoomTo(3);return}ui.lsel.clear();sel[2]=i;sel[4]=b;sel[3]=null;ui.pg[2]={inst:'s'+i,g:ui.sub['s'+i]};uis('tab');changed();
     if(playing){cue={s:sel[0],c:sel[1],p:b};awPost({t:'cue',song:cue.s,part:cue.c,bar:cue.p});updatePlayVisuals()}return}
   if(sel[L]===i){zoomTo(L+1);return}
@@ -2313,7 +2357,7 @@ function selectWorld(i){if(typeof lore!=='undefined'&&!lore.worlds.includes(i)){
 function figSet(d,e){
   const nt=curNote();if(!nt)return;
   {if(d.kx)nt.locks[d.kx]=snapV(d.kx,d.sx+(e.clientX-d.x0)/d.w);if(d.ky)nt.locks[d.ky]=snapV(d.ky,d.sy-(e.clientY-d.y0)/d.h)}
-  dirty=true;setZ(z);refreshPanel();
+  dirty=true;setZ(z);refreshPanel();awLive();
 }
 /* a tap plants a sixteenth; drag to make it longer */
 const lastLen={};
@@ -2360,10 +2404,10 @@ function actState(){
 }
 function renderActs(){const st=actState();for(const a in st){const b=AB(a);const on=st[a][0];if(b.classList.contains('dsl')){b.classList.toggle('dis',!on);b.setAttribute('aria-disabled',!on);b.querySelector('.dl').textContent=sc(b._lab||b.querySelector('.dl').textContent)}else b.disabled=!on;b.title=st[a][1]||'Not available here';b.setAttribute('aria-label',st[a][1]||a)}
   AB('worms').hidden=!(skin==='solucan'&&(Lnow()===2||Lnow()===3));
-  const lb=AB('lasso');if(Lnow()!==3)ui.lasso=false;lb.classList.toggle('on',ui.lasso);lb.setAttribute('aria-pressed',ui.lasso);renderPager()}
+  const lb=AB('lasso');if(Lnow()!==3){ui.lasso=false;ui.lsel.clear()}lb.classList.toggle('on',ui.lasso);lb.setAttribute('aria-pressed',ui.lasso);renderPager()}
 acts.addEventListener('click',e=>{
   const b=e.target.closest('button[data-a]');if(!b||b.disabled||Lnow()<0)return;const act=b.dataset.a;
-  if(act==='lasso'){ui.lasso=!ui.lasso;uis('tab');renderActs();return}
+  if(act==='lasso'){ui.lasso=!ui.lasso;if(!ui.lasso&&ui.lsel.size){ui.lsel.clear();changed()}uis('tab');renderActs();return}
   if(act==='worms'){runWorms();return}
   runAct(act);
 });
@@ -2426,18 +2470,27 @@ const NORAND_K=new Set(['drums.d0.tu']);
 const soundKeys=(slots,voice)=>{const out=[];for(const s of slots){const eng=DEF_ENG[s];for(const g of PG[eng]){if(voice!=null&&g.g!=='d'+voice&&g.g!=='kit')continue;for(const k of g.keys)if(!NORAND.has(P[k].role)&&!NORAND_K.has(k))out.push(s+'.'+k)}}return out};
 /* reworks a bar around the notes already in it: some go, some move to another pitch at the same moment, some keep their
    pitch and move to another step, and a few new ones join from a fresh roll. A bigger roll changes more. */
-function mutateNotes(old,nw,a,eng,steps,r){const rows=ROWS[eng],drums=eng==='drums',out=[],taken=new Set(),key=(st,p)=>drums?st+'.'+p:''+st+'.'+p;
-  const free=(st,p,len)=>!out.some(o=>o.pitch===p&&st<o.step+(drums?1:o.len)&&o.step<st+(drums?1:len));
+/* reworks a bar around the notes already in it: some go, some move to another pitch at the same moment, some keep their
+   pitch and move to another step, and a few new ones join from a fresh roll. A bigger roll changes more. The fuller the
+   bar, the more go and the fewer join, so rolling again and again keeps the bar breathing instead of filling it up. */
+function mutateNotes(old,nw,a,eng,steps,r){const rows=ROWS[eng],drums=eng==='drums',out=[];
+  const free=(st,p,len)=>!out.some(o=>(drums?o.pitch===p:true)&&st<o.step+(drums?1:o.len)&&o.step<st+(drums?1:len));
+  const fill=clamp01(old.length/(drums?steps*1.5:steps*.5)),pDel=a*(.15+.45*fill*fill);
   for(const n of old){const roll=r();
-    if(roll<.22*a)continue;
-    const c=Object.assign({},n,{locks:Object.assign({},n.locks),ramp:Object.assign({},n.ramp||{})});
-    if(roll<.48*a){for(let t=0;t<12;t++){const p=drums?Math.floor(r()*8):clampi(n.pitch+(r()<.5?-1:1)*(1+Math.floor(r()*4)),0,rows-1);if(p!==n.pitch&&free(n.step,p,c.len)){c.pitch=p;break}}}
-    else if(roll<.74*a){const reach=Math.max(1,Math.round(1+a*steps/4));for(let t=0;t<12;t++){const st=clampi(n.step+(r()<.5?-1:1)*(1+Math.floor(r()*reach)),0,steps-1);if(st!==n.step&&free(st,c.pitch,c.len)){c.step=st;break}}}
-    if(free(c.step,c.pitch,c.len))out.push(c)}
-  const want=Math.round(a*(old.length*.4+r()*3));let added=0;
-  for(const n of nw.slice().sort(()=>r()-.5)){if(added>=want)break;if(n.step>=steps||!free(n.step,n.pitch,n.len))continue;out.push(n);added++}
+    if(roll<pDel)continue;
+    const c=Object.assign({},n,{locks:Object.assign({},n.locks),ramp:Object.assign({},n.ramp||{})}),q=(roll-pDel)/(1-pDel);
+    if(q<.3*a){for(let t=0;t<12;t++){const p=drums?Math.floor(r()*8):clampi(n.pitch+(r()<.5?-1:1)*(1+Math.floor(r()*4)),0,rows-1);if(p!==n.pitch){c.pitch=p;break}}}
+    else if(q<.6*a){const reach=Math.max(1,Math.round(1+a*steps/4));for(let t=0;t<12;t++){const st=clampi(n.step+(r()<.5?-1:1)*(1+Math.floor(r()*reach)),0,steps-1);if(st!==n.step&&free(st,c.pitch,drums?1:1)){c.step=st;break}}}
+    if(free(c.step,c.pitch,drums?1:1))out.push(c)}
+  const want=Math.max(0,Math.round(a*(old.length*.4+r()*3)*(1.2-fill)));let added=0;
+  for(const n of nw.slice().sort(()=>r()-.5)){if(added>=want)break;if(n.step>=steps||!free(n.step,n.pitch,drums?1:1))continue;out.push(n);added++}
   if(!out.length)out.push(Object.assign({},old[0]));
-  return sortN(out)}
+  return sortN(drums?out:monoLine(out,steps))}
+/* one note at a time: notes that start together keep the first, and each note ends where the next begins */
+function monoLine(notes,steps){const a=sortN(notes.slice()),out=[];for(const n of a){if(out.length&&out[out.length-1].step===n.step)continue;out.push(n)}
+  out.forEach((n,i)=>{const nx=out[i+1],end=nx?nx.step:steps*8;n.len=Math.max(1,Math.min(n.len,end-n.step))});return out}
+/* chords mostly come as short stabs; only now and then does one ring for a long time */
+function shortChords(notes,r){for(const n of notes)if(n.len>4&&r()<.85)n.len=[1,2,2,3,4][Math.floor(r()*5)];return notes}
 function blendNotes(old,nw,a,eng,r){
   if(a>=.97)return nw;const keep=old.filter(()=>r()>a),add=nw.filter(()=>r()<a),seen=new Set(),out=[];
   for(const n of add.concat(keep)){const k=eng==='drums'?n.step+'.'+n.pitch:''+n.step;if(seen.has(k))continue;seen.add(k);out.push(n)}
@@ -2482,7 +2535,8 @@ function runAct(act,amt=1){
     const fill=(s,b,steps)=>{const eng=DEF_ENG[s],root=OCT_OFF[eng]+song.prog[b%song.prog.length];if(eng==='drums')return[mkNote(0,0,1),mkNote(Math.floor(steps/2),1,1)];const k=1+Math.floor(r()*3),out=[];for(let i=0;i<k;i++)out.push(mkNote(Math.min(steps-1,Math.floor(i*steps/k)),clampi(root+[0,2,4][i%3],0,ROWS[eng]-1),Math.max(1,Math.floor(steps/k/2))));return out};
     const gen=(s,b)=>{const bar=sec.lanes[s].bars[b];if(!bar)return;const steps=barSteps(mu,bar);let nw=[];for(let tr=0;tr<4&&!nw.length;tr++){nw=genTrack(song,s,DEF_ENG[s],sec.type,song.prog[b%song.prog.length],r,{wild:true});
         if(bar.trip)nw.forEach(n=>{n.step=Math.round(n.step*1.5);n.len=Math.max(1,Math.round(n.len*1.5))});nw=nw.filter(n=>n.step<steps)}
-      if(!nw.length)nw=fill(s,b,steps);bar.notes=bar.notes.length?mutateNotes(bar.notes,nw,amt,DEF_ENG[s],steps,r):nw};
+      if(!nw.length)nw=fill(s,b,steps);const eng=DEF_ENG[s];if(eng==='chords')shortChords(nw,r);if(eng!=='drums')nw=monoLine(nw,steps);
+      bar.notes=bar.notes.length?mutateNotes(bar.notes,nw,amt,eng,steps,r):nw};
     if(L===2){for(let s=0;s<4;s++)sec.lanes[s].bars.forEach((_,b)=>gen(s,b))}else gen(sel[2],sel[4]);
     ui.lsel.clear();sel[3]=null;uis('dice');changed();return}
   if(act==='rlocks'){const eng=curEng(),slot=sel[2],pLock=.2+.8*amt,lane=curLane(),bars=L===2?lane.bars:[curBar()];
@@ -2553,7 +2607,7 @@ $('#tsR').addEventListener('click',e=>{e.stopPropagation();if(!$('#tsR').classLi
 [['#keyR','g.key'],['#scaleR','g.sc']].forEach(([q,k])=>{const b=$(q);b.addEventListener('click',e=>{e.stopPropagation();if(b.classList.contains('off'))return;const p=pdef(k),n=p.st.length;
   openMenu(b,k==='g.sc'?SCALE_ORDER.map(scaleName):p.st,Math.round(scoreState(k).v*(n-1)),i=>{checkpoint();scoreSet(k,i/(n-1));changed();if(k==='g.key')playRoot();else if(k==='g.sc')playRun();else uis('tab')})})});
 $('#metro').onclick=()=>{ensureAudio();prefs.metro=!prefs.metro;savePrefs();uis('tab');renderTop()};
-$('#rec').onclick=()=>{ui.rec=!ui.rec;recChk=false;ensureAudio();renderTop();refreshPanel()};
+$('#rec').onclick=()=>{ui.rec=!ui.rec;ui.recL=Lnow();recChk=false;ensureAudio();renderTop();refreshPanel()};
 $('#undo').onclick=undo;$('#redo').onclick=redo;
 /* reset is global: every world returns to its demo songs. It lives in Preferences and is the one button that asks twice. */
 function resetAll(){stop();checkpoint();const d=demo();state.master=d.master;state.worlds=d.worlds;state.wsel=0;applySkin();fxSig='';sel.splice(0,5,...d.sel);z=0;ui.pg={};ui.l2=0;changed()}
@@ -2607,13 +2661,15 @@ function pageState(){const L=Lnow();if(L<0){const i=curPl();return{n:PLANETS.len
   if(L===0){const np=Math.ceil(state.songs.length/SPP),p=songPage();return{n:np,i:p,lab:np>1?`${p+1}/${np}`:''}}
   if(L===1){const pg=secPages(curSong()),p=secPageOf(curSong(),sel[1]);return{n:pg.length,i:p,lab:pg.length>1?`${p+1}/${pg.length}`:''}}
   if(L===2)return{n:2,i:ui.l2,lab:ui.l2?sc('EFFECTS'):sc('BARS')};
-  if(L===3){const n=curLane().bars.length;return{n,i:sel[4],lab:`${sc('BAR')} ${sel[4]+1}/${n}`}}
+  if(L===3){const n=secLen(curSec());return{n,i:sel[4],lab:`${sc('BAR')} ${sel[4]+1}/${n}`}}
   const n=curBar().notes.length,i=sel[3]??0;return{n,i,lab:n?`${sc('NOTE')} ${i+1}/${n}`:''}}
 const barPos=document.createElement('div');barPos.className='barpos';barPos.setAttribute('aria-hidden','true');stage.appendChild(barPos);
 function renderPager(){const st=pageState();$('#pgL').disabled=!st||st.i<=0;$('#pgR').disabled=!st||st.i>=st.n-1;$('#pgN').textContent=st?st.lab:'';placeBarPos()}
 /* the pattern view shows which bar you are on, out of the part's length */
 function placeBarPos(){const on=z>2.5&&z<3.5&&!!curSong();barPos.hidden=!on;if(!on)return;barPos.style.opacity=clamp01(1-Math.abs(z-3)*2.4).toFixed(2);const pb=playing&&cur&&cur.s===sel[0]&&cur.c===sel[1]&&cur.p!==sel[4]?` · ▶ ${cur.p+1}`:'';barPos.textContent=`${sel[4]+1} / ${secLen(curSec())}`+(ui.loop?' ⟲':'')+pb}
-function pageBar(d){const n=curLane().bars.length,b=clampi(sel[4]+d,0,n-1);if(b===sel[4])return;sel[4]=b;sel[3]=null;ui.lsel.clear();uis('tab');changed()}
+/* a track shorter than its part has silence at the end; paging there gives it empty bars to plant in */
+function padLane(lane,n){while(lane.bars.length<n)lane.bars.push({notes:[]})}
+function pageBar(d){const n=secLen(curSec()),b=clampi(sel[4]+d,0,n-1);if(b===sel[4])return;padLane(curLane(),b+1);sel[4]=b;sel[3]=null;ui.lsel.clear();uis('tab');changed()}
 function pageGo(d){const L=Lnow(),st=pageState();if(!st||!settled())return;const i=st.i+d;if(i<0||i>=st.n)return;ensureAudio();
   if(L<0){switchPlanet(i);return}
   if(L===0){selectAt(0,i*SPP);uis('tab')}
@@ -2640,7 +2696,7 @@ function fxHTML(){const{s,i}=ui.fx,song=curSong(),t=song.fx[s][i],tr=sc(ELAB[DEF
   return x+`<div class="fxv-h"><i class="fxv-ic">${BLD_ICON[t]}</i><div><b>${esc(sc(BLD[t].name))}</b><span>${BLD[t].full} · ${tr} · ${sc('Plot')} ${i+1}</span></div></div>
   <div class="fxv-p">${fxKeys().map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(pdef(k).label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${pdef(k).label}"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span><span class="hfd-s"></span></div>`).join('')}</div>
   <div class="fxv-a">${BLD_ORDER.filter(b=>b!==t).map(b=>`<button class="key" data-build="${b}"><i class="fxv-mi">${BLD_ICON[b]}</i><span>${esc(sc(BLD[b].name))}</span></button>`).join('')}<button class="key" data-demolish>${ICON.del}<span>${sc('Remove')}</span></button></div>`}
-function refreshFx(){if(!ui.fx)return;fxv.querySelectorAll('.hfd').forEach(h=>{const k=h.dataset.k,f=fdState(k,2);h.querySelector('.hfd-f').style.width=(f.v*100)+'%';h.querySelector('.hfd-k').style.left=(f.v*100)+'%';h.querySelector('.hfd-v').textContent=fmt(k,f.v);const[src]=srcText(k,f);const s=h.querySelector('.hfd-s');s.textContent=src;h.classList.toggle('lk',f.here&&f.lk)})}
+function refreshFx(){if(!ui.fx)return;fxv.querySelectorAll('.hfd').forEach(h=>{const k=h.dataset.k,f=fdState(k,2);h.querySelector('.hfd-f').style.width=(f.v*100)+'%';h.querySelector('.hfd-k').style.left=(f.v*100)+'%';h.querySelector('.hfd-v').textContent=fmt(k,f.v);const[src]=srcText(k,f);const s=h.querySelector('.hfd-s');s.textContent=src;h.classList.toggle('lk',f.here)})}
 function openFx(s,i,el){ui.fx={s,i};fxv.innerHTML=fxHTML();refreshFx();fxv.hidden=false;uis('in');
   const sr=stage.getBoundingClientRect(),r=el.getBoundingClientRect(),W=sr.width,Hh=sr.height;
   fxv.style.transition='none';fxv.style.transformOrigin='0 0';fxv.style.opacity='.2';fxv.style.transform=`translate(${r.left-sr.left}px,${r.top-sr.top}px) scale(${r.width/W},${r.height/Hh})`;fxv._from=fxv.style.transform;
@@ -2649,9 +2705,9 @@ function closeFx(instant,then){if(!ui.fx){then&&then();return}ui.fx=null;
   if(instant||RM){fxv.hidden=true;fxv.innerHTML='';then&&then();return}uis('out');
   fxv.style.transform=fxv._from||'scale(.2)';fxv.style.opacity='0';setTimeout(()=>{if(!ui.fx){fxv.hidden=true;fxv.innerHTML=''}dirty=true;setZ(z);then&&then()},300)}
 let fxg=null;
-const fxSet=(g,e)=>{const r=g.el.getBoundingClientRect();setAbs(g.k,clamp01((e.clientX-r.left)/r.width),2);refreshFx()};
+const fxSet=(g,e)=>{const r=g.el.getBoundingClientRect();setAbs(g.k,clamp01((e.clientX-r.left)/r.width),2);refreshFx();awLive()};
 fxv.addEventListener('pointerdown',e=>{const t=e.target.closest('.hfd-t');if(!t)return;e.preventDefault();const k=t.closest('.hfd').dataset.k,now=Date.now();
-  if(lastFdTap.k===k&&now-lastFdTap.t<320){lastFdTap={k:null,t:0};checkpoint();if(lockOn(2))clearLock(k,2);else setAbs(k,pdef(k).d,2);refreshFx();save();return}lastFdTap={k,t:now};
+  if(lastFdTap.k===k&&now-lastFdTap.t<320){lastFdTap={k:null,t:0};checkpoint();if(fdState(k,2).here)clearLock(k,2);else setAbs(k,pdef(k).d,2);refreshFx();save();return}lastFdTap={k,t:now};
   try{fxv.setPointerCapture(e.pointerId)}catch(_){}checkpoint();fxg={id:e.pointerId,el:t,k};fxSet(fxg,e)});
 fxv.addEventListener('pointermove',e=>{if(fxg&&e.pointerId===fxg.id)fxSet(fxg,e)});
 const fxEnd=e=>{if(fxg&&e.pointerId===fxg.id){fxg=null;save();refreshPanel()}};fxv.addEventListener('pointerup',fxEnd);fxv.addEventListener('pointercancel',fxEnd);
@@ -2667,7 +2723,7 @@ panel.innerHTML='<div class="pview" id="pview"><div class="pcol" id="pcol"></div
 const pview=$('#pview'),pcol=$('#pcol');
 const SL=[-1,0,1,2,3,4];
 const ui={loop:false,keys:false,lock:false,allHeld:false,allLatch:false,pg:{},sub:{},slide:{},lasso:false,lsel:new Set(),rec:false,l2:0,fx:null};
-const allActive=()=>ui.allHeld||ui.allLatch;
+const allActive=()=>skin!=='farm'&&(ui.allHeld||ui.allLatch);
 const lockOn=L=>L>=2&&ui.lock;
 const slideOf=el=>{const s=el&&el.closest&&el.closest('.slide');return s?+s.dataset.l:Lnow()};
 function ctxNode(L){if(L<0)return{L,path:[],chain:[state.master],node:state.master};const path=sel.slice(0,L),chain=chainFor(path);return{L,path,chain,node:chain[L]||null}}
@@ -2704,7 +2760,7 @@ const fdHTML=(k,lab)=>{const p=pdef(k),kind=p.role==='pan'||p.knob?' knob':p.st&
     <div class="fd-track" tabindex="0" role="slider" aria-label="${l}" aria-valuemin="0" aria-valuemax="100"><div class="fd-well"><div class="fd-fill"></div><div class="fd-band" hidden></div></div><div class="fd-bug2" hidden></div><div class="fd-knob"></div>${kind===' knob'?'<div class="kn"><i></i></div>':kind===' tog'?`<div class="tg"><span>${sc(p.st[1])}</span><span>${sc(p.st[0])}</span><b></b></div>`:''}</div>
     <div class="fd-val"></div><div class="fd-src"></div><div class="fd-ex"></div></div>`};
 const ddHTML=k=>`<div class="ddc" data-k="${k}"><div class="fd-lab">${sc(pdef(k).label)}<button class="fd-x" aria-label="Clear lock" hidden>×</button></div><button class="dd" data-dd="${k}" aria-haspopup="listbox" aria-expanded="false"><b></b><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><div class="fd-src"></div><div class="fd-ex"></div></div>`;
-function mixPageHTML(){return `<div class="mixs">${[0,1,2,3].map(s=>{const[lk,pk]=mixKeys(s);return `<div class="mx" style="--ec:${engCol(DEF_ENG[s])}"><div class="mx-h"><b>${sc(ELAB[DEF_ENG[s]])}</b></div><div class="mx-f">${fdHTML(lk,'LEVEL')}${fdHTML(pk,'PAN')}</div></div>`}).join('')}</div>`}
+function mixPageHTML(){return `<div class="mixs">${[0,1,2,3].map(s=>{const[lk,pk]=mixKeys(s);return `<div class="mx" style="--ec:${engCol(DEF_ENG[s])}"><div class="mx-h"><b>${sc(ELAB[DEF_ENG[s]])}</b></div><div class="mx-ms"><button class="mod${curSong().mix.m[s]?' on':''}" data-mute="${s}" aria-pressed="${!!curSong().mix.m[s]}" title="Mute">M</button><button class="mod${curSong().mix.s[s]?' on':''}" data-solo="${s}" aria-pressed="${!!curSong().mix.s[s]}" title="Solo">S</button></div><div class="mx-f">${fdHTML(lk,'LEVEL')}${fdHTML(pk,'PAN')}</div></div>`}).join('')}</div>`}
 /* the Prism page: a little screen that draws the wave, over four coloured knobs (blue, green, white, orange) */
 const OPCOL=['#3d7bff','#2fbf6b','#ececec','#ff7a1f'];
 function opPageHTML(pg){const pre=pg.slot+'.prism.';return `<div class="opp" data-pre="${pre}"><div class="opscr"><svg viewBox="0 0 200 70" preserveAspectRatio="none" aria-hidden="true"><path class="opg" d="M0 35H200M50 4V66M100 4V66M150 4V66"/><path class="opw" d=""/></svg><span class="opn"></span></div><div class="opk">${pg.keys.map((k,i)=>`<div class="opc" style="--ec:${OPCOL[i%4]}">${fdHTML(k)}</div>`).join('')}</div></div>`}
@@ -2733,11 +2789,19 @@ function yardPageHTML(s){
     return `<button class="eng-b${t?' on':''}" data-yard="${s}.${i}" style="--c:${t?'#f3e3bf':'transparent'}" title="${t?BLD[t].full+' — tap to change':'Empty plot — tap to build'}">${t?BLD_ICON[t]+sc(BLD[t].name):'+ plot '+(i+1)}</button>`}).join('')}</div></div>`;
 }
 /* the library page: long master sliders, and the selected song's name with rename and export */
-function libHTML(){const song=curSong();return `<div class="lib"><div class="hsl">${engKeys('master').map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(P[k].label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${P[k].label}" aria-valuemin="0" aria-valuemax="100"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span></div>`).join('')}</div>
-  <div class="libb"><div class="lib-n" title="${esc(song.name)}">${esc(song.name)}</div><div class="lib-a"><button class="key" data-rename>${ICON.pen}<span>${sc('Rename')}</span></button><button class="key" data-export>${ICON.exp}<span>${sc('Export')}</span></button></div></div></div>`}
-function startRename(btn){const box=btn.closest('.libb'),n=box.querySelector('.lib-n'),song=curSong();if(!n||n.querySelector('input'))return;
-  n.innerHTML=`<input type="text" maxlength="40" value="${esc(song.name)}" aria-label="Song name">`;const inp=n.querySelector('input');inp.focus();inp.select();let done=false;
-  const fin=ok=>{if(done)return;done=true;const v=inp.value.trim();if(ok&&v&&v!==song.name){checkpoint();song.name=v;uis('tab');changed()}else renderSlide(0)};
+/* the song and part pages: the name with rename (and export) beside it, a line of facts, then the controls */
+const mmss=t=>Math.floor(t/60)+':'+String(Math.round(t%60)).padStart(2,'0');
+function songFacts(song){const mu=musAt([state.master,song]);let bars=0,secs=0;for(const c of song.sections){const m=musAt([state.master,song,c]),n=secLen(c);bars+=n;secs+=n*barTicks(m)/12*60/m.bpm}
+  return `${mu.bpm} bpm · ${NN[mu.key]} ${scaleName(mu.scale)} · ${song.sections.length} part${song.sections.length>1?'s':''} · ${bars} bars · ${mmss(secs)}`}
+function nameHead(name,act,extra,facts){return `<div class="nm-head"><div class="nm-n" title="${esc(name)}">${esc(name)}</div><button class="ib" data-${act} aria-label="Rename" title="Rename">${ICON.pen}</button>${extra}<span class="pn-sp"></span><span class="pn-tag"></span></div><div class="nm-facts">${facts}</div>`}
+function libHTML(){const song=curSong();return nameHead(song.name,'rename',`<button class="ib" data-export aria-label="Export" title="Export the song">${ICON.exp}</button>`,songFacts(song))+
+  `<div class="fwrap"><div class="hsl">${engKeys('master').map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(P[k].label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${P[k].label}" aria-valuemin="0" aria-valuemax="100"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span></div>`).join('')}</div></div>`}
+function partHead(){const song=curSong(),sec=curSec(),mu=musAt([state.master,song,sec]),n=secLen(sec),t=n*barTicks(mu)/12*60/mu.bpm;
+  return nameHead(sec.name,'prename','',`${sc('PART')} ${sel[1]+1} ${sc('of')} ${song.sections.length} · ${n} bar${n>1?'s':''} · ${mmss(t)} · ${mu.bpm} bpm`)}
+/* rename in place: the song on the song page, the part on the part page */
+function startRename(btn){const box=btn.closest('.nm-head'),n=box&&box.querySelector('.nm-n'),part=btn.hasAttribute('data-prename'),obj=part?curSec():curSong();if(!n||n.querySelector('input'))return;
+  n.innerHTML=`<input type="text" maxlength="${part?24:40}" value="${esc(obj.name)}" aria-label="${part?'Part':'Song'} name">`;const inp=n.querySelector('input');inp.focus();inp.select();let done=false;
+  const fin=ok=>{if(done)return;done=true;const v=inp.value.trim();if(ok&&v&&v!==obj.name){checkpoint();obj.name=v;uis('tab');changed()}else renderSlide(part?1:0)};
   inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')fin(true);else if(e.key==='Escape')fin(false)});inp.addEventListener('blur',()=>fin(true))}
 async function exportSong(){const song=curSong(),data=JSON.stringify({app:"Andrew's World",format:8,world:state.worlds[state.wsel].name,song},null,1),fn=(song.name.replace(/[^\w\- ]+/g,'').trim()||'song')+'.json';
   try{if(typeof claude!=='undefined'&&claude.use){const dl=await claude.use('downloads');if(dl){await dl.save({filename:fn,data});flash(sc('Exported'));return}}}catch(e){if(e&&(e.code==='declined'))return}
@@ -2751,7 +2815,9 @@ function slideHTML(L){
   if(L<0)return worldInfoHTML();
   const pages=curPages(L),pi=pageIndex(pages,L),pg=pages[pi];ui.pg[L]={inst:pg.inst,g:pg.g};if(pg.slot!=null||pg.inst==='mix')ui.sub[pg.inst]=pg.g;
   if(pg.custom==='empty')return `<div class="pempty">${sc('Tap a note in the pattern to look at it up close.')}</div>`;
-  if(L===0)return `<div class="pn-head"><span class="pn-title">${sc('MASTER')}</span><span class="pn-sp"></span><span class="pn-tag"></span></div><div class="fwrap">${libHTML()}</div>`;
+  if(L===0)return libHTML();
+  if(L===1){const C1=pg.custom;return partHead()+`<div class="pn-nav"><div class="gchips">${pages.map(p=>`<button class="gchip${p.g===pg.g?' on':''}" data-g="${p.g}">${sc(p.label)}</button>`).join('')}</div></div>
+    <div class="fwrap">${C1==='mix'?mixPageHTML():`<div class="faders" style="--ec:#9fb7ff;--n:${Math.max(pg.keys.length,5)}">${pg.keys.map(k=>fdHTML(k)).join('')}</div>`}</div>`}
   const tabs=[];pages.forEach(p=>{if(!tabs.find(t=>t.inst===p.inst))tabs.push(p)});
   const itabs=tabs.map(p=>`<button class="itab${p.inst===pg.inst?' on':''}" data-inst="${p.inst}" style="--c:${p.eng?engCol(p.eng):ECOL[p.inst]}">${sc(tabLabel(p))}</button>`).join('');
   const mine=pages.filter(p=>p.inst===pg.inst);
@@ -2761,9 +2827,9 @@ function slideHTML(L){
     :`<div class="faders${an}" style="--ec:${pg.eng?engCol(pg.eng):'#9fb7ff'};--n:${Math.max(pg.keys.length,5)}">${pg.keys.map(k=>fdHTML(k)).join('')}</div>`;
   ui.slide[L]=0;
   const lk=!dis&&ui.lock;
-  return `<div class="pn-head"><button class="mod lockb${lk?' on':''}" data-lock${dis?' disabled':''} aria-pressed="${lk}" title="${dis?'Lock works on tracks, patterns and notes':lk?'Lock is on: changes stay on this '+LEVELS[L].toLowerCase():'Lock is off: changes go to the song’s sound'}">${lk?ICON.lock:ICON.unlock}<span>${sc('Lock')}</span></button><button class="mod" data-clear title="Remove every lock on this level">${sc('Clear locks')}</button>
-    <button class="mod allb" data-all title="Hold to move related parameters together. Double-tap to latch.">${sc('All')}</button>
-    <button class="mod keysb${ui.keys&&L>=2?' on':''}" data-keys${L>=2?'':' disabled'} aria-pressed="${ui.keys&&L>=2}" title="Play notes on the screen">${sc('Keys')}</button>${L===3?`<button class="mod tripb${ui.loop?' on':''}" data-loop aria-pressed="${ui.loop}" title="Loop just this bar while you work on it">${sc('Loop')}</button>`:''}
+  return `<div class="pn-head"><button class="mod lockb${lk?' on':''}" data-lock${dis?' disabled':''} aria-pressed="${lk}" title="${dis?'Lock works on tracks, patterns and notes':lk?'Lock is on: changes stay on this '+LEVELS[L].toLowerCase():'Lock is off: changes go where the sound comes from, the song or a lock that is already set'}">${lk?ICON.lock:ICON.unlock}<span>${sc('Lock')}</span></button><button class="mod" data-clear title="Remove every lock on this level">${sc('Clear locks')}</button>
+    ${skin==='farm'?'':`<button class="mod allb" data-all title="Hold to move related parameters together. Double-tap to latch.">${sc('All')}</button>`}
+    <button class="mod keysb${ui.keys&&L>=2?' on':''}" data-keys${L>=2?'':' disabled'} aria-pressed="${ui.keys&&L>=2}" aria-label="Keys" title="Play notes on the screen">${ICON.piano}</button>${L===3?`<button class="mod tripb${ui.loop?' on':''}" data-loop aria-pressed="${ui.loop}" title="Loop just this bar while you work on it">${sc('Loop')}</button>`:''}
     <span class="pn-sp"></span><span class="pn-tag"></span></div>
   ${L===1?'':`<div class="pn-nav"><div class="itabs">${itabs}</div><div class="gchips${mine.length<2?' solo':''}">${chips}</div></div>`}
   <div class="fwrap">${body}</div>`;
@@ -2776,30 +2842,36 @@ function fixChips(gc){const on=gc.querySelector('.on');if(on&&gc.scrollWidth>gc.
 function scrollPanel(){const H=pview.clientHeight;if(!H)return;if(H!==pvH){pvH=H;pcol.style.setProperty('--sh',H+'px')}pcol.style.transform=`translate3d(0,${(-(Math.max(-1,z)+1)*H).toFixed(1)}px,0)`;
   const R=Math.round(z);if(R!==lastSlideL){lastSlideL=R;pcol.querySelectorAll('.slide').forEach(s=>{const on=+s.dataset.l===R;s.inert=!on;s.setAttribute('aria-hidden',String(!on))})}}
 new ResizeObserver(()=>scrollPanel()).observe(pview);
+/* a fader always shows what you hear at this level, and a drag changes what you hear: with Lock on it pins a value
+   here; with Lock off it changes the value where it comes from (the song, or a lock that already wins here). With notes
+   lassoed in the pattern view, it reads the first one and writes to all of them. */
+const selNotes=()=>Lnow()===3&&ui.lsel.size?curBar().notes.filter(n=>ui.lsel.has(n.id)):[];
+const noteKey=k=>/^\d\./.test(k)&&pdef(k).lv[1]>=4;
 function fdState(k,L){
-  const{chain,node}=ctxNode(L),song=curSong(),isM=k.startsWith('master.'),isR=k.startsWith('rat.'),isG=isM||k.startsWith('space.'),ramp=rampOn(L)&&pdef(k).role!=='prob'&&!isR;
-  const vchain=L<=1?[state.master,song]:chain,lk=lockOn(L)||isR,eff=rv(vchain,k),base=lk||ramp||isG?eff:rv([state.master,song],k);
-  const here=!!node&&(L>=2||isR)&&node.locks&&node.locks[k]!==undefined;
-  let v=base.v,v2=null;if(ramp)v2=node.ramp[k]!==undefined?node.ramp[k]:eff.v;
-  return{L,node,ramp,eff,isM,isR,isG,lk,here,inh:lk&&!here&&!isG&&!isR&&eff.from>=2,over:!lk&&!isG&&!ramp&&L>=2&&eff.from>=2,v,v2,rampSet:ramp&&node.ramp[k]!==undefined,shown:v2!=null?v2:v};
+  let{chain,node}=ctxNode(L);const song=curSong(),isM=k.startsWith('master.'),isR=k.startsWith('rat.'),isG=isM||k.startsWith('space.'),ramp=rampOn(L)&&pdef(k).role!=='prob'&&!isR;
+  const sn=L===3&&noteKey(k)?selNotes():[];if(sn.length){chain=chain.concat(sn[0]);node=sn[0]}
+  const vchain=L<=0||isG?[state.master,song]:chain,lk=lockOn(L)||isR,eff=rv(vchain,k);
+  const here=sn.length?sn.some(n=>n.locks[k]!==undefined):!!node&&(L>=2||isR)&&!isG&&node.locks&&node.locks[k]!==undefined;
+  let v=eff.v,v2=null;if(ramp)v2=node.ramp[k]!==undefined?node.ramp[k]:eff.v;
+  return{L,node,ramp,eff,isM,isR,isG,lk,here,sel:sn.length,inh:!here&&!isG&&!isR&&eff.from>=2,v,v2,rampSet:ramp&&node.ramp[k]!==undefined,shown:v2!=null?v2:v};
 }
 const shownV=(k,L)=>fdState(k,L).shown;
 function srcText(k,f){
   if(f.isM)return['this song',[]];if(f.isR)return[f.here?'locked on note':'default',[]];
-  const ex=[];let src;
+  let src;
   if(f.v2!=null)src='from '+fmt(k,f.v);
-  else if(f.lk&&f.L>=2)src=f.here?'locked here':f.inh?NODE_NAME[f.eff.from]+' lock':'song';
-  else{src='song';if(f.over)ex.push(NODE_NAME[f.eff.from]+' lock wins')}
-  return[src,ex];
+  else if(f.sel)src=f.here?'locked on notes':'for '+f.sel+' notes';
+  else src=f.here?'locked here':f.inh?NODE_NAME[f.eff.from]+' lock':'song';
+  return[src,[]];
 }
 function refreshPanel(only){
   const allOn=allActive();
   pcol.querySelectorAll('.slide').forEach(sl=>{const L=+sl.dataset.l;if(L<0||(only!=null&&L!==only))return;const cx=ctxNode(L),node=cx.node;
     sl.querySelectorAll('.fd').forEach(fd=>{
       const k=fd.dataset.k,f=fdState(k,L),{v,v2}=f;
-      fd.classList.toggle('lk',(f.here&&f.lk)||f.rampSet);fd.classList.toggle('inh',f.inh);fd.classList.toggle('gl',f.over);
+      fd.classList.toggle('lk',f.here||f.rampSet);fd.classList.toggle('inh',f.inh);
       const peers=allOn&&!f.ramp&&L>0?peersOf(k,L).length:0;fd.classList.toggle('peer',peers>0);
-      fd.querySelector('.fd-x').hidden=!((f.here&&f.lk&&(L>=2||f.isR))||f.rampSet);
+      fd.querySelector('.fd-x').hidden=!(f.here||f.rampSet);
       fd.querySelector('.fd-knob').style.top=`calc(7px + (100% - 14px) * ${1-v})`;
       fd.querySelector('.fd-fill').style.height=(v*100)+'%';
       const kn=fd.querySelector('.kn');if(kn)kn.style.setProperty('--a',((v-.5)*270).toFixed(1)+'deg');const tg=fd.querySelector('.tg');if(tg)tg.classList.toggle('on',v>.5);
@@ -2814,14 +2886,15 @@ function refreshPanel(only){
       fd.querySelector('.fd-src').textContent=src;fd.querySelector('.fd-ex').textContent=ex.join(' · ');
     });
     sl.querySelectorAll('.hfd').forEach(h=>{const k=h.dataset.k,f=fdState(k,L);h.querySelector('.hfd-f').style.width=(f.v*100)+'%';h.querySelector('.hfd-k').style.left=(f.v*100)+'%';h.querySelector('.hfd-v').textContent=fmt(k,f.v);const t=h.querySelector('.hfd-t');t.setAttribute('aria-valuenow',Math.round(f.v*100));t.setAttribute('aria-valuetext',fmt(k,f.v))});
-    sl.querySelectorAll('.ddc').forEach(dc=>{const k=dc.dataset.k,f=fdState(k,L);dc.classList.toggle('lk',f.here&&f.lk);dc.classList.toggle('inh',f.inh);
-      dc.querySelector('.dd b').textContent=fmt(k,f.v);dc.querySelector('.fd-x').hidden=!(f.here&&f.lk&&L>=2);
+    sl.querySelectorAll('.ddc').forEach(dc=>{const k=dc.dataset.k,f=fdState(k,L);dc.classList.toggle('lk',f.here);dc.classList.toggle('inh',f.inh);
+      dc.querySelector('.dd b').textContent=fmt(k,f.v);dc.querySelector('.fd-x').hidden=!f.here;
       const[src,ex]=srcText(k,f),below=L>=1&&L<4?countBelow(cx.path,k):0;if(below)ex.push(below+' below');dc.querySelector('.fd-src').textContent=src;dc.querySelector('.fd-ex').textContent=ex.join(' · ')});
     sl.querySelectorAll('.opp').forEach(o=>{const pre=o.dataset.pre,g=k=>fdState(pre+k,L).shown;o.querySelector('.opw').setAttribute('d',wavePath(prismWave(g('sh'),g('fo'))));o.querySelector('.opn').textContent=fmt(pre+'sh',g('sh'))+' · '+sc('FOLD')+' '+Math.round(g('fo')*100)+'%'});
-    sl.querySelectorAll('.hbank i').forEach(b=>{const f=fdState(b.dataset.k,L);b.querySelector('b').style.height=(f.shown*100)+'%';b.classList.toggle('lk',(f.here&&f.lk)||f.rampSet);b.classList.toggle('inh',f.inh)});
-    const ca=sl.querySelector('[data-clear]');if(ca)ca.disabled=!(L>=2&&node&&(Object.keys(node.locks||{}).length||(rampOn(L)&&Object.keys(node.ramp).length)));
+    sl.querySelectorAll('.hbank i').forEach(b=>{const f=fdState(b.dataset.k,L);b.querySelector('b').style.height=(f.shown*100)+'%';b.classList.toggle('lk',f.here||f.rampSet);b.classList.toggle('inh',f.inh)});
+    const ca=sl.querySelector('[data-clear]');if(ca){const sn=L===3?selNotes():[];ca.disabled=sn.length?!sn.some(hasLocks):!(L>=2&&node&&(Object.keys(node.locks||{}).length||(rampOn(L)&&Object.keys(node.ramp).length)));
+      ca.title=sn.length?`Remove the locks on the ${sn.length} selected notes`:'Remove every lock on this level'}
     const ab=sl.querySelector('[data-all]');if(ab){ab.classList.toggle('on',allOn);ab.classList.toggle('latch',ui.allLatch)}
-    const tg=sl.querySelector('.pn-tag');if(tg&&!tg.classList.contains('fl'))tg.textContent=ui.rec&&L>=2?'REC · A–; Q–P · Z/X octave':allOn?sc('ALL'):rampOn(L)?sc('RAMP '+(curNote().rm==='away'?'AWAY':'TOWARDS')):L===3&&ui.lsel.size?ui.lsel.size+' selected':L===0?curSong().name:'';
+    const tg=sl.querySelector('.pn-tag');if(tg&&!tg.classList.contains('fl'))tg.textContent=ui.rec&&L>=2?'REC · A–; Q–P · Z/X octave':allOn?sc('ALL'):rampOn(L)?sc('RAMP '+(curNote().rm==='away'?'AWAY':'TOWARDS')):L===3&&ui.lsel.size?ui.lsel.size+' selected':'';
   });
 }
 function setAll(){refreshPanel()}
@@ -2831,14 +2904,15 @@ function gotoInst(inst,dir,L,all){const pages=curPages(L);let i=pages.findIndex(
 function jumpInst(d,L){const pages=curPages(L),insts=[...new Set(pages.map(p=>p.inst))];if(insts.length<2)return;const ii=(insts.indexOf(pages[pageIndex(pages,L)].inst)+d+insts.length)%insts.length;gotoInst(insts[ii],d,L);uis('tab')}
 /* where a fader drag writes: the song's sound (Lock off), this level (Lock on), each lassoed note, or the note's ramp */
 function dragTargets(k,L,chain,node,solo){
-  const ramp=rampOn(L),keys=[k],song=curSong();
+  const ramp=rampOn(L),keys=[k],song=curSong(),sn=selNotes();
   if(!solo&&allActive()&&!ramp&&L>0)keys.push(...peersOf(k,L));
   const ws=[];
   for(const key of keys){
     if(key.startsWith('rat.')){ws.push([node.locks,key,rv(chain,key).v]);continue}
     if(ramp&&pdef(key).role!=='prob'){ws.push([node.ramp,key,node.ramp[key]!==undefined?node.ramp[key]:rv(chain,key).v]);continue}
-    if(key.startsWith('master.')||key.startsWith('space.')||!lockOn(L)){ws.push([song.locks,key,rv([state.master,song],key).v]);continue}
-    if(L===3&&ui.lsel.size&&pdef(key).lv[1]>=4){const b=curBar();for(const nt of b.notes)if(ui.lsel.has(nt.id))ws.push([nt.locks,key,rv(chain.concat(nt),key).v]);continue}
+    if(key.startsWith('master.')||key.startsWith('space.')||L<=0){ws.push([song.locks,key,rv([state.master,song],key).v]);continue}
+    if(L===3&&sn.length&&noteKey(key)){for(const nt of sn)ws.push([nt.locks,key,rv(chain.concat(nt),key).v]);continue}
+    if(!lockOn(L)){const eff=rv(chain,key);ws.push([eff.from>=2?chain[eff.from].locks:song.locks,key,eff.v]);continue}
     ws.push([node.locks,key,rv(chain,key).v]);
   }
   return ws;
@@ -2852,8 +2926,8 @@ function toDefault(k,L){checkpoint();setAbs(k,pdef(k).d,L);if(k.startsWith('mast
 let gest=null,lastFdTap={k:null,t:0},lastAllDown=0;
 function bankAt(g,e){const r=g.el.getBoundingClientRect(),i=clampi(Math.floor((e.clientX-r.left)/r.width*8),0,7),v=clamp01(1-(e.clientY-r.top-8)/(r.height-26));
   const a=g.last==null?i:g.last,lo=Math.min(a,i),hi=Math.max(a,i);for(let j=lo;j<=hi;j++){const vj=g.last==null||hi===lo?v:g.lv+(v-g.lv)*(j-a)/(i-a);setAbs(g.pre+(j+1),clamp01(vj),g.L)}
-  g.last=i;g.lv=v;refreshPanel(g.L)}
-function hfdAt(g,e){const r=g.el.getBoundingClientRect(),v=clamp01((e.clientX-r.left)/r.width);setAbs(g.k,v,0);refreshPanel(0);applyMaster(curSong())}
+  g.last=i;g.lv=v;refreshPanel(g.L);awLive()}
+function hfdAt(g,e){const r=g.el.getBoundingClientRect(),v=clamp01((e.clientX-r.left)/r.width);setAbs(g.k,v,0);refreshPanel(0);applyMaster(curSong());awLive()}
 panel.addEventListener('pointerdown',e=>{
   if(e.target.closest('button,input,.gchips,.keys'))return;
   const L=slideOf(e.target);if(L!==Lnow()||L<0)return;
@@ -2875,7 +2949,7 @@ panel.addEventListener('pointermove',e=>{
   const dx=e.clientX-gest.x0,dy=e.clientY-gest.y0,L=gest.L;
   if(!gest.axis){if(Math.hypot(dx,dy)<6)return;gest.axis=gest.k&&Math.abs(dy)>=Math.abs(dx)*.8?'v':'h';
     if(gest.axis==='v'){const{chain,node}=ctxNode(L);checkpoint();gest.ws=dragTargets(gest.k,L,chain,node);gest.live=L>=3&&LFO_ROLES.has(pdef(gest.k).role)}}
-  if(gest.axis==='v'){const dlt=-(dy+(dy>0?-6:6))/140;for(const[o,key,s] of gest.ws)o[key]=snapV(key,s+dlt);refreshPanel(L);if(gest.k.startsWith('master.'))applyMaster(curSong());
+  if(gest.axis==='v'){const dlt=-(dy+(dy>0?-6:6))/140;for(const[o,key,s] of gest.ws)o[key]=snapV(key,s+dlt);refreshPanel(L);awLive();if(gest.k.startsWith('master.'))applyMaster(curSong());
     if(gest.live&&!gest.raf)gest.raf=requestAnimationFrame(()=>{if(gest)gest.raf=0;dirty=true;setZ(z)})}
   else{const sl=pcol.querySelector(`.slide[data-l="${L}"]`),f=sl&&sl.querySelector('.faders,.engs,.mixs,.pres');if(f)f.style.transform=`translateX(${Math.max(-60,Math.min(60,dx*.35))}px)`}
 });
@@ -2899,6 +2973,7 @@ const kEnd=e=>{const st=kTouch.get(e.pointerId);if(!st)return;kTouch.delete(e.po
 panel.addEventListener('pointerup',kEnd);panel.addEventListener('pointercancel',kEnd);
 panel.addEventListener('pointerup',gestEnd);panel.addEventListener('pointercancel',gestEnd);
 function clearLock(k,L){const{node}=ctxNode(L);if(!node)return;if(rampOn(L)&&node.ramp[k]!==undefined){checkpoint();delete node.ramp[k];softRefresh();return}
+  const sn=L===3?selNotes():[];if(sn.length){if(!sn.some(n=>n.locks[k]!==undefined))return;checkpoint();sn.forEach(n=>delete n.locks[k]);softRefresh();return}
   if((L>=2||k.startsWith('rat.'))&&node.locks[k]!==undefined){checkpoint();delete node.locks[k];softRefresh()}}
 function softRefresh(){save();dirty=true;setZ(z);refreshPanel()}
 panel.addEventListener('click',e=>{
@@ -2906,7 +2981,8 @@ panel.addEventListener('click',e=>{
   const wr=t.closest('[data-world]');if(wr){const i=+wr.dataset.world;openInfo(i);return}
   const ld=t.closest('[data-land]');if(ld){landOn(+ld.dataset.land);return}
   if(t.closest('[data-wback]')){closeInfo();uis('out');return}
-  if(t.closest('[data-rename]')){startRename(t.closest('[data-rename]'));return}
+  const rn=t.closest('[data-rename],[data-prename]');if(rn){startRename(rn);return}
+  const ms=t.closest('[data-mute],[data-solo]');if(ms){const song=curSong(),m=ms.hasAttribute('data-mute'),i=+(m?ms.dataset.mute:ms.dataset.solo),a=m?song.mix.m:song.mix.s;checkpoint();a[i]=a[i]?0:1;uis('tab');changed();return}
   if(t.closest('[data-export]')){exportSong();return}
   if(t.closest('[data-loop]')){ui.loop=!ui.loop;uis('tab');renderSlide(3);return}
   const kb=t.closest('[data-keys]');if(kb){if(kb.disabled)return;ui.keys=!ui.keys;uis('tab');renderPanel();return}
@@ -2918,7 +2994,8 @@ panel.addEventListener('click',e=>{
   const pb=t.closest('[data-pre]');if(pb){const pages=curPages(L),pg=pages[pageIndex(pages,L)],id=pb.dataset.pre,list=id[0]==='f'?FACTORY[pg.eng]:userPre[pg.eng]||[],p=list[+id.slice(1)];if(p){applyPreset(pg.slot,p.v,L);uis('tab');flash('Loaded '+p.name)}return}
   if(t.closest('[data-presave]')){const pages=curPages(L),pg=pages[pageIndex(pages,L)];saveUserPreset(pg.slot,L);uis('add');return}
   const yd=t.closest('[data-yard]');if(yd){const[s,i]=yd.dataset.yard.split('.').map(Number),song=curSong(),cur=song.fx[s][i],nx=[null,...BLD_ORDER][([null,...BLD_ORDER].indexOf(cur)+1)%(BLD_ORDER.length+1)];checkpoint();song.fx[s][i]=nx;fxSig='';uis('tab');save();renderPanel();dirty=true;setZ(z);return}
-  const ca=t.closest('[data-clear]');if(ca){if(ca.disabled)return;const{node}=ctxNode(L);if(!node)return;checkpoint();if(rampOn(L))node.ramp={};else node.locks={};uis('clear');changed();return}
+  const ca=t.closest('[data-clear]');if(ca){if(ca.disabled)return;const{node}=ctxNode(L);if(!node)return;checkpoint();const sn=L===3?selNotes():[];
+    if(rampOn(L))node.ramp={};else if(sn.length)sn.forEach(n=>{const r=n.locks['rat.rt'];n.locks={};if(r!==undefined)n.locks['rat.rt']=r});else node.locks={};uis('clear');changed();return}
   const it=t.closest('[data-inst]');if(it){const wasK=ui.keys&&L>=2;ui.keys=false;const pages=curPages(L),insts=[...new Set(pages.map(p=>p.inst))],cur=insts.indexOf(pages[pageIndex(pages,L)].inst),idx=insts.indexOf(it.dataset.inst);uis('tab');if(idx===cur&&!wasK)return;gotoInst(it.dataset.inst,idx>cur?1:idx<cur?-1:0,L,wasK);return}
   const gc=t.closest('[data-g]');if(gc){const wasK=ui.keys&&L>=2;ui.keys=false;const pages=curPages(L),cur=pageIndex(pages,L),idx=pages.findIndex(p=>p.inst===ui.pg[L].inst&&p.g===gc.dataset.g);uis('tab');gotoPage(idx,idx>cur?1:idx<cur?-1:0,L,wasK);return}
 });
@@ -3167,15 +3244,23 @@ function awEvent(m){
   if(m.t==='ready'){aw.ready=true;aw.dirty=true;awSyncNow();bagSendAll();awFollow(true);awMetro(true);aw.wsel=state.wsel;
     const q=aw.queue;aw.queue=[];for(const[x,tr] of q)aw.node.port.postMessage(x,tr||[]);return}
   if(m.t==='error'){console.warn('engine:',m.message);return}
+  if(m.t==='resync'){aw.sent=null;awSyncNow();return}
   if(m.t==='events'){
     for(const e of m.ticks){vq.push(e);recLog.push(e);if(cue&&e.tk===0&&e.s===cue.s&&e.c===cue.c&&e.p===cue.p)cue=null}
     if(vq.length>600)vq.splice(0,vq.length-600);if(recLog.length>160)recLog.splice(0,recLog.length-160);
     for(const n of m.notes)hits.push(n)}}
-/* song data: posted 30 ms after the last edit, or at once before anything that must hear it */
+/* song data: posted 30 ms after the last edit, or at once before anything that must hear it. Usually only the song
+   that changed is sent; a new location, a new song order or a change to the master sends the whole location. */
 function awSync(){aw.dirty=true;clearTimeout(aw.syncT);aw.syncT=setTimeout(awSyncNow,30)}
 function awFlush(){if(aw.dirty)awSyncNow()}
-function awSyncNow(){clearTimeout(aw.syncT);if(!aw.ready)return;aw.dirty=false;const enc=new TextEncoder();
-  const location=enc.encode(JSON.stringify(state.worlds[state.wsel])),master=enc.encode(JSON.stringify(state.master));
+/* while a control is dragged the sound follows it: the current song is posted at most every 40 ms */
+function awLive(){if(!aw.ready||aw.liveT)return;aw.liveT=setTimeout(()=>{aw.liveT=0;awSyncNow()},40)}
+function awSyncNow(){clearTimeout(aw.syncT);if(!aw.ready)return;aw.dirty=false;const enc=new TextEncoder(),w=state.worlds[state.wsel];
+  const songs=w.songs.map(so=>JSON.stringify(so)),mtxt=JSON.stringify(state.master),sent=aw.sent;
+  if(sent&&sent.w===state.wsel&&sent.m===mtxt&&sent.songs.length===songs.length&&sent.skin===w.skin){
+    songs.forEach((t,i)=>{if(t===sent.songs[i])return;const song=enc.encode(t);awPost({t:'song',index:i,song},[song.buffer])});
+    sent.songs=songs;return}
+  const location=enc.encode(JSON.stringify(w)),master=enc.encode(mtxt);aw.sent={w:state.wsel,m:mtxt,songs,skin:w.skin};
   awPost({t:'location',location,master},[location.buffer,master.buffer])}
 const awCtx=()=>({level:Math.max(0,Lnow()),song:sel[0],part:sel[1],bar:sel[4],loop:!!ui.loop});
 function awFollow(force){const c=awCtx(),k=JSON.stringify(c);if(!force&&k===aw.ctxKey)return;aw.ctxKey=k;awPost({t:'context',context:c})}
@@ -3219,6 +3304,8 @@ const ROWL=['K','SN','C','R','CH','OH','TM','PC'];
 const GEAR_ICON=pix(['..KKKKKKKK..','.KBBBBBBBBK.','.KBWKBBWKBK.','.KBKKBBKKBK.','.KBBBBBBBBK.','.KBBRRRRBBK.','.KBBBBBBBBK.','.KBBSSSSBBK.','.KBSWWWWSBK.','.KBBSSSSBBK.','.KBBBBBBBBK.','..KKKKKKKK..'],{});
 const GEAR=[{id:'echo-pedal',name:'Echo pedal',from:'demo gear',desc:'Adds an echo to the track you’re on.',building:'well'}];
 const bagEl=$('#bagM');
+const BAG_SPR=['.....KKKK.....','....KK..KK....','...KKKKKKKK...','..KNNNNNNNNK..','.KNNNNNNNNNNK.','.KnnnnnnnnnnK.','.KNNNNNNNNNNK.','.KNNNNYYNNNNK.','.KnnnnYYnnnnK.','.KNNNNNNNNNNK.','KKNKKKKKKKKNKK','KNKNNNNNNNNKNK','KNKNNyNNyNNKNK','KNKnnnnnnnnKNK','.KKNNNNNNNNKK.','..KKKKKKKKKK..'];
+$('#bag').innerHTML=pix(BAG_SPR,{N:'#b5762c',n:'#6e4316',Y:'#f8b800',y:'#e0a85c'});
 async function bagLoad(){if(!cloud.db)return;try{const d=await cloud.db.doc(cloud.col+'/backpack').get();if(!d.exists)return;bag.items=d.data().items||[];
   for(const it of bag.items){try{const r=await fetch('/_blob/'+it.asset);if(!r.ok)continue;const j=await r.json();bag.data.set(it.id,{rate:j.rate,pcm:decodePCM(j.pcm)})}catch(e){}}
   bagSendAll();if(!bagEl.hidden)renderBag()}catch(e){console.warn('backpack unavailable:',e)}}
@@ -3227,7 +3314,7 @@ function encodePCM(f){const i16=new Int16Array(f.length);for(let i=0;i<f.length;
   const b=new Uint8Array(i16.buffer);let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)}
 function decodePCM(b64){const s=atob(b64),b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=s.charCodeAt(i);const i16=new Int16Array(b.buffer),f=new Float32Array(i16.length);for(let i=0;i<i16.length;i++)f[i]=i16[i]/32768;return f}
 function bagSend(id){const d=bag.data.get(id);if(!d||!aw.ready)return;aw.node.port.postMessage({t:'sample',id:new TextEncoder().encode(id),data:d.pcm,rate:d.rate});bag.sent.add(id)}
-function bagSendAll(){for(const id of bag.data.keys())if(!bag.sent.has(id))bagSend(id);if(bag.data.size)awSync()}
+function bagSendAll(){for(const id of bag.data.keys())if(!bag.sent.has(id))bagSend(id);if(bag.data.size){aw.sent=null;awSync()}}
 async function bagAdd(file){if(!ensureAudio())return;bag.busy='Packing '+file.name+'…';renderBag();
   try{const buf=await ac.decodeAudioData(await file.arrayBuffer()),n=Math.min(buf.length,Math.round(buf.sampleRate*10)),pcm=new Float32Array(n);
     for(let c=0;c<buf.numberOfChannels;c++){const d=buf.getChannelData(c);for(let i=0;i<n;i++)pcm[i]+=d[i]/buf.numberOfChannels}
@@ -3362,7 +3449,7 @@ function updatePlayVisuals(force){
       [sk,ck].forEach(k=>stage.querySelectorAll(`[data-k="${k}"]`).forEach(e=>e.classList.add('on')));
       stage.querySelectorAll(`.b[data-cp="${cp}"]`).forEach(e=>e.classList.add('on'));
       phEls=[...stage.querySelectorAll(`.ph[data-cp="${cp}"]`)];phEls.forEach(e=>e.hidden=false)}}
-  if(cp&&phEls.length){const x=(PAD+(cur.tk+1.5)/cur.bt*(1-2*PAD))*100+'%';for(const e of phEls)e.style.left=x}
+  if(cp&&phEls.length){const x=(PXL+(cur.tk+1.5)/cur.bt*(1-PXL-PAD))*100+'%';for(const e of phEls)e.style.left=x}
 }
 /* in the pattern view the page follows the playing bar */
 function followPage(){if(!playing||!cur||Lnow()!==3||!settled()||cur.s!==sel[0]||cur.c!==sel[1]||cur.p===sel[4]||drag||nd)return;if(!curLane().bars[cur.p])return;sel[4]=cur.p;sel[3]=null;dirty=true;setZ(z);renderPager()}
@@ -3473,8 +3560,9 @@ const barEmpty=()=>{const t=curBar();return!!t&&!t.notes.length};
 function charFor(){if(z<-.4)return null;const L=Lnow();if(state.worlds[state.wsel].skin!=='farm')return 'guide';const tc=['taco','magwood','charles','addison'][sel[2]];
   if(L===0)return 'keeper';if(L===2)return tc;if(L===3)return barEmpty()?'patti':tc;return 'guide'}
 function renderChar(){if(chat.open&&(z<-.4||chat.L!==Lnow()))closeChat();const w=chat.open?chat.who:charFor();chBtn.hidden=!w;if(!w)return;
-  if(chBtn.dataset.who!==w){const L=Lnow(),up=chFaceL==null||L>=chFaceL,old=chBtn.querySelector('.chi'),nw=document.createElement('span');nw.className='chi'+(w==='guide'?' gdi':'');nw.innerHTML=PORT[w];
-    if(old&&!RM){old.className+=up?' out-up':' out-dn';nw.className+=up?' in-up':' in-dn';setTimeout(()=>old.remove(),340)}else if(old)old.remove();chBtn.appendChild(nw);chBtn.dataset.who=w}
+  if(chBtn.dataset.who!==w){const L=Lnow(),up=chFaceL==null||L>=chFaceL,olds=[...chBtn.querySelectorAll('.chi:not(.gone)')],nw=document.createElement('span');nw.className='chi'+(w==='guide'?' gdi':'');nw.innerHTML=PORT[w];
+    /* every face still showing leaves, so quick level changes never leave two faces stacked */
+    for(const old of olds){if(RM){old.remove();continue}old.classList.add('gone',up?'out-up':'out-dn');setTimeout(()=>old.remove(),340)}if(olds.length&&!RM)nw.className+=up?' in-up':' in-dn';chBtn.appendChild(nw);chBtn.dataset.who=w}
   chFaceL=Lnow();
   chBtn.classList.toggle('on',chat.open);chBtn.title=chat.open?'Close':w==='guide'?'About this page':'Talk to '+CHARS[w].name;chBtn.setAttribute('aria-label',chBtn.title)}
 chBtn.addEventListener('click',()=>{if(chat.open){closeChat();return}const w=charFor();if(w)openChat(w)});
@@ -3539,7 +3627,7 @@ function startGame(id){const song=curSong(),sec=curSec(),b=sel[4],r=Math.random;
     barOf(0).notes=reid(JSON.parse(JSON.stringify(p.notes)));msg=`I borrowed a beat from “${src.name}” for bar ${b+1}. Now answer it!`}
   else if(id==='onetake'){msg='Recording is on! Keys A to L play the lead. One take, no take-backs!'}
   changed();
-  typeLine(msg).then(()=>{setTimeout(()=>{if(chat.who==='patti')closeChat();if(id==='onetake'){sel[2]=3;sel[3]=null;changed();zoomTo(3);setTimeout(()=>{ui.rec=true;renderTop();refreshPanel();if(!playing)play()},500)}},1200)});
+  typeLine(msg).then(()=>{setTimeout(()=>{if(chat.who==='patti')closeChat();if(id==='onetake'){sel[2]=3;sel[3]=null;changed();zoomTo(3);setTimeout(()=>{ui.rec=true;ui.recL=Lnow();renderTop();refreshPanel();if(!playing)play()},500)}},1200)});
 }
 /* the blitz: Patti waits in the action row with a stopwatch, pipes up now and then, cheers at the end */
 let blitz=null;
@@ -3584,7 +3672,7 @@ const liveUp=code=>liveRelease(code);
 
 /* ================= keyboard ================= */
 document.addEventListener('keydown',ev=>{const e={key:ev.key,code:ev.code,repeat:ev.repeat,shiftKey:ev.shiftKey,metaKey:ev.metaKey,ctrlKey:ev.ctrlKey,altKey:ev.altKey,target:ev.target&&ev.target.closest?ev.target:document.body,preventDefault:()=>ev.preventDefault()};
-  if(e.key==='Shift'&&!ui.allHeld){ui.allHeld=true;setAll()}
+  if(e.key==='Shift'&&!ui.allHeld&&skin!=='farm'){ui.allHeld=true;setAll()}
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return}
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();return}
   if(e.target.closest('input,textarea'))return;

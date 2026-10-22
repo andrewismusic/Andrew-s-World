@@ -25,19 +25,18 @@ struct SynthVoice {
     double phA[kDegrees] = {}, phB[kDegrees] = {}, phSub[kDegrees] = {};
     float fmDepth[kDegrees] = {};
     Wave waveA = Wave::Saw, waveB = Wave::Square;
-    float ratioB = 1, detuneB = 1, gainA = 0, gainB = 0, gainSub = 0, gainNoise = 0;
+    float ratioB = 1, detuneB = 1;
     bool oscs = true;
 
     // additive partials (lead)
     struct Partial {
-        int degree;
+        int degree, harmonic;
         float ratio, detune, amp, target;
         bool decays;
         double phase;
     };
     Partial partials[kDegrees * 8];
     int partialCount = 0;
-    float additiveGain = 0;
     Automation partialDecay;
 
     FilterType filterType = FilterType::Lowpass;
@@ -49,8 +48,19 @@ struct SynthVoice {
     Automation amp;
     Route route;
 
-    // LFOs: pitch (cents), cutoff (cents), amp
+    // LFOs: pitch (cents), cutoff (cents), amp; each keeps its own phase so a rate change doesn't jump
     float lfoPitchHz = 0, lfoPitchCents = 0, lfoCutHz = 0, lfoCutCents = 0, lfoAmpHz = 0, lfoAmp = 0;
+    double lfoPhase[3] = {};
+
+    // following edits while the note sounds: where its parameters came from, what it started with, and gains that
+    // glide to their new values (level and cutoff as multipliers on their envelopes)
+    int32_t noteId = 0;
+    int16_t song = -1, part = -1;
+    const void *from = nullptr; // the song snapshot the parameters were last read from
+    float baseLevel = 0, baseCutoff = 1, levelScale = 1;
+    double rootFreq[kDegrees] = {};
+    enum Smoothed { GainA, GainB, GainSub, GainNoise, Additive, LevelMul, CutMul, kSmoothed };
+    float cur[kSmoothed] = {}, tgt[kSmoothed] = {};
 
     RNG rng;
 
@@ -63,6 +73,9 @@ struct SynthVoice {
         float *lastFreq; // per slot, one per chord degree
     };
     void trigger(const RenderEnv &e, const Setup &s);
+    /// Takes up new parameter values while the note sounds: levels, mix, tone, filter, LFOs, effects and sends.
+    /// Envelope times, pitch and chord shape stay as the note started.
+    void retarget(const float *v, const Music &m, EngineKind engine);
     /// Cuts the note short at t2: a fast 18 ms fade for voice stealing and mono lines, else its own release.
     void release(double t2, bool fast);
     void render(double t0, int frames, const TrackBus &bus);

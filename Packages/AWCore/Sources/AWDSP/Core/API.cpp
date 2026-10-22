@@ -32,6 +32,11 @@ int32_t aw_engine_set_location(aw_engine *e, const char *location_json, const ch
     return e->engine.setLocation(location_json, master_json) ? 0 : -1;
 }
 
+int32_t aw_engine_set_song(aw_engine *e, int32_t index, const char *song_json) {
+    if (!e || !song_json) return -1;
+    return e->engine.setSong(index, song_json) ? 0 : -1;
+}
+
 void aw_engine_play(aw_engine *e, aw_context c) {
     if (e) e->engine.post({aw::Command::Type::Play, toContext(c)});
 }

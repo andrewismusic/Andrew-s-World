@@ -84,6 +84,14 @@ bool Engine::setLocation(const std::string &locationJSON, const std::string &mas
     return true;
 }
 
+bool Engine::setSong(int index, const std::string &songJSON) {
+    collect();
+    std::unique_ptr<LocationSnap> snap = builder_.buildWithSong(index, songJSON);
+    if (!snap) return false;
+    delete pending_.exchange(snap.release());
+    return true;
+}
+
 Module *Engine::moduleFor(int slot) {
     if (!current_) return nullptr;
     int k = kindIndex(current_->engines[slot]);
@@ -163,7 +171,7 @@ void Engine::audition(int32_t noteId) {
         const PartSnap &part = so.parts[nt.part];
         double sd = 60.0 / part.music.bpm / kTicksPerQuarter * (nt.triplet ? 2 : 3);
         const Sample *smp = current_->engines[nt.slot] == EngineKind::Drums ? so.drumSamples[nt.slot][std::clamp((int)nt.pitch, 0, 7)] : nullptr;
-        m->start({now_, nt.len * sd, nt.pitch, &so.params[nt.params], &part.music, smp});
+        m->start({now_, nt.len * sd, nt.pitch, &so.params[nt.params], &part.music, smp, nt.id, (int16_t)s, (int16_t)nt.part});
         return;
     }
 }
@@ -181,7 +189,8 @@ void Engine::startLive(const Command &c) {
     bool drums = current_->engines[slot] == EngineKind::Drums;
     int row = drums ? std::clamp(c.c, 0, 7) : 0;
     const float *params = &so.params[part.laneParams[slot] + row * paramCount(current_->engines[slot])];
-    uint32_t token = m->startHeld({now_, 60, c.c, params, &part.music, drums ? so.drumSamples[slot][row] : nullptr});
+    int partIndex = std::clamp(c.context.part, 0, (int)so.parts.size() - 1);
+    uint32_t token = m->startHeld({now_, 60, c.c, params, &part.music, drums ? so.drumSamples[slot][row] : nullptr, -1, (int16_t)s, (int16_t)partIndex});
     for (auto &l : live_)
         if (l.id < 0) {
             l = {c.a, slot, token};
@@ -195,6 +204,29 @@ void Engine::stopLive(int32_t id) {
             if (Module *m = moduleFor(l.slot)) m->release(l.token, now_);
             l.id = -1;
         }
+}
+
+void Engine::retargetVoices() {
+    // sounding notes take up the edit: each voice finds its note (or, played live, its lane) in the new snapshot
+    for (int slot = 0; slot < 4; ++slot) {
+        EngineKind e = current_->engines[slot];
+        int k = kindIndex(e);
+        if (k < 1) continue;
+        const Module *m = modules_[slot][k].get();
+        for (SynthVoice &v : pool_.voices) {
+            if (!v.active || v.owner != m || !v.noteId || v.song < 0 || v.song >= (int)current_->songs.size()) continue;
+            const SongSnap &so = *current_->songs[v.song];
+            if (v.from == &so) continue;
+            v.from = &so;
+            if (v.noteId > 0) {
+                const NoteEvent *nt = so.noteWithId(v.noteId);
+                if (!nt || nt->slot != slot || nt->part >= so.parts.size()) continue;
+                v.retarget(&so.params[nt->params], so.parts[nt->part].music, e);
+            } else if (v.part >= 0 && v.part < (int)so.parts.size() && so.parts[v.part].laneParams[slot] >= 0) {
+                v.retarget(&so.params[so.parts[v.part].laneParams[slot]], so.parts[v.part].music, e);
+            }
+        }
+    }
 }
 
 void Engine::addClick(double t, int accent) {
@@ -274,7 +306,10 @@ void Engine::advance() {
     }
 }
 
-void Engine::applySpace(const SongSnap &song, const Music &mu, double t) {
+void Engine::applySpace(const SongSnap &song, const Music &mu, double t, bool barStart) {
+    if (!barStart && spaceFrom_ == &song && spaceBpm_ == mu.bpm) return;
+    spaceFrom_ = &song;
+    spaceBpm_ = mu.bpm;
     double beat = 60.0 / mu.bpm;
     const SpaceSettings &sp = song.space;
     int di = std::clamp((int)std::floor(sp.time * 6 + .5f), 0, 6);
@@ -338,7 +373,7 @@ void Engine::playNote(int slot, const PartSnap &part, const NoteEvent &nt, doubl
         count = std::max(1, (int)std::ceil(nt.len / stepLen - 1e-6));
     }
     if (count <= 1) {
-        m->start({t, dur, nt.pitch, base, &part.music, smp});
+        m->start({t, dur, nt.pitch, base, &part.music, smp, nt.id, (int16_t)pos_.s, (int16_t)nt.part});
         return;
     }
     int cnt = std::min(count, 48);
@@ -384,12 +419,13 @@ void Engine::scheduleTick(double t0, double td) {
     const SongSnap &so = *current_->songs[pos_.s];
     const PartSnap &se = so.parts[pos_.c];
     const Music &mu = se.music;
-    if (pos_.tk == 0) {
-        applySpace(so, mu, t0);
+    if (pos_.tk == 0) buildFx(so);
+    // space and master follow edits within the bar, not only from the next one
+    if (pos_.tk % 3 == 0) {
+        applySpace(so, mu, t0, pos_.tk == 0);
         applyMaster(so);
-        buildFx(so);
+        applyFx(so, se, t0);
     }
-    if (pos_.tk % 3 == 0) applyFx(so, se, t0);
     if (metronome_ && pos_.tk % metronomeRate_ == 0) addClick(t0, pos_.tk == 0 ? 2 : pos_.tk % mu.tpb == 0 ? 1 : 0);
     ticks.push({t0, pos_.s, pos_.c, pos_.p, pos_.tk, mu.barTicks()});
     for (int ti = 0; ti < 4; ++ti) {
@@ -454,6 +490,7 @@ void Engine::renderBlock(int n, float *outL, float *outR) {
             int s = std::clamp(ctx_.song, 0, (int)current_->songs.size() - 1);
             applyMaster(*current_->songs[s]);
         }
+        retargetVoices();
     }
     Command c;
     while (commands_.pop(c)) handle(c);

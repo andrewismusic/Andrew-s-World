@@ -35,25 +35,19 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
     env = &e;
     const float *v = s.v;
     const Music &m = *s.music;
-    const double t = s.time, dur = s.duration, sr = e.sampleRate;
+    const double t = s.time, dur = s.duration;
     active = true;
     start = t;
 
-    double beat = 60.0 / m.bpm;
     double at = .001 * std::pow(2000.0, (double)v[sp::at]), dc = .02 * std::pow(200.0, (double)v[sp::dc]);
     float su = v[sp::su];
     double rl = .01 * std::pow(400.0, (double)v[sp::rl]);
     float cf = hz(v[sp::cf]);
-    filterQ = .5f + v[sp::rs] * v[sp::rs] * 18;
     float fe = v[sp::fe] * 6;
     double fd = .01 * std::pow(200.0, (double)v[sp::fd]);
     int oct = (int)std::floor(v[sp::oc] * 4 + .5f) - 2;
-    waveA = waveOf(v[sp::wa]);
-    waveB = waveOf(v[sp::wb]);
-    int tb = (int)std::floor(v[sp::tb] * 36 + .5f) - 12;
-    float det = v[sp::dt] * 50;
     float gl = v[sp::gl] * v[sp::gl] * .5f;
-    float ab = s.engine == EngineKind::Lead ? v[sp::ab] : 0, sb = 1 - ab;
+    float ab = s.engine == EngineKind::Lead ? v[sp::ab] : 0;
 
     int degs[kDegrees];
     degrees = 1;
@@ -64,8 +58,10 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
         for (int i = 0; i < degrees; ++i)
             degs[i] = s.degree + kChordDegrees[ci][i] + (spread >= 1 && i == 1 ? 7 : 0) + (spread == 2 && i == 0 ? -7 : 0);
     }
-    float levelScale = s.engine == EngineKind::Bass ? .55f : s.engine == EngineKind::Lead ? .34f : .34f / std::sqrt((float)degrees);
+    levelScale = s.engine == EngineKind::Bass ? .55f : s.engine == EngineKind::Lead ? .34f : .34f / std::sqrt((float)degrees);
     float level = v[sp::lv] * v[sp::lv] * 1.25f * levelScale;
+    baseLevel = level;
+    baseCutoff = cf;
     end = t + std::max(.012, dur);
     stopAt = end + rl * 5 + .06;
     releaseTime = (float)rl;
@@ -74,12 +70,9 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
         a->reset(0);
         a->setSampleTime(e.dt);
     }
-    filterType = (FilterType)std::clamp((int)std::floor(v[sp::ft] * 2 + .5f), 0, 2);
     filter.clear();
     cutoff.setValueAtTime(std::min(18000.f, cf * std::exp2(fe)), t);
     cutoff.setTargetAtTime(std::min(18000.f, cf), t + .001, fd / 3);
-    drive.set(v[sp::dr]);
-    crush.set(v[sp::cr]);
 
     attack = std::min(at, std::max(.002, dur * .95));
     amp.setValueAtTime(0, t);
@@ -87,35 +80,13 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
     amp.setTargetAtTime(level * su, t + attack, dc / 3);
     amp.setTargetAtTime(0, end, rl / 4);
 
-    // LFOs: rates in beats; depth in cents for pitch and cutoff
-    auto rate = [&](float r) { return (float)(1 / (kLfoBeats[std::clamp((int)std::floor(r * 9 + .5f), 0, 9)] * beat)); };
-    lfoPitchCents = v[sp::lp] > .01f ? v[sp::lp] * v[sp::lp] * 1200 : 0;
-    lfoPitchHz = rate(v[sp::lpr]);
-    lfoCutCents = v[sp::lc] > .01f ? v[sp::lc] * 4 * 1200 : 0;
-    lfoCutHz = rate(v[sp::lcr]);
-    lfoAmp = v[sp::la] > .01f ? v[sp::la] : 0;
-    lfoAmpHz = rate(v[sp::lar]);
-
-    route.set((v[sp::pn] - .5f) * 2, v[sp::dl], v[sp::rv]);
-
-    oscs = sb > .01f;
-    ratioB = std::exp2(tb / 12.f);
-    detuneB = std::exp2(det / 1200);
-    gainA = (1 - v[sp::mx]) * sb;
-    gainB = v[sp::mx] * sb;
-    gainSub = v[sp::sb] > .01f ? v[sp::sb] * .8f * sb : 0;
-    gainNoise = v[sp::nz] > .01f && oscs ? v[sp::nz] * .6f * sb : 0;
-
+    oscs = ab < .99f;
     bool chromatic = m.scaleLength() == 12;
     int base = kBaseMidi[s.engine == EngineKind::Bass ? 0 : s.engine == EngineKind::Chords ? 1 : 2];
     int rootMidi = degMidi(m, base, s.degree, oct);
     partialCount = 0;
-    float amps[8], total = 0;
-    for (int n = 1; n <= 8; ++n) total += amps[n - 1] = v[sp::h1 + n - 1] * oddEven(n, v[sp::oe]);
-    if (total == 0) total = 1;
-    additiveGain = ab > .01f ? ab * 1.1f / std::max(1.f, total * .55f) : 0;
     float stretch = (v[sp::st] - .5f) * .12f;
-    if (additiveGain > 0) {
+    if (ab > .01f) {
         partialDecay.setValueAtTime(1, t);
         partialDecay.setTargetAtTime(0, t + attack, dc / 3);
     }
@@ -129,6 +100,7 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
         } else {
             fr = mtof(degMidi(m, base, dd, oct));
         }
+        rootFreq[d] = fr;
         float prev = s.lastFreq[d] ? s.lastFreq[d] : s.lastFreq[0];
         freq[d].reset(0);
         freq[d].setSampleTime(e.dt);
@@ -139,25 +111,69 @@ void SynthVoice::trigger(const RenderEnv &e, const Setup &s) {
             freq[d].setValueAtTime((float)fr, t);
         }
         phA[d] = phB[d] = phSub[d] = 0;
-        fmDepth[d] = v[sp::fm] > .01f ? v[sp::fm] * v[sp::fm] * (float)fr * 8 : 0;
-        if (additiveGain > 0)
+        if (ab > .01f)
             for (int n = 1; n <= 8; ++n) {
-                float am = amps[n - 1];
+                float am = v[sp::h1 + n - 1] * oddEven(n, v[sp::oe]);
                 if (am < .01f) continue;
                 float ra = std::pow((float)n, 1 + stretch);
                 if (fr * ra > 18000) continue;
                 Partial &p = partials[partialCount++];
                 p.degree = d;
+                p.harmonic = n;
                 p.ratio = ra;
                 p.detune = std::exp2((rng.uniform() - .5f) * v[sp::sh] * 30 / 1200);
-                p.amp = am;
-                p.decays = n > 1 && v[sp::dm] > .01f;
-                p.target = p.decays ? am * (1 - v[sp::dm] * .92f * (n - 1) / 7) : am;
                 p.phase = 0;
             }
         s.lastFreq[d] = (float)fr;
     }
-    (void)sr;
+    for (double &ph : lfoPhase) ph = 0;
+    retarget(v, m, s.engine);
+    for (int i = 0; i < kSmoothed; ++i) cur[i] = tgt[i];
+}
+
+void SynthVoice::retarget(const float *v, const Music &m, EngineKind engine) {
+    double beat = 60.0 / m.bpm;
+    float ab = engine == EngineKind::Lead ? v[sp::ab] : 0, sb = 1 - ab;
+    filterType = (FilterType)std::clamp((int)std::floor(v[sp::ft] * 2 + .5f), 0, 2);
+    filterQ = .5f + v[sp::rs] * v[sp::rs] * 18;
+    drive.set(v[sp::dr]);
+    crush.set(v[sp::cr]);
+    route.set((v[sp::pn] - .5f) * 2, v[sp::dl], v[sp::rv]);
+
+    // LFOs: rates in beats; depth in cents for pitch and cutoff
+    auto rate = [&](float r) { return (float)(1 / (kLfoBeats[std::clamp((int)std::floor(r * 9 + .5f), 0, 9)] * beat)); };
+    lfoPitchCents = v[sp::lp] > .01f ? v[sp::lp] * v[sp::lp] * 1200 : 0;
+    lfoPitchHz = rate(v[sp::lpr]);
+    lfoCutCents = v[sp::lc] > .01f ? v[sp::lc] * 4 * 1200 : 0;
+    lfoCutHz = rate(v[sp::lcr]);
+    lfoAmp = v[sp::la] > .01f ? v[sp::la] : 0;
+    lfoAmpHz = rate(v[sp::lar]);
+
+    waveA = waveOf(v[sp::wa]);
+    waveB = waveOf(v[sp::wb]);
+    ratioB = std::exp2(((int)std::floor(v[sp::tb] * 36 + .5f) - 12) / 12.f);
+    detuneB = std::exp2(v[sp::dt] * 50 / 1200);
+    for (int d = 0; d < degrees; ++d) fmDepth[d] = v[sp::fm] > .01f ? v[sp::fm] * v[sp::fm] * (float)rootFreq[d] * 8 : 0;
+    tgt[GainA] = (1 - v[sp::mx]) * sb;
+    tgt[GainB] = v[sp::mx] * sb;
+    tgt[GainSub] = v[sp::sb] > .01f ? v[sp::sb] * .8f * sb : 0;
+    tgt[GainNoise] = v[sp::nz] > .01f && oscs ? v[sp::nz] * .6f * sb : 0;
+
+    float amps[8], total = 0;
+    for (int n = 1; n <= 8; ++n) total += amps[n - 1] = v[sp::h1 + n - 1] * oddEven(n, v[sp::oe]);
+    if (total == 0) total = 1;
+    tgt[Additive] = ab > .01f ? ab * 1.1f / std::max(1.f, total * .55f) : 0;
+    for (int k = 0; k < partialCount; ++k) {
+        Partial &p = partials[k];
+        float am = amps[p.harmonic - 1];
+        p.amp = am;
+        p.decays = p.harmonic > 1 && v[sp::dm] > .01f;
+        p.target = p.decays ? am * (1 - v[sp::dm] * .92f * (p.harmonic - 1) / 7) : am;
+    }
+
+    float level = v[sp::lv] * v[sp::lv] * 1.25f * levelScale;
+    tgt[LevelMul] = baseLevel > 1e-6f ? level / baseLevel : (level > 0 ? 1.f : 0.f);
+    tgt[CutMul] = hz(v[sp::cf]) / baseCutoff;
 }
 
 void SynthVoice::release(double t2, bool fast) {
@@ -182,11 +198,18 @@ void SynthVoice::render(double t0, int frames, const TrackBus &bus) {
         }
         double age = t - start;
         float cutCents = 0;
-        if ((i & 15) == 0 || age < dt * 1.5) {
-            pitchF = lfoPitchCents ? std::exp2((float)std::sin(kTwoPi * lfoPitchHz * age) * lfoPitchCents / 1200) : 1.f;
-            if (lfoCutCents) cutCents = (float)std::sin(kTwoPi * lfoCutHz * age) * lfoCutCents;
-            ampLfo = lfoAmp ? (1 - lfoAmp * .5f) + (float)std::sin(kTwoPi * lfoAmpHz * age) * lfoAmp * .5f : 1.f;
+        bool control = (i & 15) == 0 || age < dt * 1.5;
+        if (control) {
+            // edits glide in over a few milliseconds
+            for (int k = 0; k < kSmoothed; ++k) cur[k] += (tgt[k] - cur[k]) * .25f;
+            pitchF = lfoPitchCents ? std::exp2((float)std::sin(kTwoPi * lfoPhase[0]) * lfoPitchCents / 1200) : 1.f;
+            if (lfoCutCents) cutCents = (float)std::sin(kTwoPi * lfoPhase[1]) * lfoCutCents;
+            ampLfo = lfoAmp ? (1 - lfoAmp * .5f) + (float)std::sin(kTwoPi * lfoPhase[2]) * lfoAmp * .5f : 1.f;
         }
+        lfoPhase[0] += lfoPitchHz * dt;
+        lfoPhase[1] += lfoCutHz * dt;
+        lfoPhase[2] += lfoAmpHz * dt;
+        const float gainA = cur[GainA], gainB = cur[GainB], gainSub = cur[GainSub], gainNoise = cur[GainNoise], additiveGain = cur[Additive];
         float sum = 0;
         float decay = additiveGain > 0 ? partialDecay.step(t, dt) : 0;
         for (int d = 0; d < degrees; ++d) {
@@ -201,7 +224,7 @@ void SynthVoice::render(double t0, int frames, const TrackBus &bus) {
                 phA[d] += fA * dt;
                 phA[d] -= std::floor(phA[d]);
                 sum += yA * gainA + yB * gainB;
-                if (gainSub) {
+                if (gainSub > 1e-5f) {
                     float fs = f * .5f * pitchF;
                     sum += (float)std::sin(kTwoPi * phSub[d]) * gainSub;
                     phSub[d] += fs * dt;
@@ -209,7 +232,7 @@ void SynthVoice::render(double t0, int frames, const TrackBus &bus) {
                 }
             }
         }
-        if (additiveGain > 0) {
+        if (additiveGain > 1e-5f) {
             float add = 0;
             for (int k = 0; k < partialCount; ++k) {
                 Partial &p = partials[k];
@@ -221,19 +244,21 @@ void SynthVoice::render(double t0, int frames, const TrackBus &bus) {
             }
             sum += add * additiveGain;
         }
-        if (gainNoise) sum += rng.bipolar() * gainNoise;
+        if (gainNoise > 1e-5f) sum += rng.bipolar() * gainNoise;
 
         float fc = cutoff.step(t, dt);
-        if ((i & 15) == 0 || age < dt * 1.5) {
-            float f = lfoCutCents ? fc * std::exp2(cutCents / 1200) : fc;
-            filter.set(filterType, f, filterQ, env->sampleRate);
+        if (control) {
+            float f = fc * cur[CutMul];
+            if (lfoCutCents) f *= std::exp2(cutCents / 1200);
+            filter.set(filterType, std::min(f, 20000.f), filterQ, env->sampleRate);
         }
         float y = filter.process(sum);
         if (drive.on) y = drive(y);
         if (crush.on) y = crush(y);
-        y *= amp.step(t, dt) * ampLfo;
+        y *= amp.step(t, dt) * ampLfo * cur[LevelMul];
         route.add(bus, i, y);
     }
+    for (double &ph : lfoPhase) ph -= std::floor(ph);
     filter.settle();
 }
 
@@ -283,6 +308,10 @@ void SynthModule::start(const NoteStart &n) {
     SynthVoice &voice = pool_.voices[h.index];
     voice.rng = RNG(seed_ = seed_ * 1664525u + 1013904223u);
     voice.trigger(env_, {engine_, n.music, n.pitch, n.time, n.duration, v, lastFreq_});
+    voice.noteId = n.noteId;
+    voice.song = n.song;
+    voice.part = n.part;
+    voice.from = nullptr;
     if (mono) mono_ = h;
     pool_.admit(h, now_, n.time);
 }

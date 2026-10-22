@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Params.hpp"
@@ -80,6 +81,9 @@ struct ReverbIR {
 struct SongSnap {
     std::vector<PartSnap> parts;
     std::vector<NoteEvent> notes;
+    /// (note id, index into notes), sorted by id: how a sounding voice finds its note again after an edit.
+    std::vector<std::pair<int32_t, uint32_t>> noteIndex;
+    const NoteEvent *noteWithId(int32_t id) const;
     std::vector<float> params;
     SpaceSettings space;
     MasterSettings master;
@@ -105,6 +109,9 @@ public:
     SnapshotBuilder(double sampleRate, const SampleBank &samples) : sampleRate_(sampleRate), samples_(samples) {}
     /// Returns nullptr if the JSON can't be read.
     std::unique_ptr<LocationSnap> build(const std::string &locationJSON, const std::string &masterJSON);
+    /// The last location built, with one song replaced: what an edit to one song posts, so the other songs' text
+    /// isn't read again. Returns nullptr if nothing was built yet, the index is out of range or the JSON can't be read.
+    std::unique_ptr<LocationSnap> buildWithSong(int index, const std::string &songJSON);
 
 private:
     std::shared_ptr<const SongSnap> buildSong(const json::Value &song, const json::Value &master,
@@ -118,6 +125,8 @@ private:
         std::shared_ptr<const SongSnap> song;
     };
     std::vector<Cached> cache_;
+    std::string skin_, masterJSON_;
+    bool built_ = false;
     std::vector<std::shared_ptr<const ReverbIR>> irs_;
 };
 

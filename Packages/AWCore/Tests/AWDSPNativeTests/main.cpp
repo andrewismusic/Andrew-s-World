@@ -296,6 +296,45 @@ static void testLiveAndSamples() {
     CHECK(held > 0.01 && after < held * 0.1, "held %g, after release %g", held, after);
 }
 
+static void testLiveEdits() {
+    // a long bass note keeps sounding while its level is edited: the voice follows the new snapshot
+    auto song = [](double level) {
+        char locks[160];
+        std::snprintf(locks, sizeof locks, "\"g.bpm\":%.10g,\"1.bass.lv\":%.4g,\"1.bass.su\":1,\"1.bass.at\":0", 70.0 / 150, level);
+        std::string empty = "{\"locks\":{},\"bars\":[]}", bass = "{\"locks\":{},\"bars\":[{\"notes\":[" + note(5, 0, 7, 16) + "]}]}";
+        return std::string("{\"skin\":\"farm\",\"name\":\"Farm\",\"songs\":[{\"name\":\"T\",\"style\":\"house\",\"hue\":0,"
+                           "\"prog\":[0,0,0,0],\"locks\":{") + locks +
+               "},\"mix\":{\"m\":[0,0,0,0],\"s\":[0,0,0,0]},\"sections\":[{\"name\":\"A\",\"hue\":0,\"type\":\"main\",\"locks\":{},\"lanes\":[" +
+               empty + "," + bass + "," + empty + "," + empty + "]}],\"fx\":[[null,null,null],[null,null,null],[null,null,null],[null,null,null]]}]}";
+    };
+    std::string quiet = song(0.35);
+    Rendered r = renderSong(song(0.7), "{\"locks\":{}}", {3, 0, 0, 0, true}, 1.0, 48000, [&](aw::Engine &e, double t) {
+        static bool sent = false;
+        if (t < 0.01) sent = false;
+        if (!sent && t >= 0.5) { e.setLocation(quiet, "{\"locks\":{}}"); sent = true; }
+    });
+    auto rms = [&](double a, double b) {
+        double s = 0;
+        size_t i0 = (size_t)(a * 48000), i1 = (size_t)(b * 48000);
+        for (size_t i = i0; i < i1; ++i) s += r.L[i] * r.L[i];
+        return std::sqrt(s / (i1 - i0));
+    };
+    double before = rms(0.3, 0.5), after = rms(0.7, 0.9);
+    // level is squared: half the fader is a quarter of the amplitude
+    CHECK(before > 1e-3 && after / before > 0.18 && after / before < 0.33, "before %g after %g", before, after);
+
+    // the same edit posted as just the one song
+    size_t a = quiet.find("\"songs\":[") + 9, b = quiet.rfind("]}");
+    std::string one = quiet.substr(a, b - a);
+    r = renderSong(song(0.7), "{\"locks\":{}}", {3, 0, 0, 0, true}, 1.0, 48000, [&](aw::Engine &e, double t) {
+        static bool sent = false;
+        if (t < 0.01) sent = false;
+        if (!sent && t >= 0.5) { CHECK(e.setSong(0, one), "setSong"); sent = true; }
+    });
+    double after2 = rms(0.7, 0.9);
+    CHECK(std::fabs(after2 - after) < after * 0.05, "setSong %g, setLocation %g", after2, after);
+}
+
 int main(int argc, char **argv) {
     savePath = argc > 1 ? argv[1] : "../AWCore/Resources/DefaultState.json";
     testAutomation();
@@ -306,6 +345,7 @@ int main(int argc, char **argv) {
     testDemoSong();
     testLevels();
     testLiveAndSamples();
+    testLiveEdits();
     std::printf("%d checks, %d failed\n", checks, failures);
     return failures ? 1 : 0;
 }

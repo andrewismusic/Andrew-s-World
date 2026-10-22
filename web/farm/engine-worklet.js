@@ -50,6 +50,13 @@ class EngineProcessor extends AudioWorkletProcessor {
         if (r !== 0) this.port.postMessage({ t: 'error', message: 'The engine could not read the song data.' });
         break;
       }
+      case 'song': {
+        const j = this.bytes(m.song);
+        const r = x.aw_engine_set_song(e, m.index, j);
+        x.free(j);
+        if (r !== 0) this.port.postMessage({ t: 'resync' });
+        break;
+      }
       case 'play': x.aw_engine_play_count_in(e, this.context(m.context), m.countIn | 0); break;
       case 'stop': x.aw_engine_stop(e); break;
       case 'context': x.aw_engine_set_context(e, this.context(m.context)); break;

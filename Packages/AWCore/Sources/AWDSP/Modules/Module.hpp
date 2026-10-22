@@ -34,6 +34,10 @@ struct NoteStart {
     const Music *music;
     /// Drums only: a collected sound that replaces this row's voice.
     const Sample *sample = nullptr;
+    /// Where the parameters came from, so a sounding voice can follow edits: a note's id (> 0), or −1 for a note
+    /// played live on a lane of `part`. 0 (ratchet repeats, previews) means the voice keeps what it started with.
+    int32_t noteId = 0;
+    int16_t song = -1, part = -1;
 };
 
 class Module {

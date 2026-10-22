@@ -29,6 +29,11 @@ void aw_engine_render(aw_engine *engine, int32_t frames, float *left, float *rig
 /// not be read (the engine keeps playing what it had).
 int32_t aw_engine_set_location(aw_engine *engine, const char *location_json, const char *master_json);
 
+/// Replaces one song (an entry of the location's `songs`) of the location posted last: the cheap way to post an
+/// edit, since the other songs aren't read again. Returns -1 if no location was posted yet, the index is out of
+/// range or the JSON can't be read.
+int32_t aw_engine_set_song(aw_engine *engine, int32_t index, const char *song_json);
+
 /// Where the player is, as the transport sees it: the zoom level (0 song … 4 note), the selection and the
 /// pattern level's Loop switch. The sequencer follows this the way the prototype's advance() follows `sel`.
 typedef struct aw_context {

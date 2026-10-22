@@ -249,7 +249,15 @@ std::shared_ptr<const SongSnap> SnapshotBuilder::buildSong(const json::Value &so
         }
         out->parts.push_back(std::move(ps));
     }
+    out->noteIndex.reserve(out->notes.size());
+    for (uint32_t i = 0; i < out->notes.size(); ++i) out->noteIndex.push_back({out->notes[i].id, i});
+    std::sort(out->noteIndex.begin(), out->noteIndex.end());
     return out;
+}
+
+const NoteEvent *SongSnap::noteWithId(int32_t id) const {
+    auto it = std::lower_bound(noteIndex.begin(), noteIndex.end(), std::make_pair(id, (uint32_t)0));
+    return it != noteIndex.end() && it->first == id ? &notes[it->second] : nullptr;
 }
 
 std::unique_ptr<LocationSnap> SnapshotBuilder::build(const std::string &locationJSON, const std::string &masterJSON) {
@@ -273,6 +281,23 @@ std::unique_ptr<LocationSnap> SnapshotBuilder::build(const std::string &location
         next.push_back({std::move(key), built});
     }
     cache_ = std::move(next);
+    skin_ = snap->skin;
+    masterJSON_ = masterJSON;
+    built_ = true;
+    return snap;
+}
+
+std::unique_ptr<LocationSnap> SnapshotBuilder::buildWithSong(int index, const std::string &songJSON) {
+    if (!built_ || index < 0 || index >= (int)cache_.size()) return nullptr;
+    json::Value song, master;
+    if (!json::parse(songJSON, song) || !song.isObject()) return nullptr;
+    if (!json::parse(masterJSON_, master) || !master.isObject()) return nullptr;
+    auto snap = std::make_unique<LocationSnap>();
+    snap->skin = skin_;
+    enginesForSkin(snap->skin, snap->engines);
+    std::string key = std::to_string(samples_.generation()) + "\n" + skin_ + "\n" + masterJSON_ + "\n" + songJSON;
+    if (cache_[index].key != key) cache_[index] = {std::move(key), buildSong(song, master, snap->engines)};
+    for (auto &c : cache_) snap->songs.push_back(c.song);
     return snap;
 }
 
