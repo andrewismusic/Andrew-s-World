@@ -657,6 +657,19 @@ body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!impor
 .eng-fail{position:fixed;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;padding:12px 14px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--card);color:var(--ink);font-weight:700}
 
 .bagbox{width:min(480px,100%)}
+.sendbox{width:min(460px,100%)}
+.send-where{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.send-w{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px;text-align:left;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--well);color:var(--ink)}
+.send-w b{font:700 13px var(--f-disp)}.send-w span{font:600 11px/1.3 var(--f-ui);color:var(--mute)}
+.send-w.on{background:var(--sel);color:var(--on);box-shadow:var(--sh)}.send-w.on span{color:var(--on);opacity:.85}
+.send-w[disabled]{opacity:.5}
+.send-go{display:flex;align-items:center;gap:10px}.send-go .key{min-width:110px;height:38px;padding:0 18px}.send-go span{font:600 12px/1.3 var(--f-ui);color:var(--mute)}
+.bag-tabs{display:flex;gap:4px;border-bottom:2px solid #6e4316;margin:-4px 0 4px}
+.bag-tab{flex:1;height:34px;border-radius:10px 10px 0 0;background:#e9d3ab;color:#6e4316;font:700 12px var(--f-disp);display:flex;align-items:center;justify-content:center;gap:5px}
+.bag-tab i{font-style:normal;font-size:10px;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:rgba(110,67,22,.15)}
+.bag-tab.on{background:#b5762c;color:#fff}.bag-tab.on i{background:rgba(255,255,255,.25)}
+body[data-skin="farm"] .bagbox{background:linear-gradient(#fbf1dc,#f4e2bf)}
+.pat-ico{width:32px;height:32px;display:grid;gap:2px;padding:3px;border-radius:6px;background:#3a2d27}.pat-ico i{border-radius:2px}
 .pan-ghost{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .pan-ghost>*{position:absolute;inset:0}
 /* the backpack is always to hand: a brown pixel pack in the top bar, bigger than the icon buttons and not boxed in */
@@ -897,7 +910,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
 <div class="app">
   <header class="top">
     <div class="brand"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><span class="bt">Andrew’s World</span></div>
-    <button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button><button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="ib" id="send" aria-label="Send" title="Send this bar, track, part or song as audio or notes"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2M4.6 5.2 8 1.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 9.5v3.2c0 .6.5 1.1 1.1 1.1h8.8c.6 0 1.1-.5 1.1-1.1V9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button><button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="ib" id="redo" aria-label="Redo" title="Redo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M9.5 3l3 3-3 3M12 6H5.5a3.5 3.5 0 0 0 0 7H8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="ag dz">
       <div class="dsl" data-a="rsound" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Sound</span><span class="dk"></span></div>
@@ -939,6 +952,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
 <div class="menu" id="scaleMenu" role="listbox" aria-label="Scale" hidden></div>
 <div class="modal" id="bagM" hidden><div class="mbox bagbox" role="dialog" aria-modal="true" aria-labelledby="bagH"><div class="mhead"><b id="bagH">Backpack</b><button class="mx-x" aria-label="Close backpack">×</button></div><div class="mbody"></div></div></div>
 <input type="file" id="bagFile" hidden>
+<div class="modal" id="sendM" hidden><div class="mbox sendbox" role="dialog" aria-modal="true" aria-labelledby="sendH"><div class="mhead"><b id="sendH">Send</b><button class="mx-x" aria-label="Close">×</button></div><div class="mbody"></div></div></div>
 <div class="modal" id="prefs" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="prefsH"><div class="mhead"><b id="prefsH">Preferences</b><button class="mx-x" aria-label="Close preferences">×</button></div><div class="mbody"></div></div></div>
 
 <script>
@@ -3343,7 +3357,7 @@ async function cloudWrite(){if(cloud.busy){cloudSave();return}cloud.busy=true;
    What you carry between locations. Sounds are audio files you've collected: plant one on a drum row and it plays
    in place of that row's voice, with the row's tune, decay, tone and kit settings. Gear is functions found elsewhere
    that you can put to work on a track. Sounds are kept with the artifact; the list is in your own storage. */
-const bag={items:[],data:new Map(),sent:new Set(),plantFor:null,busy:''};
+const bag={items:[],data:new Map(),sent:new Set(),plantFor:null,busy:'',pocket:'sounds'};
 const ROWL=['K','SN','C','R','CH','OH','TM','PC'];
 const GEAR_ICON=pix(['..KKKKKKKK..','.KBBBBBBBBK.','.KBWKBBWKBK.','.KBKKBBKKBK.','.KBBBBBBBBK.','.KBBRRRRBBK.','.KBBBBBBBBK.','.KBBSSSSBBK.','.KBSWWWWSBK.','.KBBSSSSBBK.','.KBBBBBBBBK.','..KKKKKKKK..'],{});
 const GEAR=[{id:'echo-pedal',name:'Echo pedal',from:'demo gear',desc:'Adds an echo to the track you’re on.',building:'well'}];
@@ -3351,7 +3365,7 @@ const bagEl=$('#bagM');
 const BAG_SPR=['.....KKKK.....','....KK..KK....','...KKKKKKKK...','..KNNNNNNNNK..','.KNNNNNNNNNNK.','.KnnnnnnnnnnK.','.KNNNNNNNNNNK.','.KNNNNYYNNNNK.','.KnnnnYYnnnnK.','.KNNNNNNNNNNK.','KKNKKKKKKKKNKK','KNKNNNNNNNNKNK','KNKNNyNNyNNKNK','KNKnnnnnnnnKNK','.KKNNNNNNNNKK.','..KKKKKKKKKK..'];
 $('#bag').innerHTML=pix(BAG_SPR,{N:'#b5762c',n:'#6e4316',Y:'#f8b800',y:'#e0a85c'});
 async function bagLoad(){if(!cloud.db)return;try{const d=await cloud.db.doc(cloud.col+'/backpack').get();if(!d.exists)return;bag.items=d.data().items||[];
-  for(const it of bag.items){try{const r=await fetch('/_blob/'+it.asset);if(!r.ok)continue;const j=await r.json();bag.data.set(it.id,{rate:j.rate,pcm:decodePCM(j.pcm)})}catch(e){}}
+  for(const it of bag.items){if(it.kind==='pattern'||!it.asset)continue;try{const r=await fetch('/_blob/'+it.asset);if(!r.ok)continue;const j=await r.json();bag.data.set(it.id,{rate:j.rate,pcm:decodePCM(j.pcm)})}catch(e){}}
   bagSendAll();if(!bagEl.hidden)renderBag()}catch(e){console.warn('backpack unavailable:',e)}}
 async function bagStore(){if(!cloud.db)return;try{await cloud.db.doc(cloud.col+'/backpack').set({items:bag.items})}catch(e){console.warn('backpack save failed:',e)}}
 function encodePCM(f){const i16=new Int16Array(f.length);for(let i=0;i<f.length;i++)i16[i]=Math.max(-32768,Math.min(32767,Math.round(f[i]*32767)));
@@ -3359,14 +3373,16 @@ function encodePCM(f){const i16=new Int16Array(f.length);for(let i=0;i<f.length;
 function decodePCM(b64){const s=atob(b64),b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=s.charCodeAt(i);const i16=new Int16Array(b.buffer),f=new Float32Array(i16.length);for(let i=0;i<i16.length;i++)f[i]=i16[i]/32768;return f}
 function bagSend(id){const d=bag.data.get(id);if(!d||!aw.ready)return;aw.node.port.postMessage({t:'sample',id:new TextEncoder().encode(id),data:d.pcm,rate:d.rate});bag.sent.add(id)}
 function bagSendAll(){for(const id of bag.data.keys())if(!bag.sent.has(id))bagSend(id);if(bag.data.size){aw.sent=null;awSync()}}
-async function bagAdd(file){if(!ensureAudio())return;bag.busy='Packing '+file.name+'…';renderBag();
+/* a sound joins the backpack: kept for this visit at once, and with the artifact when its storage allows */
+async function bagKeep(name,rate,pcm,from){const id='snd-'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36),it={id,name:name.slice(0,40)||'Sound',secs:+(pcm.length/rate).toFixed(2),asset:null,from:from||''};
+  bag.data.set(id,{rate,pcm});bagSend(id);
+  try{const assets=typeof claude!=='undefined'&&claude.use?await claude.use('assets'):null;
+    if(assets){const blob=new Blob([JSON.stringify({rate,pcm:encodePCM(pcm)})],{type:'application/json'});const up=await assets.upload(blob);it.asset=up.id}}catch(e){console.warn('sound not kept:',e)}
+  bag.items.push(it);await bagStore();return it}
+async function bagAdd(file){if(!ensureAudio())return;bag.busy='Packing '+file.name+'…';bag.pocket='sounds';renderBag();
   try{const buf=await ac.decodeAudioData(await file.arrayBuffer()),n=Math.min(buf.length,Math.round(buf.sampleRate*10)),pcm=new Float32Array(n);
     for(let c=0;c<buf.numberOfChannels;c++){const d=buf.getChannelData(c);for(let i=0;i<n;i++)pcm[i]+=d[i]/buf.numberOfChannels}
-    const id='snd-'+Date.now().toString(36),name=file.name.replace(/\.[^.]+$/,'').slice(0,40)||'Sound',it={id,name,secs:+(n/buf.sampleRate).toFixed(2),asset:null};
-    bag.data.set(id,{rate:buf.sampleRate,pcm});bagSend(id);
-    try{const assets=typeof claude!=='undefined'&&claude.use?await claude.use('assets'):null;
-      if(assets){const blob=new Blob([JSON.stringify({rate:buf.sampleRate,pcm:encodePCM(pcm)})],{type:'application/json'});const up=await assets.upload(blob);it.asset=up.id}}catch(e){console.warn('sound not kept:',e)}
-    bag.items.push(it);await bagStore();bag.busy=it.asset?'':'Packed for this visit only: this view can’t keep files.';
+    const it=await bagKeep(file.name.replace(/\.[^.]+$/,''),buf.sampleRate,pcm,'your files');bag.busy=it.asset?'':'Packed for this visit only: this view can’t keep files.';
   }catch(e){bag.busy='Couldn’t read '+file.name+' as audio. Try a WAV, MP3, M4A or AIFF file.'}
   renderBag()}
 function bagPreview(id){const d=bag.data.get(id);if(!d||!ensureAudio())return;const b=ac.createBuffer(1,d.pcm.length,d.rate);b.copyToChannel(d.pcm,0);const s=ac.createBufferSource(),g=ac.createGain();g.gain.value=.8;s.buffer=b;s.connect(g);g.connect(ac.destination);s.start()}
@@ -3375,37 +3391,144 @@ function plant(id,row){const song=curSong();checkpoint();song.samples=Object.ass
 function digUp(key){const song=curSong();if(!song.samples)return;checkpoint();const s2=Object.assign({},song.samples);delete s2[key];if(Object.keys(s2).length)song.samples=s2;else delete song.samples;changed();renderBag()}
 function useGear(g){const song=curSong(),slot=Lnow()>=2?sel[2]:null;if(slot==null){flash('Go to a track first');return}
   const fx=song.fx[slot],i=fx.indexOf(null);if(i<0){flash('This track’s effect slots are full');return}checkpoint();fx[i]=g.building;changed();renderBag();flash(g.name+' on')}
-function renderBag(){const song=curSong(),planted=Object.entries(song.samples||{}),name=id=>(bag.items.find(x=>x.id===id)||{}).name||'a lost sound';
-  const tip=onDrums()?(curNote()?'Plants on the selected note’s row, '+ROWL[clampi(curNote().pitch,0,7)]+'.':'Choose a row to plant on.'):'Go to the drums track to plant a sound on a row.';
-  const items=bag.items.map(it=>`<div class="bag-item"><button class="ib" data-bprev="${esc(it.id)}" aria-label="Hear ${esc(it.name)}"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg></button>
-      <div style="min-width:0"><div class="bi-n">${esc(it.name)}</div><div class="bi-d">${it.secs}s${bag.data.has(it.id)?'':' · not loaded'}</div></div>
+/* patterns: notes carried from somewhere else. Drum patterns plant on drum tracks, melodic ones on any melodic track
+   (as scale steps, so they land in the key of wherever you are). One track plants into this track from the bar
+   you're on; several tracks plant into this part, each on the track of the same kind. */
+const family=e=>e==='drums'?'drums':'melodic';
+function patternFits(p){const L=Lnow();if(L<2)return false;if(p.lanes.length===1)return L>=3&&family(p.lanes[0].eng)===family(curEng());return p.lanes.some(l=>DEF_ENG[l.slot]&&family(DEF_ENG[l.slot])===family(l.eng))}
+function deployPattern(p){if(!patternFits(p))return;checkpoint();const sec=curSec(),start=Lnow()>=3?sel[4]:0;
+  const put=(lane,bars)=>{bars.forEach((notes,i)=>{const b=start+i;if(b>=MAXB)return;padLane(lane,b+1);lane.bars[b].notes=reid(JSON.parse(JSON.stringify(notes)))})};
+  if(p.lanes.length===1)put(curLane(),p.lanes[0].bars);else p.lanes.forEach(l=>{if(DEF_ENG[l.slot]&&family(DEF_ENG[l.slot])===family(l.eng))put(sec.lanes[l.slot],l.bars)});
+  sel[3]=null;uis('add');changed();renderBag();flash('Planted '+p.name)}
+const POCKETS=[['sounds','Sounds'],['patterns','Patterns'],['gear','Gear'],['keep','Keepsakes']];
+const PLAY_ICO='<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>';
+function renderBag(){const song=curSong(),planted=Object.entries(song.samples||{}),name=id=>(bag.items.find(x=>x.id===id)||{}).name||'a lost sound',pk=bag.pocket||'sounds';
+  const sounds=bag.items.filter(it=>it.kind!=='pattern'),pats=bag.items.filter(it=>it.kind==='pattern');
+  const tabs=`<div class="bag-tabs" role="tablist">${POCKETS.map(([k,l])=>`<button role="tab" class="bag-tab${k===pk?' on':''}" data-pocket="${k}" aria-selected="${k===pk}">${l}<i>${k==='sounds'?sounds.length:k==='patterns'?pats.length:k==='gear'?GEAR.length:0}</i></button>`).join('')}</div>`;
+  let body='';
+  if(pk==='sounds'){const tip=onDrums()?(curNote()?'Plants on the selected note’s row, '+ROWL[clampi(curNote().pitch,0,7)]+'.':'Choose a row to plant on.'):'Go to the drums track to plant a sound on a row.';
+    body=(sounds.map(it=>`<div class="bag-item"><button class="ib" data-bprev="${esc(it.id)}" aria-label="Hear ${esc(it.name)}">${PLAY_ICO}</button>
+      <div style="min-width:0"><div class="bi-n">${esc(it.name)}</div><div class="bi-d">${it.secs}s${it.from?' · from '+esc(it.from):''}${bag.data.has(it.id)?'':' · not loaded'}</div></div>
       <div class="bi-a"><button class="key" data-bplant="${esc(it.id)}" ${onDrums()&&bag.data.has(it.id)?'':'disabled'}>${sc('Plant')}</button><button class="key" data-bdrop="${esc(it.id)}" aria-label="Remove ${esc(it.name)} from the backpack">×</button></div>
-      ${bag.plantFor===it.id?`<div class="bag-rows">${ROWL.map((l,r)=>`<button class="key" data-brow="${r}">${l}</button>`).join('')}</div>`:''}</div>`).join('');
-  bagEl.querySelector('.mbody').innerHTML=`
-  <section class="bag-sec" aria-labelledby="bagS"><h3 id="bagS">Sounds</h3>
-    ${items||'<p class="bag-empty">No sounds yet. Sounds you collect on your travels land here; for now, add your own.</p>'}
-    <p class="bag-empty">${tip}</p>
-    <div><button class="key" id="bagAddB">${sc('Add a sound file')}</button></div>
-    ${bag.busy?`<p class="bag-empty" role="status">${esc(bag.busy)}</p>`:''}
-    ${planted.length?`<div class="bag-planted">${planted.map(([k,id])=>`<button class="key" data-bdig="${esc(k)}" title="Dig up">${ROWL[+k.split('.')[1]]||k} · ${esc(name(id))} ×</button>`).join('')}</div><p class="bag-empty">Planted in ${esc(song.name)}. Tap one to dig it up.</p>`:''}
-  </section>
-  <section class="bag-sec" aria-labelledby="bagG"><h3 id="bagG">Gear</h3>
-    ${GEAR.map(g=>`<div class="bag-item"><span class="gear-ico" aria-hidden="true">${GEAR_ICON}</span><div style="min-width:0"><div class="bi-n">${esc(g.name)}</div><div class="bi-d">${esc(g.desc)} (${esc(g.from)})</div></div><div class="bi-a"><button class="key" data-bgear="${g.id}" ${Lnow()>=2?'':'disabled'}>${sc('Use here')}</button></div></div>`).join('')}
-    <p class="bag-empty">Gear you find on other planets will appear here.</p>
-  </section>`}
+      ${bag.plantFor===it.id?`<div class="bag-rows">${ROWL.map((l,r)=>`<button class="key" data-brow="${r}">${l}</button>`).join('')}</div>`:''}</div>`).join('')||'<p class="bag-empty">No sounds yet. Sounds you find on your travels land here. You can also send audio here from anything you make, or add your own files.</p>')+
+      `<p class="bag-empty">${tip}</p><div><button class="key" id="bagAddB">${sc('Add a sound file')}</button></div>`+
+      (bag.busy?`<p class="bag-empty" role="status">${esc(bag.busy)}</p>`:'')+
+      (planted.length?`<div class="bag-planted">${planted.map(([k,id])=>`<button class="key" data-bdig="${esc(k)}" title="Dig up">${ROWL[+k.split('.')[1]]||k} · ${esc(name(id))} ×</button>`).join('')}</div><p class="bag-empty">Planted in ${esc(song.name)}. Tap one to dig it up.</p>`:'')}
+  else if(pk==='patterns')body=(pats.map(p=>`<div class="bag-item"><span class="pat-ico" aria-hidden="true">${p.lanes.map(l=>`<i style="background:${ECOL[l.eng]||'#ccc'}"></i>`).join('')}</span>
+      <div style="min-width:0"><div class="bi-n">${esc(p.name)}</div><div class="bi-d">${p.lanes.map(l=>sc(ELAB[l.eng])).join(', ')} · ${Math.max(...p.lanes.map(l=>l.bars.length))} bar${Math.max(...p.lanes.map(l=>l.bars.length))>1?'s':''}${p.from?' · from '+esc(p.from):''}</div></div>
+      <div class="bi-a"><button class="key" data-bpat="${esc(p.id)}" ${patternFits(p)?'':'disabled'}>${sc('Plant')}</button><button class="key" data-bdrop="${esc(p.id)}" aria-label="Remove ${esc(p.name)} from the backpack">×</button></div></div>`).join('')||'<p class="bag-empty">No patterns yet. Send the notes of a bar, a track or a part here, then plant them somewhere else.</p>')+
+      '<p class="bag-empty">A one-track pattern plants on this track from the bar you’re on. A pattern of several tracks plants into this part.</p>';
+  else if(pk==='gear')body=GEAR.map(g=>`<div class="bag-item"><span class="gear-ico" aria-hidden="true">${GEAR_ICON}</span><div style="min-width:0"><div class="bi-n">${esc(g.name)}</div><div class="bi-d">${esc(g.desc)} (${esc(g.from)})</div></div><div class="bi-a"><button class="key" data-bgear="${g.id}" ${Lnow()>=2?'':'disabled'}>${sc('Use here')}</button></div></div>`).join('')+'<p class="bag-empty">Gear you find on other planets will appear here.</p>';
+  else body='<p class="bag-empty">Keepsakes are things people give you on your travels: a note from the Keeper, a feather, a map. Nothing here yet.</p>';
+  bagEl.querySelector('.mbody').innerHTML=tabs+`<section class="bag-sec" role="tabpanel">${body}</section>`}
 function openBag(){ensureAudio();bag.plantFor=null;renderBag();bagEl.hidden=false;uis('in');bagEl.querySelector('.mx-x').focus()}
 $('#bag').onclick=openBag;
 bagEl.addEventListener('click',e=>{const t=e.target;if(t===bagEl||t.closest('.mx-x')){bagEl.hidden=true;return}
   const q=a=>t.closest('['+a+']'),g=(a,el)=>el.getAttribute(a);let el;
+  if(el=q('data-pocket')){bag.pocket=g('data-pocket',el);bag.plantFor=null;uis('tab');renderBag();return}
   if(el=q('data-bprev')){bagPreview(g('data-bprev',el));return}
   if(t.closest('#bagAddB')){$('#bagFile').click();return}
   if(el=q('data-bplant')){const id=g('data-bplant',el);if(curNote())plant(id,clampi(curNote().pitch,0,7));else{bag.plantFor=bag.plantFor===id?null:id;renderBag()}return}
   if(el=q('data-brow')){plant(bag.plantFor,+g('data-brow',el));return}
+  if(el=q('data-bpat')){const p=bag.items.find(x=>x.id===g('data-bpat',el));if(p)deployPattern(p);return}
   if(el=q('data-bdrop')){const id=g('data-bdrop',el);bag.items=bag.items.filter(x=>x.id!==id);bagStore();renderBag();return}
   if(el=q('data-bdig')){digUp(g('data-bdig',el));return}
   if(el=q('data-bgear')){const gear=GEAR.find(x=>x.id===g('data-bgear',el));if(gear)useGear(gear)}});
 bagEl.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Escape')bagEl.hidden=true});
 $('#bagFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)bagAdd(f)});
+/* ================= send =================
+   One button sends whatever you're looking at (a bar, a track, a part or the song) as audio or as notes, to the
+   backpack, out of the app (a file, or the share sheet: AirDrop, Messages, Mail), and later to a studio's timeline or
+   a sampler in another location. Audio is rendered by the same engine in a worker, so playback never stutters. */
+const sendEl=$('#sendM');
+const sendUI={what:null,form:'audio',where:'bag',busy:'',done:''};
+const SEND_WHAT=[['bar','This bar',3],['track','This track',2],['part','This part',1],['song','The whole song',0]];
+const SEND_WHERE=[['bag','Backpack'],['device','Save as a file'],['share','Share…'],['studio','A studio timeline'],['sampler','A sampler elsewhere']];
+const canShare=()=>!!(navigator.canShare&&navigator.share);
+function sendDefault(){const L=Lnow();return L>=3?'bar':L===2?'part':L===1?'part':'song'}
+function renderSend(){const L=Lnow(),u=sendUI;if(!u.what||SEND_WHAT.find(w=>w[0]===u.what)[2]>L)u.what=sendDefault();
+  const seg=(k,opts,cur,dis)=>`<div class="pseg">${opts.map(([v,l])=>`<button data-sk="${k}" data-sv="${v}" class="${v===cur?'on':''}" aria-pressed="${v===cur}"${dis&&dis(v)?' disabled':''}>${l}</button>`).join('')}</div>`;
+  const later={studio:'Arrives with the Laboratory’s studio.',sampler:'Arrives with the first sampler you find on your travels.'};
+  sendEl.querySelector('.mbody').innerHTML=`
+  <div class="prow"><span>What</span>${seg('what',SEND_WHAT.map(w=>[w[0],sc(w[1])]),u.what,v=>SEND_WHAT.find(w=>w[0]===v)[2]>L)}</div>
+  <div class="prow"><span>As</span>${seg('form',[['audio','Audio'],['notes','Notes (MIDI)']],u.form)}</div>
+  <div class="send-where">${SEND_WHERE.map(([v,l])=>{const off=later[v]||(v==='share'&&!canShare());return `<button class="send-w${v===u.where?' on':''}" data-sk="where" data-sv="${v}"${off?' disabled':''}><b>${l}</b><span>${later[v]||(v==='share'&&!canShare()?'Not available in this browser.':v==='bag'?(u.form==='audio'?'Into Sounds, ready to plant on a drum row.':'Into Patterns, ready to plant in another part or song.'):v==='device'?(u.form==='audio'?'A WAV file.':'A MIDI file for any music app.'):'AirDrop, Messages, Mail and more.')}</span></button>`}).join('')}</div>
+  <p class="pnote">${esc(sendSummary())}</p>
+  <div class="send-go"><button class="key play" id="sendGo"${u.busy?' disabled':''}>${u.busy?esc(u.busy):sc('Send')}</button>${u.done?`<span role="status">${esc(u.done)}</span>`:''}</div>`}
+function sendSummary(){const j=sendJob();return `${j.label}: ${j.music.toFixed(1)} seconds${j.slot!=null?' of the '+ELAB[DEF_ENG[j.slot]].toLowerCase():''}${sendUI.form==='audio'?', with its effects and space':''}.`}
+const secSeconds=(song,c)=>{const m=musAt([state.master,song,c]);return secLen(c)*barTicks(m)/12*60/m.bpm};
+/* what to render or write: where playback starts, how long the music runs, and which track (if just one) */
+function sendJob(){const song=curSong(),c=curSec(),si=sel[0],ci=sel[1],w=sendUI.what,mu=musAt([state.master,song,c]);
+  if(w==='bar')return{w,label:`${song.name} · ${c.name} · bar ${sel[4]+1}`,context:{level:3,song:si,part:ci,bar:sel[4],loop:true},music:barTicks(mu)/12*60/mu.bpm,slot:sel[2],secs:[ci],bars:[sel[4]]};
+  if(w==='track')return{w,label:`${song.name} · ${c.name} · ${sc(ELAB[DEF_ENG[sel[2]]])}`,context:{level:2,song:si,part:ci,bar:0,loop:false},music:secSeconds(song,c),slot:sel[2],secs:[ci]};
+  if(w==='part')return{w,label:`${song.name} · ${c.name}`,context:{level:2,song:si,part:ci,bar:0,loop:false},music:secSeconds(song,c),slot:null,secs:[ci]};
+  return{w,label:song.name,context:{level:0,song:si,part:0,bar:0,loop:false},music:song.sections.reduce((a,x)=>a+secSeconds(song,x),0),slot:null,secs:song.sections.map((_,i)=>i)}}
+/* audio: the location as the engine would play it, the chosen track soloed */
+function renderAudio(job){const w=JSON.parse(JSON.stringify(state.worlds[state.wsel]));if(job.slot!=null)w.songs[sel[0]].mix={m:[0,0,0,0],s:[0,1,2,3].map(i=>i===job.slot?1:0)};
+  const msg={id:Date.now(),location:JSON.stringify(w),master:JSON.stringify(state.master),context:job.context,music:job.music,seconds:Math.min(300,job.music+2.5),rate:44100,
+    samples:[...bag.data].map(([id,d])=>({id,rate:d.rate,data:d.pcm}))};
+  return new Promise((res,rej)=>{let wk;try{wk=new Worker('render-worker.js')}catch(e){rej(e);return}
+    wk.onmessage=e=>{wk.terminate();e.data.error?rej(new Error(e.data.error)):res(e.data)};wk.onerror=e=>{wk.terminate();rej(new Error(e.message||'The renderer could not start.'))};wk.postMessage(msg)})}
+function wavBlob(L,R,rate){const n=L.length,buf=new ArrayBuffer(44+n*4),v=new DataView(buf),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*4,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,2,true);v.setUint32(24,rate,true);v.setUint32(28,rate*4,true);v.setUint16(32,4,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*4,true);
+  for(let i=0,o=44;i<n;i++,o+=4){v.setInt16(o,Math.max(-1,Math.min(1,L[i]))*32767,true);v.setInt16(o+2,Math.max(-1,Math.min(1,R[i]))*32767,true)}return new Blob([buf],{type:'audio/wav'})}
+/* notes: a standard MIDI file, one track per instrument (drums on channel 10 with General MIDI drum notes) */
+const GM_DRUM=[36,38,39,37,42,46,45,56];
+function midiNotes(job){const song=curSong(),slots=job.slot!=null?[job.slot]:[0,1,2,3],tracks=slots.map(()=>[]),tempos=[];let t0=0;
+  for(const ci of job.secs){const c=song.sections[ci],mu=musAt([state.master,song,c]),bt=barTicks(mu)*8,bars=job.bars||Array.from({length:secLen(c)},(_,i)=>i);
+    tempos.push([t0,mu.bpm,mu.ts,mu.den]);
+    bars.forEach((b,bi)=>{slots.forEach((s,ti)=>{const lane=c.lanes[s],bar=lane&&lane.bars[b],eng=DEF_ENG[s];if(!bar||!audible(song,s))return;
+      for(const nt of bar.notes){const ch=[state.master,song,c,lane,nt],on=t0+bi*bt+nt.step*stepTicks(bar)*8,len=Math.max(6,nt.len*stepTicks(bar)*8-2);
+        if(eng==='drums'){tracks[ti].push([on,len,GM_DRUM[clampi(nt.pitch,0,7)],9]);continue}
+        const oct=Math.round(rv(ch,s+'.'+eng+'.oc').v*4)-2;let degs=[nt.pitch];
+        if(eng==='chords'){const ci2=Math.round(rv(ch,s+'.chords.ch').v*6),sp=Math.round(rv(ch,s+'.chords.sp').v*2);degs=CHORD_DEG[ci2].map((d,i)=>nt.pitch+d+(sp>=1&&i===1?7:0)+(sp===2&&i===0?-7:0))}
+        for(const d of degs)tracks[ti].push([on,len,clampi(degMidi(mu,eng,d,oct),0,127),ti])}})});
+    t0+=bars.length*bt}
+  return{slots,tracks,tempos,end:t0}}
+function midiBlob(job){const m=midiNotes(job),vl=n=>{const b=[n&127];while(n>>=7)b.unshift((n&127)|128);return b},str=s=>[...s].map(c=>c.charCodeAt(0)&255);
+  const chunk=(id,data)=>[...str(id),data.length>>>24&255,data.length>>>16&255,data.length>>>8&255,data.length&255,...data];
+  const track=(name,evs)=>{evs.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const out=[0,0xFF,0x03,...vl(name.length),...str(name)];let last=0;
+    for(const e of evs){out.push(...vl(e[0]-last),...e.slice(2));last=e[0]}out.push(0,0xFF,0x2F,0);return chunk('MTrk',out)};
+  const meta=m.tempos.flatMap(([t,bpm,ts,den])=>{const us=Math.round(60e6/bpm*(den===4?1:1));return[[t,0,0xFF,0x51,3,us>>16&255,us>>8&255,us&255],[t,0,0xFF,0x58,4,ts,Math.round(Math.log2(den)),24,8]]});
+  const trks=[track('Tempo',meta)];
+  m.slots.forEach((s,i)=>{const evs=[];for(const[on,len,p,ch] of m.tracks[i]){evs.push([on,1,0x90|ch,p,100]);evs.push([on+len,0,0x80|ch,p,0])}trks.push(track(ELAB[DEF_ENG[s]],evs))});
+  const head=chunk('MThd',[0,1,0,trks.length,0,96]);return new Blob([new Uint8Array([...head,...trks.flat()])],{type:'audio/midi'})}
+/* notes for the backpack: the bars as they are, per track */
+function patternOf(job){const song=curSong(),slots=job.slot!=null?[job.slot]:[0,1,2,3];
+  const lanes=slots.map(s=>({slot:s,eng:DEF_ENG[s],bars:job.secs.flatMap(ci=>{const c=song.sections[ci],bars=job.bars||Array.from({length:secLen(c)},(_,i)=>i);return bars.map(b=>((c.lanes[s].bars[b]||{notes:[]}).notes).map(n=>({step:n.step,pitch:n.pitch,len:n.len,locks:n.locks,ramp:n.ramp,rm:n.rm})))}).slice(0,MAXB)})).filter(l=>l.bars.some(b=>b.length));
+  return{id:'pat-'+Date.now().toString(36),kind:'pattern',name:job.label.replace(/^[^·]*· /,'').slice(0,40),lanes,from:state.worlds[state.wsel].name}}
+/* inside Claude, files leave through the downloads capability, which takes a .zip but not a .wav or .mid, so the file
+   travels in a small zip (stored, not compressed); elsewhere it downloads as it is */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+async function zipBlob(fn,blob){const d=new Uint8Array(await blob.arrayBuffer()),name=new TextEncoder().encode(fn);let c=0xFFFFFFFF;for(let i=0;i<d.length;i++)c=CRC[(c^d[i])&255]^(c>>>8);c=(c^0xFFFFFFFF)>>>0;
+  const h=(sig,cen)=>{const b=new DataView(new ArrayBuffer(cen?46:30));b.setUint32(0,sig,true);let o=4;if(cen){b.setUint16(o,20,true);o+=2}
+    b.setUint16(o,20,true);b.setUint16(o+2,0x800,true);b.setUint16(o+4,0,true);b.setUint32(o+6,0,true);b.setUint32(o+10,c,true);b.setUint32(o+14,d.length,true);b.setUint32(o+18,d.length,true);b.setUint16(o+22,name.length,true);return b};
+  const loc=h(0x04034b50,false),cen=h(0x02014b50,true),end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);end.setUint16(8,1,true);end.setUint16(10,1,true);end.setUint32(12,46+name.length,true);end.setUint32(16,30+name.length+d.length,true);
+  return new Blob([loc,name,d,cen,name,end],{type:'application/zip'})}
+async function saveFile(blob,fn){try{if(typeof claude!=='undefined'&&claude.use){const dl=await claude.use('downloads');if(dl){await dl.save({filename:fn.replace(/\.[^.]+$/,'')+'.zip',data:await zipBlob(fn,blob)});return true}}}catch(e){if(e&&e.code==='declined')return false;throw new Error(e&&e.message||'The file couldn’t be saved.')}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);return true}
+async function doSend(){const u=sendUI,job=sendJob(),base=(job.label.replace(/[^\w\- ·]+/g,'').replace(/ · /g,' - ').trim()||'Andrew’s World');u.done='';
+  try{
+    if(u.form==='notes'){
+      if(u.where==='bag'){const p=patternOf(job);if(!p.lanes.length){u.done='There are no notes here to send.';renderSend();return}bag.items.push(p);await bagStore();bag.pocket='patterns';u.done='In your backpack, under Patterns.';uis('add');renderSend();return}
+      const blob=midiBlob(job),fn=base+'.mid';
+      if(u.where==='share'){await navigator.share({files:[new File([blob],fn,{type:'audio/midi'})],title:job.label});u.done='Shared.'}else{u.done=await saveFile(blob,fn)?'Saved '+fn+'.':''}
+      renderSend();return}
+    u.busy='Rendering…';renderSend();const a=await renderAudio(job);u.busy='';
+    if(u.where==='bag'){const n=Math.min(a.L.length,a.rate*60),m=new Float32Array(n);for(let i=0;i<n;i++)m[i]=(a.L[i]+a.R[i])/2;const it=await bagKeep(job.label.replace(/^[^·]*· /,''),a.rate,m,state.worlds[state.wsel].name);
+      bag.pocket='sounds';u.done=(it.asset?'In your backpack, under Sounds.':'In your backpack for this visit (this view can’t keep files).')+(a.L.length>n?' Sounds keep their first minute.':'');uis('add')}
+    else{const blob=wavBlob(a.L,a.R,a.rate),fn=base+'.wav';
+      if(u.where==='share'){await navigator.share({files:[new File([blob],fn,{type:'audio/wav'})],title:job.label});u.done='Shared.'}else{u.done=await saveFile(blob,fn)?'Saved '+fn+'.':''}}
+  }catch(e){u.busy='';u.done=e&&e.name==='AbortError'?'':'Couldn’t send: '+(e&&e.message||e)}
+  renderSend()}
+function openSend(){ensureAudio();sendUI.what=null;sendUI.done='';renderSend();sendEl.hidden=false;uis('in');sendEl.querySelector('.mx-x').focus()}
+$('#send').onclick=()=>{if(Lnow()>=0)openSend()};
+sendEl.addEventListener('click',e=>{const t=e.target;if(t===sendEl||t.closest('.mx-x')){sendEl.hidden=true;return}
+  const b=t.closest('[data-sk]');if(b&&!b.disabled){sendUI[b.dataset.sk]=b.dataset.sv;sendUI.done='';uis('tab');renderSend();return}
+  if(t.closest('#sendGo')&&!sendUI.busy)doSend()});
+sendEl.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Escape')sendEl.hidden=true});
+
 
 /* ================= metronome, count-in, preferences ================= */
 const PREF_STORE='fractal-groovebox-prefs';

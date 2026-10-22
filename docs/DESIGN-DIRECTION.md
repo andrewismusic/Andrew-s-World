@@ -98,10 +98,46 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   plus or duplicate.
 - **Randomizing notes:** an empty bar gets a fresh pattern; a bar with notes is reworked around them. Some notes go,
   some move to another pitch at the same moment, some move to another step, and a few new ones join. A bigger roll
-  changes more.
+  changes more. The fuller the bar, the more notes go and the fewer join, so rolling again and again doesn't fill it
+  up. Bass, chords and lead come out monophonic, and chords only rarely ring for a long time.
 - **Randomizing locks:** a bigger roll locks more notes and more settings and moves them further; at the top it can
   set any value.
-- **Locked notes have a pink outline.** Each track at the track level shows how many locks it carries, counting its
-  notes' locks.
-- **Zooming into a note keeps its surface**: bark for a log, rind for a pumpkin, and so on.
-- **LFO critters keep their size**: the mushroom grows out of the log and back in time with its LFO.
+- **Locked notes are hatched in pink**, like an empty bar's hatching (an outline read as a selection). There are no
+  lock counts on tracks.
+- **A fader shows and edits what you hear.** With Lock off it changes the value where the sound comes from: the song,
+  or a lock that already wins at this level (so a lock set by the sound die can always be adjusted). With Lock on it
+  pins the value at this level. With notes lassoed in the pattern view, faders and Clear locks work on those notes;
+  turning the lasso off deselects.
+- **Edits are heard while you drag**, including on notes already sounding (level, mix, filter, LFOs, effects, sends).
+- **Dragging a note's end past the bar's edge turns the page** to the next bar, and the end stays under your finger.
+  The faded tail in the next bar can be grabbed to change where the note ends.
+- **Row names sit in a gutter** at the left of every bar, so they never cover a step.
+- **Moving to another level ends a recording.**
+- **LFO critters keep their size**: the mushroom grows out of the log and back in time with its LFO. On the track view
+  at most one critter of each kind shows per track, drawn small.
+- **Parts are drawn at one scale on every page**: four rows of eight bars. Parts have names (letters by default) that
+  you can change on the part page.
+- **The Farm has no All button** (Solucan keeps it). Keys is a piano icon.
+- **Chords are ducks**: a mother duck and a line of ducklings, so a note looks natural at any length.
+- **Effects are buildings you walk to**: paging pans sideways across the farm, and opening an effect zooms you up to
+  its wall, where the controls are plaques. A magnifier zooms back out.
+
+## Style rule: zooming is moving closer
+
+Every change of level should feel like moving closer to (or further from) the thing you tapped, never like cutting
+to a new screen:
+
+- What you zoom into grows smoothly from exactly how it looked. Zooming into a note shows that note's own sprite (the
+  log, pumpkin, ducks or flower) growing in its own field, with square pixels all the way, until you're looking at it
+  "under the microscope".
+- Text never just vanishes. A name on the thing you're entering grows with it and slides out of view; names elsewhere
+  move away with their ground.
+- Paging is walking sideways: the old view slides out as the new one slides in.
+
+## The backpack and Send (decided)
+
+- **Getting things in:** found in the game (a gift, a discovery), or **Send** from anything you make. Send takes the
+  bar, track, part or song you're on, as audio (rendered by the engine with its effects) or as notes, to the backpack,
+  out of the app (a file or the share sheet), and later to a studio's timeline or a sampler in another location.
+- **Pockets:** Sounds, Patterns, Gear, Keepsakes. Sounds plant on drum rows; patterns plant notes into a track or a
+  part (as scale steps, so they land in the local key); gear works on a track.

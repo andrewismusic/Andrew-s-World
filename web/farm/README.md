@@ -5,12 +5,16 @@ phone build. It starts from the prototype's workflow (`reference/fractal-grooveb
 
 - **Music plays through the native engine.** `awdsp.wasm` is `Packages/AWCore/Sources/AWDSP` compiled to
   WebAssembly (`./build.sh`), running in an AudioWorklet (`engine-worklet.js`): the same C++ the iOS app uses.
-  Interface sounds, ambience and scale previews still use Web Audio.
+  Interface sounds, ambience and scale previews still use Web Audio. Edits post just the song that changed
+  (`aw_engine_set_song`), so dragging a control is heard as you drag.
 - **Songs are kept in the artifact's private storage** (`db`, under the viewer's own folder), as well as in the browser.
-- **The backpack**: collected sounds (planted on drum rows, stored with the artifact) and gear.
+- **The backpack and Send**: pockets for sounds (planted on drum rows, stored with the artifact), patterns, gear and
+  keepsakes. Send renders a bar, track, part or song to audio in a worker (`render-worker.js`, the same engine) or
+  writes it as MIDI, for the backpack, a file (zipped inside Claude, whose downloads don't take .wav or .mid) or the
+  share sheet.
 
 `farm.html` is now the source for this build; it no longer tracks the prototype. Decisions made here are the spec
 for the SwiftUI screens.
 
-Publish: `farm.html` as the page, with `engine-worklet.js` and `awdsp.wasm` as files; capabilities
+Publish: `farm.html` as the page, with `engine-worklet.js`, `render-worker.js` and `awdsp.wasm` as files; capabilities
 `{db: {}, user: {}, assets: {}, downloads: true}`.
