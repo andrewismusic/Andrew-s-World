@@ -100,6 +100,7 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   some move to another pitch at the same moment, some move to another step, and a few new ones join. A bigger roll
   changes more. The fuller the bar, the more notes go and the fewer join, so rolling again and again doesn't fill it
   up. Bass, chords and lead come out monophonic, and chords only rarely ring for a long time.
+- **The dice always do something you can hear**, even at their smallest; Locks also works on a single note.
 - **Randomizing locks:** a bigger roll locks more notes and more settings and moves them further; at the top it can
   set any value.
 - **Locked notes are hatched in pink**, like an empty bar's hatching (an outline read as a selection). There are no
@@ -118,7 +119,11 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
 - **Parts are drawn at one scale on every page**: four rows of eight bars. Parts have names (letters by default) that
   you can change on the part page.
 - **The Farm has no All button** (Solucan keeps it). Keys is a piano icon.
-- **Chords are ducks**: a mother duck and a line of ducklings, so a note looks natural at any length.
+- **Chords are ducks**: a mother duck leads at the start of the chord and her ducklings trail to the right, so a
+  note looks natural at any length.
+- **A note that runs past the bar line shows no end there**, and its continuation shows no start: ends are drawn
+  only where a note really ends.
+- **Zooming into a note dives into one pixel of its main colour**, which becomes the note view's ground.
 - **Effects are buildings you walk to**: paging pans sideways across the farm, and opening an effect zooms you up to
   its wall, where the controls are plaques. A magnifier zooms back out.
 
@@ -134,10 +139,24 @@ to a new screen:
   move away with their ground.
 - Paging is walking sideways: the old view slides out as the new one slides in.
 
-## The backpack and Send (decided)
+## The backpack (decided)
 
-- **Getting things in:** found in the game (a gift, a discovery), or **Send** from anything you make. Send takes the
-  bar, track, part or song you're on, as audio (rendered by the engine with its effects) or as notes, to the backpack,
-  out of the app (a file or the share sheet), and later to a studio's timeline or a sampler in another location.
-- **Pockets:** Sounds, Patterns, Gear, Keepsakes. Sounds plant on drum rows; patterns plant notes into a track or a
-  part (as scale steps, so they land in the local key); gear works on a track.
+- **One tap to bounce.** The arrow beside the pack renders what you're looking at (the note, the bar of a track, the
+  part, the song) to audio in the background while you keep working. The arrow fills as it renders; when it's done a
+  little sound flies into the pack, the pack jumps with a chime and counts what's new. No dialog, no pause.
+- **Audio only.** The game doesn't export MIDI: committing ideas to audio is part of how it works.
+- **Opening the pack zooms into it**: a fixed, full-screen inventory with pockets for Sounds (in folders; bounces
+  file themselves by location, imports into "Imported"; imported audio keeps its first minute), Patterns (found, not
+  made), Tools and Keepsakes.
+- **Tools work two ways.** Some act on what you're working on (the jar of worms eats, darkens and stutters notes on
+  the pattern or part you're on). Others are places you take audio to: the Transmitter sends a sound out of the game
+  or to the home studio; Slicefield (not met yet) will cut and rearrange audio and hand it back.
+- **Direction under discussion:** locations are where particular sounds and tools are found; the general DAW tools
+  live in the home studio, so a song moves through stages: ideas, development, structure, then commit and polish.
+
+## Style rules
+
+- **Zooms only move and scale things.** Nothing fades or turns transparent while zooming in or out; text that leaves
+  slides out of view.
+- **Popups never change size** with what they show. The backpack fills the screen.
+- **Sound parameters are knobs**, in every location; faders are kept for mix levels.

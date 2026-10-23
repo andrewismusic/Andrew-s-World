@@ -36,7 +36,9 @@ onmessage = async e => {
     if (r !== 0) throw new Error('The engine could not read the song.');
     const c = m.context, ctx = x.malloc(20);
     new Int32Array(x.memory.buffer, ctx, 5).set([c.level, c.song, c.part, c.bar, c.loop ? 1 : 0]);
-    x.aw_engine_play_count_in(e2, ctx, 0);
+    // a note plays once, as an audition; anything bigger plays from where the context starts
+    if (m.audition) { x.aw_engine_set_context(e2, ctx); x.aw_engine_audition(e2, m.audition); }
+    else x.aw_engine_play_count_in(e2, ctx, 0);
     const total = Math.ceil(m.seconds * rate), stopAt = Math.ceil(m.music * rate), block = 4096;
     const L = new Float32Array(total), R = new Float32Array(total), pl = x.malloc(block * 4), pr = x.malloc(block * 4);
     let stopped = false;
@@ -45,6 +47,7 @@ onmessage = async e => {
       if (!stopped && i >= stopAt) { x.aw_engine_stop(e2); stopped = true; }
       n = Math.min(block, total - i, i < stopAt ? stopAt - i : block);
       x.aw_engine_render(e2, n, pl, pr);
+      if ((i / block | 0) % 24 === 0) postMessage({ id: m.id, progress: i / total });
       L.set(new Float32Array(x.memory.buffer, pl, n), i);
       R.set(new Float32Array(x.memory.buffer, pr, n), i);
     }
