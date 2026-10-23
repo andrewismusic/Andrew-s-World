@@ -74,7 +74,7 @@ body[data-skin="farm"] .key:active:not([disabled]),body[data-skin="farm"] .ib:ac
 .arm{background:var(--force)!important;color:var(--on)!important}
 
 .top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:9px;margin-right:auto;font:700 15px 'Unbounded','Arial Black',system-ui,sans-serif;letter-spacing:.04em}
+.brand{display:flex;align-items:center;gap:9px;font:700 15px 'Unbounded','Arial Black',system-ui,sans-serif;letter-spacing:.04em}
 .brand svg{display:block}
 .ro{display:flex;flex-direction:column;justify-content:center;height:32px;padding:0 9px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--card);box-shadow:var(--sh);cursor:ns-resize;touch-action:none;user-select:none;-webkit-user-select:none;min-width:58px}
 .ro span{font:700 8px var(--f-ui);letter-spacing:.12em;color:var(--mute)}
@@ -657,6 +657,7 @@ body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!impor
 .eng-fail{position:fixed;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:90;padding:12px 14px;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--card);color:var(--ink);font-weight:700}
 
 .bagbox{width:min(480px,100%)}
+.top #gear{margin-right:auto}
 .sendbox{width:min(460px,100%)}
 .send-where{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .send-w{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px;text-align:left;border:var(--bw) solid var(--edge);border-radius:var(--r);background:var(--well);color:var(--ink)}
@@ -673,8 +674,18 @@ body[data-skin="farm"] .bagbox{background:linear-gradient(#fbf1dc,#f4e2bf)}
 .pan-ghost{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .pan-ghost>*{position:absolute;inset:0}
 /* the backpack is always to hand: a brown pixel pack in the top bar, bigger than the icon buttons and not boxed in */
-.bagb{width:42px;height:42px;padding:0;border:0;background:none;box-shadow:none;flex:0 0 42px;display:grid;place-items:center;cursor:pointer;filter:drop-shadow(0 2px 0 rgba(58,45,39,.35));transition:transform .15s}
-.bagb svg{width:38px;height:auto;display:block;image-rendering:pixelated}
+.bagb{position:relative;width:32px;height:32px;padding:0;border:0;background:none;box-shadow:none;flex:0 0 32px;display:grid;place-items:center;cursor:pointer;filter:drop-shadow(0 2px 0 rgba(58,45,39,.35));transition:transform .15s}
+.bagb svg{width:32px;height:32px;display:block;image-rendering:pixelated}
+.bag-n{position:absolute;right:-5px;top:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--force);color:#fff;font:700 10px/16px var(--f-disp);font-style:normal;box-shadow:0 0 0 2px var(--paper)}
+.bagb.got{animation:gotIt .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes gotIt{0%{transform:scale(1)}30%{transform:scale(1.35) rotate(-8deg)}60%{transform:scale(.92) rotate(5deg)}100%{transform:scale(1)}}
+/* the bounce arrow fills like a clock while the engine renders */
+.bnc{position:relative}
+.bnc.busy{background:conic-gradient(color-mix(in srgb,var(--sel) 45%,var(--card)) calc(var(--p,0) * 1turn),var(--card) 0)}
+.bnc.busy svg{animation:bncNudge .6s ease-in-out infinite alternate}
+@keyframes bncNudge{to{transform:translateX(2px)}}
+.bounce-fly{position:fixed;z-index:95;width:22px;height:22px;pointer-events:none;image-rendering:pixelated}
+.bounce-fly svg{width:100%;height:100%;display:block}
 .bagb:hover{transform:translateY(-2px) rotate(-4deg)}.bagb:active{transform:translateY(1px) scale(.95)}
 .bagb:focus-visible{outline:2px solid var(--sel);outline-offset:2px;border-radius:8px}
 .bag-sec{display:flex;flex-direction:column;gap:8px}
@@ -725,7 +736,7 @@ body[data-skin="station"] .actrow>*{visibility:hidden}
 @media (max-width:560px){.ar{gap:5px}.arg{gap:3px}.actrow .ib{width:30px;min-width:30px}.actrow .play,.actrow .rec{width:36px}.pgn{display:none}.mscell{flex-basis:42px}}
 /* the info / character button: faces slide like the pane does */
 .chb{overflow:hidden;color:var(--ink)}
-.chi{position:absolute;inset:0;display:block}
+.chi{position:absolute;inset:0;display:block;background:var(--card)}
 .chi svg{display:block;width:100%;height:100%}
 .chi.gdi{display:grid;place-items:center}.chi.gdi svg{width:78%;height:78%}
 .chi.in-up{animation:fUpIn .32s cubic-bezier(.2,.8,.2,1)}.chi.out-up{animation:fUpOut .32s cubic-bezier(.2,.8,.2,1) forwards}
@@ -815,7 +826,15 @@ body[data-skin="farm"] .top.crop.e-drums{background-image:var(--sp-pumpkin),var(
 body[data-skin="farm"] .top.crop.e-bass{background-image:var(--sp-logend),var(--sp-bark)!important;background-size:auto 100%,auto 100%!important;background-position:right center,left center!important;background-repeat:no-repeat,repeat-x!important}
 body[data-skin="farm"] .top.crop.e-lead{background-image:var(--fl,var(--sp-flower0)),var(--sp-vine)!important;background-size:auto 100%,auto 100%!important;background-position:left center,left center!important;background-repeat:no-repeat,repeat-x!important}
 body[data-skin="farm"] .top.crop.e-lead.p1{--fl:var(--sp-flower1)}body[data-skin="farm"] .top.crop.e-lead.p2{--fl:var(--sp-flower2)}body[data-skin="farm"] .top.crop.e-lead.p3{--fl:var(--sp-flower3)}
-body[data-skin="farm"] .top.crop.e-chords{background-image:var(--hd,var(--sp-head0)),var(--tl,var(--sp-tail0)),var(--bd,var(--sp-body0))!important;background-size:auto 100%,auto 100%,auto 100%!important;background-position:right center,left center,left center!important;background-repeat:no-repeat,no-repeat,repeat-x!important}
+body[data-skin="farm"] .top.crop.e-chords{background-image:none!important;container-type:size}
+body[data-skin="farm"] .top.crop.e-chords .dk-m,body[data-skin="farm"] .top.crop.e-chords .dk-b{position:absolute;top:0;bottom:0;pointer-events:none;image-rendering:pixelated}
+body[data-skin="farm"] .top.crop.e-chords .dk-m{left:0;width:130cqh;background:var(--hd) left center/auto 100% no-repeat}
+body[data-skin="farm"] .top.crop.e-chords .dk-b{left:130cqh;right:0;background:var(--tl) right center/auto 100% no-repeat,var(--bd) left center/auto 100% repeat-x}
+/* a note that carries on past the bar line shows no end there; its continuation in the next bar shows no start */
+body[data-skin="farm"] .top.crop.e-chords.over .dk-b{background:var(--bd) left center/auto 100% repeat-x}
+body[data-skin="farm"] .top.crop.e-chords.tail .dk-m{display:none}body[data-skin="farm"] .top.crop.e-chords.tail .dk-b{left:0}
+body[data-skin="farm"] .top.crop.e-bass.over{background-image:var(--sp-bark)!important;background-size:auto 100%!important;background-position:left center!important;background-repeat:repeat-x!important}
+body[data-skin="farm"] .top.crop.e-lead.tail{background-image:var(--sp-vine)!important;background-size:auto 100%!important;background-position:left center!important;background-repeat:repeat-x!important}
 body[data-skin="farm"] .crop.e-chords.q0{--hd:var(--sp-head0);--tl:var(--sp-tail0);--bd:var(--sp-body0)}
 body[data-skin="farm"] .crop.e-chords.q1{--hd:var(--sp-head1);--tl:var(--sp-tail1);--bd:var(--sp-body1)}
 body[data-skin="farm"] .crop.e-chords.q2{--hd:var(--sp-head2);--tl:var(--sp-tail2);--bd:var(--sp-body2)}
@@ -909,9 +928,11 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
 <div id="bgfx" aria-hidden="true"></div>
 <div class="app">
   <header class="top">
-    <div class="brand"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><span class="bt">Andrew’s World</span></div>
-    <button class="ib" id="send" aria-label="Send" title="Send this bar, track, part or song as audio or notes"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2M4.6 5.2 8 1.8l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 9.5v3.2c0 .6.5 1.1 1.1 1.1h8.8c.6 0 1.1-.5 1.1-1.1V9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button><button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="brand"><svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><span class="bt">Andrew’s World</span></div>
+    <button class="ib" id="gear" aria-label="Preferences" title="Preferences"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.30 8.00L15.10 8.00M11.75 11.75L13.02 13.02M8.00 13.30L8.00 15.10M4.25 11.75L2.98 13.02M2.70 8.00L0.90 8.00M4.25 4.25L2.98 2.98M8.00 2.70L8.00 0.90M11.75 4.25L13.02 2.98" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/></svg></button>
+    <button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="ib" id="redo" aria-label="Redo" title="Redo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M9.5 3l3 3-3 3M12 6H5.5a3.5 3.5 0 0 0 0 7H8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="ib bnc" id="bnc" aria-label="Bounce to the backpack" title="Bounce what you’re looking at to audio, into your backpack"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h9.5M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button>
     <div class="ag dz">
       <div class="dsl" data-a="rsound" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Sound</span><span class="dk"></span></div>
       <div class="dsl" data-a="rnotes" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Notes</span><span class="dk"></span></div>
@@ -922,7 +943,6 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
     <div class="ro" id="swing" tabindex="0" role="slider" aria-label="Swing" data-k="g.sw"><span>SWING</span><b id="swingV">50%</b></div>
     <button class="ro" id="keyR" aria-haspopup="listbox" aria-label="Key" data-k="g.key"><span>KEY</span><b id="keyV">C</b></button>
     <button class="ro wide" id="scaleR" aria-haspopup="listbox" aria-label="Scale" data-k="g.sc"><span>SCALE</span><b id="scaleV">Minor</b></button>
-    <button class="ib" id="gear" aria-label="Preferences" title="Preferences"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.30 8.00L15.10 8.00M11.75 11.75L13.02 13.02M8.00 13.30L8.00 15.10M4.25 11.75L2.98 13.02M2.70 8.00L0.90 8.00M4.25 4.25L2.98 2.98M8.00 2.70L8.00 0.90M11.75 4.25L13.02 2.98" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/></svg></button>
   </header>
 
   <div class="spt" id="spt" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="url(#lg1)"/><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="4.8" fill="url(#lg2)"/><rect x="5.2" y="5.2" width="13.6" height="13.6" rx="3.7" fill="url(#lg3)"/><rect x="7.7" y="7.7" width="8.6" height="8.6" rx="2.5" fill="url(#lg4)"/><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.3" fill="url(#lg5)"/></svg><b>ANDREW’S <span class="w2">WORLD</span></b></div>
@@ -1556,16 +1576,27 @@ function noteLook(ch,slot,eng,nt){if(eng==='chords')return ' q'+Math.round(rv(ch
    log, pumpkin, ducks or flower) in its own field, and it grows smoothly from exactly the size it had in the bar.
    The sprite's on-screen size follows the zoom's area scale, and is set per frame in the layer's own (stretched)
    units so the pixels stay square. Style rule: every zoom should feel like moving closer to the thing you tapped. */
-const NOTE_SPR={drums:[['pumpkin',12,10,'center','no-repeat','fit']],bass:[['logend',7,10,'right center','no-repeat'],['bark',8,10,'left center','repeat-x']],
-  lead:[['flower',10,10,'left center','no-repeat'],['vine',8,10,'left center','repeat-x']],chords:[['head',13,10,'right center','no-repeat'],['tail',4,10,'left center','no-repeat'],['body',8,10,'left center','repeat-x']]};
-function noteBg(el,Wd,Hd){const eng=curEng(),r=selRect(3),nt=curNote();if(skin!=='farm'||!r||!nt||!NOTE_SPR[eng])return;
-  const fw=stage.clientWidth,fh=stage.clientHeight,k=Math.sqrt((Wd*Hd)/(r.w*r.h)),Hp=r.h*fh,Wp=r.w*fw;
-  const q=eng==='chords'?Math.round(rv(noteChain(),sel[2]+'.chords.ch').v*6):0,name=n=>n==='flower'?'flower'+(nt.id%4):n==='head'||n==='tail'||n==='body'?n+q:n;
-  const L=NOTE_SPR[eng];el.style.backgroundColor=barFill(sel[2],sel[4]);
-  el.style.backgroundImage=L.map(l=>`var(--sp-${name(l[0])})`).join(',');
-  el.style.backgroundRepeat=L.map(l=>l[4]).join(',');el.style.backgroundPosition=L.map(l=>l[3]).join(',');
-  el.style.backgroundSize=L.map(([n,w,h,,,fit])=>{const th=(fit?Math.min(Hp,Wp*h/w):Hp)*k;return `${(th*w/h/Wd).toFixed(2)}px ${(th/Hd).toFixed(2)}px`}).join(',');
-  el.style.imageRendering='pixelated'}
+/* Each note's sprite layers as they sit in its crop (h is the crop's height): image, pixel size, x offset, repeat, and
+   which pixel of its main colour the zoom dives into. */
+function noteLayers(eng,nt,w,h,over){const q=eng==='chords'?Math.round(rv(noteChain(),sel[2]+'.chords.ch').v*6):0;
+  if(eng==='drums'){const th=Math.min(h,w*10/12);return{main:'#f87800',ls:[{img:'pumpkin',tw:th*1.2,th,x:(w-th*1.2)/2,y:(h-th)/2,rep:0,a:[4,5]}]}}
+  if(eng==='bass')return{main:'#ac7c00',ls:[...(over?[]:[{img:'logend',tw:h*.7,th:h,x:w-h*.7,y:0,rep:0}]),{img:'bark',tw:h*.8,th:h,x:0,y:0,rep:1,a:[5,4]}]};
+  if(eng==='lead')return{main:PETAL[nt.id%4],ls:[{img:'flower'+(nt.id%4),tw:h,th:h,x:0,y:0,rep:0,a:[3,1]},{img:'vine',tw:h*.8,th:h,x:0,y:0,rep:1}]};
+  return{main:SEA[q].A,ls:[{img:'head'+q,tw:h*1.3,th:h,x:0,y:0,rep:0,a:[9,7]},...(over?[]:[{img:'tail'+q,tw:h*.4,th:h,x:w-h*.4,y:0,rep:0}]),{img:'body'+q,tw:h*.8,th:h,x:h*1.3,y:0,rep:1}]}}
+/* Zooming into a note dives into it: the crop's own sprite grows from exactly its size in the bar, about one pixel of
+   its main colour, which drifts to the middle of the screen and ends up covering it, so the note view's ground is
+   that one colour. Sizes and positions are set per frame in the layer's own (stretched) units, so pixels stay square.
+   Style rule: every zoom moves closer to the thing you tapped; nothing fades. */
+function noteBg(el,bx,by,Wd,Hd,t){const eng=curEng(),r=selRect(3),nt=curNote();if(skin!=='farm'||!r||!nt)return;
+  const fw=stage.clientWidth,fh=stage.clientHeight,cx=r.x*fw,cy=r.y*fh,w=r.w*fw,h=r.h*fh,steps=curSteps(),{main,ls}=noteLayers(eng,nt,w,h,nt.step+nt.len>steps);
+  const an=ls.find(l=>l.a),k=an.rep?Math.max(0,Math.floor((w/2-an.x)/an.tw)):0;
+  /* the anchor pixel's centre (sprites are ten pixels tall, with square pixels) */
+  const px=an.th/10,A0x=cx+an.x+k*an.tw+(an.a[0]+.5)*px,A0y=cy+an.y+(an.a[1]+.5)*px,sc=Math.pow(Math.max(fw,fh)*1.3/px,t),Ax=A0x+(fw/2-A0x)*t,Ay=A0y+(fh/2-A0y)*t;
+  el.style.backgroundColor=t>=1?main:barFill(sel[2],sel[4]);el.style.imageRendering='pixelated';
+  el.style.backgroundImage=ls.map(l=>`var(--sp-${l.img})`).join(',');el.style.backgroundRepeat=ls.map(l=>l.rep?'repeat-x':'no-repeat').join(',');
+  el.style.backgroundSize=ls.map(l=>`${(l.tw*sc/Wd).toFixed(3)}px ${(l.th*sc/Hd).toFixed(3)}px`).join(',');
+  el.style.backgroundPosition=ls.map(l=>`${((Ax+(cx+l.x-A0x)*sc-bx)/Wd).toFixed(3)}px ${((Ay+(cy+l.y-A0y)*sc-by)/Hd).toFixed(3)}px`).join(',')}
+const noteMain=()=>{const nt=curNote(),r=selRect(3);return nt&&r?noteLayers(curEng(),nt,r.w*stage.clientWidth,r.h*stage.clientHeight,false).main:null};
 function fillOf(path,eng){const n=path.length;if(!n)return 'transparent';if(n>=4&&skin==='farm')return barFill(path[2],sel[4]);const song=state.songs[path[0]];if(n===1)return songFill(song);if(n===2)return secFill(song.sections[path[1]]);if(n===3)return barFill(path[2],sel[4]);return engCol(eng||DEF_ENG[path[2]])}
 const stage=$('#stage'),A=$('#A'),B=$('#B'),TL=$('#T');
 /* sections flow like words in a paragraph: up to four rows, a bar is a fixed width, a section that does not fit wraps to the next row */
@@ -1660,12 +1691,14 @@ const facePix=w=>{const f=FACE[w];return pix(f.rows,{x:f.bg},{eyes:f.eyes,bg:f.b
 const SEA=[{k:'dk',H:'#00a800',A:'#ac7c00',a:'#fce0a8',Y:'#f8b800'},{k:'dk',H:'#fcfcfc',A:'#fcfcfc',a:'#bcbcbc',Y:'#fce0a8'},{k:'dk',H:'#503000',A:'#d8803a',a:'#fce0a8',Y:'#f8b800'},
   {k:'dk',H:'#0058f8',A:'#7c7c7c',a:'#bcbcbc',Y:'#fce0a8'},{k:'dk',H:'#383838',A:'#383838',a:'#7c7c7c',Y:'#bcbcbc'},{k:'dk',H:'#d82800',A:'#bcbcbc',a:'#fcfcfc',Y:'#f8b800'},{k:'dk',H:'#6844fc',A:'#b8b8f8',a:'#fcfcfc',Y:'#fce0a8'}];
 const PETAL=['#f878f8','#f8b800','#fcfcfc','#b8b8f8'];
+const DUCKS='<i class="dk-m"></i><i class="dk-b"></i>';
 /* the note and tree sprites become CSS custom properties, so stylesheets can use them as backgrounds */
 (function(){const r=document.documentElement.style,set=(n,s)=>r.setProperty('--sp-'+n,svgURL(s));
   set('grain',pix(['NNnNNNNNNNNNnNNN','NNNNNnNNNNNNNNNN','nNNNNNNNNnNNNNNn','NNNnNNNNNNNNNNNN','NNNNNNnNNNNNnNNN','NnNNNNNNNNNNNNNN','NNNNNnNNNNnNNNNN','NNNNNNNNNNNNNNnN'],{}));
   set('pumpkin',pix(SPR.pumpkin,{}));set('vine',pix(SPR.vine,{}));set('bark',pix(SPR.bark,{}));set('logend',pix(SPR.logend,{}));
   PETAL.forEach((c,i)=>set('flower'+i,pix(SPR.flower,{P:c})));
-  SEA.forEach((q,i)=>{const pl={A:q.A,a:q.a,H:q.H,Y:q.Y};set('tail'+i,pix(SPR[q.k+'Tail'],pl));set('body'+i,pix(SPR[q.k+'Body'],pl));set('head'+i,pix(SPR[q.k+'Head'],pl))})})();
+  const mir=rows=>rows.map(r=>[...r].reverse().join(''));
+  SEA.forEach((q,i)=>{const pl={A:q.A,a:q.a,H:q.H,Y:q.Y};set('tail'+i,pix(mir(SPR[q.k+'Tail']),pl));set('body'+i,pix(mir(SPR[q.k+'Body']),pl));set('head'+i,pix(mir(SPR[q.k+'Head']),pl))})})();
 const TREE_SVG=[pix(SPR.tree,{}),pix(SPR.pine,{})];
 
 /* ================= overlay items (text that never stretches) ================= */
@@ -1715,13 +1748,13 @@ function placeItems(){
     else if(it.kind==='center'){tf=`translate(${X+Wp/2}px,${Y+Hp/2}px) scale(${s}) translate(-50%,-50%)`}
     else if(it.kind==='badge'){tf=`translate(${X+Wp-30*s}px,${Y+6*s}px) scale(${s})`;if(Wp<64*s)show=false}
     else if(it.kind==='corner'){tf=`translate(${X+Wp-8*s}px,${Y+Hp-28*s}px) scale(${s}) translateX(-100%)`}
-    else if(it.kind==='selbox'){tf=`translate(${X}px,${Y}px)`;el.style.width=Wp+'px';el.style.height=Hp+'px';if(zooming&&it.lay==='A')el.style.opacity=String(Math.max(0,1-(z-built)*1.6))}
+    else if(it.kind==='selbox'){tf=`translate(${X}px,${Y}px)`;el.style.width=Wp+'px';el.style.height=Hp+'px';}
     else if(it.kind==='tree'){const k=Math.min(T.sx,T.sy)*(it.lay==='A'?1:1),tw=it.html?20:28,th=it.html?34:36;tf=`translate(${X-tw/2*k}px,${Y-th*k}px) scale(${k})`;show=true}
     else if(it.kind==='crit'){const n=it.html.n,k=it.html.small?.55:1,lift=(it.html.anim==='sprout'?14:(3+9*it.html.g)+n*7)*k;el.style.width=Math.max(17,Wp/s/k)+'px';el.style.height='17px';tf=`translate(${X}px,${Y-lift*s}px) scale(${s*k})`;if(Wp<4)show=false}
     /* the name of the thing you are zooming into doesn't vanish: it grows with the ground it's written on and slides up
-       out of view, fading as it goes */
+       out of view (zooms only move and scale things; nothing fades) */
     let fade=null;if(zooming&&it.lay==='A'&&it.bi!=null&&it.bi===selI&&(it.kind==='lab'||it.kind==='nlab')){const t=z-built,g=Math.min(3.2,Math.sqrt(T.sx*T.sy));
-      const ox=it.kind==='lab'?X+5*g:X+(skin==='farm'?Hp+3:7),oy=it.kind==='lab'?Y+5*g:Y+Hp/2-5*g;tf=`translate(${ox}px,${oy-t*t*(22*g+40)}px) scale(${g})`;fade=1-smooth(.35,.95,t);show=fade>.01}
+      const ox=it.kind==='lab'?X+5*g:X+(skin==='farm'?Hp+3:7),oy=it.kind==='lab'?Y+5*g:Y+Hp/2-5*g;tf=`translate(${ox}px,${oy-t*t*(Math.max(0,oy)+40*g)}px) scale(${g})`;fade=1;show=true}
     el.style.visibility=show?'visible':'hidden';el.style.transform=tf;if(fade!=null)el.style.opacity=fade;else if(it.kind!=='selbox'||!zooming)el.style.opacity=T.op==null?1:T.op;
   }
 }
@@ -1773,10 +1806,10 @@ function viewHTML(L,lay){
     const ri=Math.round((c.locks['rat.rt']||0)*5);if(ri){cls+=' rat';st+=`;--r:${Math.max(1,Math.ceil(c.len/RATE_ST[ri]-1e-6))}`}if(ui.lsel.has(c.id))cls+=' ls';const pr=noteProb(sel[2],eng,c);if(pr!==undefined&&pr<1)cls+=' pr';
     if(!(skin==='farm'&&eng==='drums'))item('nlab',esc(noteName(mu,eng,c.pitch)),r,{bi:i,roll:true});if(sel[3]===i&&lay==='A')item('selbox','',r,{bi:i,roll:true});
     if(viewL===3)for(const cr of crittersFor(ch.concat(c),sel[2],eng,c))item('crit',cr,r,{roll:true,bi:i});
-    blocks+=`<div class="${cls}" data-nid="${c.id}" data-i="${i}" style="${st}">${hasLocks(c)?'<i class="lkx"></i>':''}${eng==='drums'?'':'<span class="hl"></span><span class="hr"></span>'}${c.step+c.len>steps?'<i class="cont" aria-hidden="true"><svg viewBox="0 0 8 10"><path d="M1 1l6 4-6 4z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg></i>':''}</div>`});
+    blocks+=`<div class="${cls}" data-nid="${c.id}" data-i="${i}" style="${st}">${eng==='chords'?DUCKS:''}${hasLocks(c)?'<i class="lkx"></i>':''}${eng==='drums'?'':'<span class="hl"></span><span class="hr"></span>'}${c.step+c.len>steps?'<i class="cont" aria-hidden="true"><svg viewBox="0 0 8 10"><path d="M1 1l6 4-6 4z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg></i>':''}</div>`});
   const lane3=curLane();for(let pb=sel[4]-1;pb>=0;pb--){const pbar=lane3.bars[pb],off=(sel[4]-pb)*steps;if(!pbar)continue;
     pbar.notes.forEach(c=>{const tail=c.step+c.len-off;if(tail<=0||c.step>=steps)return;const r=noteRects([{step:0,len:Math.min(tail,steps),pitch:c.pitch}],eng,steps)[0];
-      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}${hasLocks(c)?' lk':''}" data-tb="${pb}" data-tid="${c.id}" aria-hidden="true" title="Drag to change where this note ends" style="${pct(r)};background-color:${engCol(eng)}">${hasLocks(c)?'<i class="lkx"></i>':''}<span class="hr"></span></div>`})}
+      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}${hasLocks(c)?' lk':''}${tail>steps?' over':''}" data-tb="${pb}" data-tid="${c.id}" aria-hidden="true" title="Drag to change where this note ends" style="${pct(r)};background-color:${engCol(eng)}">${eng==='chords'?DUCKS:''}${hasLocks(c)?'<i class="lkx"></i>':''}<span class="hr"></span></div>`})}
   let h=`<div class="roll l-${eng}" style="${rollStyle()}${bandStyle(rows,beatLines(mu))}">${gridHTML(eng,steps,mu,bar)}${blocks}<div class="ph" data-cp="${cp}" hidden></div></div>`;
   const nsc=scLen(mu);for(let p=0;p<rows;p++)if(eng==='drums'||p%nsc===0)item('row',eng==='drums'?vShort(p):noteName(mu,eng,p),{x:0,y:PAD+(rows-1-p)*rh,w:PXL,h:rh},{rollY:true});
   h+=`<div class="mm"${roll.vis>=.999?' hidden':''}><i style="left:${roll.u0*100}%;width:${roll.vis*100}%"></i></div>`;
@@ -2065,7 +2098,7 @@ function selRect(L){const fw=stage.clientWidth||800,fh=stage.clientHeight||500;
 function buildLayers(L){
   built=L;dirty=false;pend=[];setGutter();if(L>=2){computeVis();focusRollV()}
   const bgOf=l=>l===-1?SPACE_BG:l===0?worldBg(state.wsel):fillOf(sel.slice(0,l));
-  A.innerHTML=viewHTML(L,'A');A.style.background=bgOf(L);A.style.imageRendering='';A.style.borderRadius='';if(L===4)noteBg(A,1,1);
+  A.innerHTML=viewHTML(L,'A');A.style.background=bgOf(L);A.style.imageRendering='';A.style.borderRadius='';if(L===4&&skin==='farm'){const m=noteMain();if(m)A.style.background=m}
   if(L<maxZ()){B.innerHTML=viewHTML(L+1,'B');B.style.background=bgOf(L+1);B.style.imageRendering=''}else{B.innerHTML='';B.style.background='transparent'}
   viewL=L;buildItems();lastActive=new Set();updatePlayVisuals(true);
 }
@@ -2089,7 +2122,7 @@ function applyZoom(){
   B.style.setProperty('--det',det.toFixed(3));
   /* the song's outline thickens as we zoom in, so the square-ish corners of the part view never cover it */
   if(L===0&&skin==='farm'){const el=A.querySelector(`.b.farm.top[data-i="${sel[0]}"]`);if(el){const k=Math.min(sx,sy),rA=22*k,rB=selRadius(0,r.w*fw,r.h*fh)*(1-t),ex=Math.max(0,.45*(rA-rB))/k;el.style.boxShadow=`0 0 0 3px #f6e1a8,0 0 0 ${(5+ex).toFixed(1)}px var(--edge)`}}
-  if(L===3){noteBg(B,Wd,Hd);const nv=B.querySelector('.nv');if(nv){const k=Math.min(Wd,Hd);nv.style.transform=`scale(${k/Wd},${k/Hd})`;nv.style.opacity=smooth(.4,.92,t).toFixed(3)}tB={vis:false}}
+  if(L===3){noteBg(B,x*fw,y*fh,Wd,Hd,t);const nv=B.querySelector('.nv');if(nv){const k=Math.min(Wd,Hd);nv.style.transform=`scale(${k/Wd},${k/Hd})`}tB={vis:false}}
   else tB={tx:x*fw,ty:y*fh,sx:Wd,sy:Hd,s:Math.min(Wd,Hd),op:det,vis:true};
   B.style.visibility='visible';A.style.pointerEvents='none';
   placeItems();
@@ -2435,7 +2468,7 @@ function actState(){
   o.rsound=[L>=1,['','Randomize the song’s sound','Randomize every track’s sound in this part (as locks)',`Randomize the ${kind} sound in this part (as locks)`,curEng()==='drums'?'Randomize this drum hit (as locks)':'Randomize this note’s sound (as locks)'][L]];
   o.rnotes=[L===2||L===3,L===2?'Randomize every track’s notes in this part':`Randomize the ${kind} notes in this bar`];
   if(L===3&&ns){o.rsound[1]=`Randomize the sound of the ${ns} selected notes (as locks)`;o.rnotes[1]=`Move the ${ns} selected notes around the bar`}
-  o.rlocks=[L===2||L===3,L===2?`Add random locks to the ${kind} notes in this part`:ns?`Add random locks to the ${ns} selected notes`:`Add random locks to the ${kind} notes in this bar`];
+  o.rlocks=[L>=2,L===2?`Add random locks to the ${kind} notes in this part`:L===4?'Add random locks to this note':ns?`Add random locks to the ${ns} selected notes`:`Add random locks to the ${kind} notes in this bar`];
   o.lasso=[L===3,'Lasso: drag across notes to select several'];
   o.worms=[(L===2&&!fxp)||L===3,L===2?'Worms: let them loose on every track in this part':'Worms: let them loose on this bar'];
   const n=L===0?state.songs.length:song.sections.length;
@@ -2559,8 +2592,10 @@ function runAct(act,amt=1){
   if(act==='del'&&L===3){const b=curBar();if(ui.lsel.size){b.notes=b.notes.filter(n=>!ui.lsel.has(n.id));ui.lsel.clear()}else{b.notes=[];uis('clear')}sel[3]=null;changed();return}
   if(act==='del'&&L===4){const b=curBar(),i=sel[3];if(i==null)return;b.notes.splice(i,1);sel[3]=null;cancelAnim();z=3;changed();return}
   let picked=L===3&&ui.lsel.size?curBar().notes.filter(n=>ui.lsel.has(n.id)):null;if(picked&&!picked.length){picked=null;ui.lsel.clear()}
+  /* every roll counts: even the smallest one changes something you can hear, and the scale rises from there */
+  if(act==='rsound'||act==='rnotes'||act==='rlocks')amt=.3+.7*amt;
   if(act==='rsound'){/* locks on this level (or on each lassoed note); the amount sets both how many parameters get a roll and how far they move */
-    const pk=.06+.94*Math.pow(amt,1.4);let nch=0;
+    const pk=.12+.88*Math.pow(amt,1.2);let nch=0;
     const roll=(ch,lk,slots,voice,Lv)=>{for(const k of soundKeys(slots,voice)){const p=pdef(k);if(p.lv[0]>Lv||Lv>p.lv[1]||p.role==='prob'||r()>pk)continue;const cur=rv(ch,k).v,nv=randVal(p,r);lk[k]=p.st?(r()<amt?nv:cur):clamp01(cur+(nv-cur)*amt);nch++}};
     if(picked){const ch=chain;for(const nt of picked)roll(ch.concat(nt),nt.locks,[sel[2]],curEng()==='drums'?clampi(nt.pitch,0,7):null,4)}
     else roll(chain,node.locks,L<=2?[0,1,2,3]:[sel[2]],L===4&&curEng()==='drums'?clampi(curNote().pitch,0,7):null,L);
@@ -2581,8 +2616,8 @@ function runAct(act,amt=1){
       bar.notes=bar.notes.length?mutateNotes(bar.notes,nw,amt,eng,steps,r):nw};
     if(L===2){for(let s=0;s<4;s++)sec.lanes[s].bars.forEach((_,b)=>gen(s,b))}else gen(sel[2],sel[4]);
     ui.lsel.clear();sel[3]=null;uis('dice');changed();return}
-  if(act==='rlocks'){const eng=curEng(),slot=sel[2],pLock=.2+.8*amt,lane=curLane(),bars=L===2?lane.bars:[curBar()];
-    for(const bar of bars)bar.notes.forEach(nt=>{if(L===3&&ui.lsel.size&&!ui.lsel.has(nt.id))return;if(r()>pLock)return;
+  if(act==='rlocks'){const eng=curEng(),slot=sel[2],pLock=L===4?1:.25+.75*amt,lane=curLane(),bars=L===2?lane.bars:[curBar()],one=L===4?curNote():null;
+    for(const bar of bars)bar.notes.forEach(nt=>{if(one&&nt!==one)return;if(L===3&&ui.lsel.size&&!ui.lsel.has(nt.id))return;if(r()>pLock)return;
       const ks=soundKeys([slot],eng==='drums'?clampi(nt.pitch,0,7):null).filter(k=>!pdef(k).st&&!['reverb','delay','prob'].includes(pdef(k).role)&&pdef(k).lv[1]>=4);
       const nc=1+Math.floor(r()*(1+amt*amt*7)),ch=[state.master,song,sec,lane,nt],pick=new Set(),spread=.5*amt+1.5*amt*amt;
       while(pick.size<Math.min(nc,ks.length))pick.add(ks[Math.floor(r()*ks.length)]);
@@ -2708,7 +2743,7 @@ function pageState(){const L=Lnow();if(L<0){const i=curPl();return{n:PLANETS.len
 const barPos=document.createElement('div');barPos.className='barpos';barPos.setAttribute('aria-hidden','true');stage.appendChild(barPos);
 function renderPager(){const st=pageState();$('#pgL').disabled=!st||st.i<=0;$('#pgR').disabled=!st||st.i>=st.n-1;$('#pgN').textContent=st?st.lab:'';placeBarPos()}
 /* the pattern view shows which bar you are on, out of the part's length */
-function placeBarPos(){const on=z>2.5&&z<3.5&&!!curSong();barPos.hidden=!on;if(!on)return;barPos.style.opacity=clamp01(1-Math.abs(z-3)*2.4).toFixed(2);const pb=playing&&cur&&cur.s===sel[0]&&cur.c===sel[1]&&cur.p!==sel[4]?` · ▶ ${cur.p+1}`:'';barPos.textContent=`${sel[4]+1} / ${secLen(curSec())}`+(ui.loop?' ⟲':'')+pb}
+function placeBarPos(){const on=z>2.5&&z<3.5&&!!curSong();barPos.hidden=!on;if(!on)return;barPos.style.transform=`translateY(${(-Math.abs(z-3)*90).toFixed(1)}px)`;const pb=playing&&cur&&cur.s===sel[0]&&cur.c===sel[1]&&cur.p!==sel[4]?` · ▶ ${cur.p+1}`:'';barPos.textContent=`${sel[4]+1} / ${secLen(curSec())}`+(ui.loop?' ⟲':'')+pb}
 /* a track shorter than its part has silence at the end; paging there gives it empty bars to plant in */
 function padLane(lane,n){while(lane.bars.length<n)lane.bars.push({notes:[]})}
 /* paging is a sideways walk across the farm: the old view slides out as the new one slides in */
@@ -2757,11 +2792,11 @@ function fxHTML(){const{s,i}=ui.fx,song=curSong(),t=song.fx[s][i],tr=sc(ELAB[DEF
 function refreshFx(){if(!ui.fx)return;fxv.querySelectorAll('.hfd').forEach(h=>{const k=h.dataset.k,f=fdState(k,2);h.querySelector('.hfd-f').style.width=(f.v*100)+'%';h.querySelector('.hfd-k').style.left=(f.v*100)+'%';h.querySelector('.hfd-v').textContent=fmt(k,f.v);const[src]=srcText(k,f);const s=h.querySelector('.hfd-s');s.textContent=src;h.classList.toggle('lk',f.here)})}
 function openFx(s,i,el){ui.fx={s,i};fxv.innerHTML=fxHTML();refreshFx();fxv.hidden=false;uis('in');
   const sr=stage.getBoundingClientRect(),r=el.getBoundingClientRect(),W=sr.width,Hh=sr.height;
-  fxv.style.transition='none';fxv.style.transformOrigin='0 0';fxv.style.opacity='.6';fxv.style.transform=`translate(${r.left-sr.left}px,${r.top-sr.top}px) scale(${r.width/W},${r.height/Hh})`;fxv._from=fxv.style.transform;
-  void fxv.offsetWidth;fxv.style.transition=RM?'none':'transform .32s cubic-bezier(.2,.8,.2,1),opacity .2s';fxv.style.transform='none';fxv.style.opacity='1'}
+  fxv.style.transition='none';fxv.style.transformOrigin='0 0';fxv.style.opacity='1';fxv.style.transform=`translate(${r.left-sr.left}px,${r.top-sr.top}px) scale(${r.width/W},${r.height/Hh})`;fxv._from=fxv.style.transform;
+  void fxv.offsetWidth;fxv.style.transition=RM?'none':'transform .32s cubic-bezier(.2,.8,.2,1)';fxv.style.transform='none';fxv.style.opacity='1'}
 function closeFx(instant,then){if(!ui.fx){then&&then();return}ui.fx=null;
   if(instant||RM){fxv.hidden=true;fxv.innerHTML='';then&&then();return}uis('out');
-  fxv.style.transform=fxv._from||'scale(.2)';fxv.style.opacity='0';setTimeout(()=>{if(!ui.fx){fxv.hidden=true;fxv.innerHTML=''}dirty=true;setZ(z);then&&then()},300)}
+  fxv.style.transform=fxv._from||'scale(.2)';setTimeout(()=>{if(!ui.fx){fxv.hidden=true;fxv.innerHTML=''}dirty=true;setZ(z);then&&then()},300)}
 let fxg=null;
 const fxSet=(g,e)=>{const r=g.el.getBoundingClientRect();setAbs(g.k,clamp01((e.clientX-r.left)/r.width),2);refreshFx();awLive()};
 fxv.addEventListener('pointerdown',e=>{const t=e.target.closest('.hfd-t');if(!t)return;e.preventDefault();const k=t.closest('.hfd').dataset.k,now=Date.now();
@@ -2851,7 +2886,7 @@ function yardPageHTML(s){
 const mmss=t=>Math.floor(t/60)+':'+String(Math.round(t%60)).padStart(2,'0');
 function songFacts(song){const mu=musAt([state.master,song]);let bars=0,secs=0;for(const c of song.sections){const m=musAt([state.master,song,c]),n=secLen(c);bars+=n;secs+=n*barTicks(m)/12*60/m.bpm}
   return `${mu.bpm} bpm · ${NN[mu.key]} ${scaleName(mu.scale)} · ${song.sections.length} part${song.sections.length>1?'s':''} · ${bars} bars · ${mmss(secs)}`}
-function nameHead(name,act,extra,facts){return `<div class="nm-head"><div class="nm-n" title="${esc(name)}">${esc(name)}</div><button class="ib" data-${act} aria-label="Rename" title="Rename">${ICON.pen}</button>${extra}<span class="pn-sp"></span><span class="pn-tag"></span></div><div class="nm-facts">${facts}</div>`}
+function nameHead(name,act,extra,facts){return `<div class="nm-head"><div class="nm-n" title="${esc(name)}">${esc(name)}</div><button class="ib" data-${act} aria-label="Rename" title="Rename">${ICON.pen}</button>${extra}<span class="pn-sp"></span><span class="pn-tag"></span></div>`}
 function libHTML(){const song=curSong();return nameHead(song.name,'rename',`<button class="ib" data-export aria-label="Export" title="Export the song">${ICON.exp}</button>`,songFacts(song))+
   `<div class="fwrap"><div class="hsl">${engKeys('master').map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(P[k].label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${P[k].label}" aria-valuemin="0" aria-valuemax="100"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span></div>`).join('')}</div></div>`}
 function partHead(){const song=curSong(),sec=curSec(),mu=musAt([state.master,song,sec]),n=secLen(sec),t=n*barTicks(mu)/12*60/mu.bpm;
@@ -3362,8 +3397,8 @@ const ROWL=['K','SN','C','R','CH','OH','TM','PC'];
 const GEAR_ICON=pix(['..KKKKKKKK..','.KBBBBBBBBK.','.KBWKBBWKBK.','.KBKKBBKKBK.','.KBBBBBBBBK.','.KBBRRRRBBK.','.KBBBBBBBBK.','.KBBSSSSBBK.','.KBSWWWWSBK.','.KBBSSSSBBK.','.KBBBBBBBBK.','..KKKKKKKK..'],{});
 const GEAR=[{id:'echo-pedal',name:'Echo pedal',from:'demo gear',desc:'Adds an echo to the track you’re on.',building:'well'}];
 const bagEl=$('#bagM');
-const BAG_SPR=['.....KKKK.....','....KK..KK....','...KKKKKKKK...','..KNNNNNNNNK..','.KNNNNNNNNNNK.','.KnnnnnnnnnnK.','.KNNNNNNNNNNK.','.KNNNNYYNNNNK.','.KnnnnYYnnnnK.','.KNNNNNNNNNNK.','KKNKKKKKKKKNKK','KNKNNNNNNNNKNK','KNKNNyNNyNNKNK','KNKnnnnnnnnKNK','.KKNNNNNNNNKK.','..KKKKKKKKKK..'];
-$('#bag').innerHTML=pix(BAG_SPR,{N:'#b5762c',n:'#6e4316',Y:'#f8b800',y:'#e0a85c'});
+const BAG_SPR=['....KKKKKKKK....','...KssssssssK...','..KsSSSSSSSSsK..','.KKKKKKKKKKKKKK.','.KSSSSSSSSSSSSK.','.KSbbbbSSOOOOSK.','.KSbllbSSOooOSK.','.KSbbbbSSOOOOSK.','.KSSSSSSSSSSSSK.','KKKKKKKKKKKKKKKK','KdSSSSSSSSSSSSdK','KdSKKKKKKKKKKSdK','KdSKssssssssKSdK','KdSKKKKKKKKKKSdK','.KSSSSSSSSSSSSK.','..KKKKKKKKKKKK..'];
+$('#bag').innerHTML=pix(BAG_SPR,{S:'#8a96a8',s:'#c3ccd8',d:'#4a5466',b:'#3cbcfc',l:'#a4e4fc',O:'#f87800',o:'#fca044'})+'<i class="bag-n" hidden></i>';
 async function bagLoad(){if(!cloud.db)return;try{const d=await cloud.db.doc(cloud.col+'/backpack').get();if(!d.exists)return;bag.items=d.data().items||[];
   for(const it of bag.items){if(it.kind==='pattern'||!it.asset)continue;try{const r=await fetch('/_blob/'+it.asset);if(!r.ok)continue;const j=await r.json();bag.data.set(it.id,{rate:j.rate,pcm:decodePCM(j.pcm)})}catch(e){}}
   bagSendAll();if(!bagEl.hidden)renderBag()}catch(e){console.warn('backpack unavailable:',e)}}
@@ -3729,7 +3764,9 @@ function charFor(){if(z<-.4)return null;const L=Lnow();if(state.worlds[state.wse
 function renderChar(){if(chat.open&&(z<-.4||chat.L!==Lnow()))closeChat();const w=chat.open?chat.who:charFor();chBtn.hidden=!w;if(!w)return;
   if(chBtn.dataset.who!==w){const L=Lnow(),up=chFaceL==null||L>=chFaceL,olds=[...chBtn.querySelectorAll('.chi:not(.gone)')],nw=document.createElement('span');nw.className='chi'+(w==='guide'?' gdi':'');nw.innerHTML=PORT[w];
     /* every face still showing leaves, so quick level changes never leave two faces stacked */
-    for(const old of olds){if(RM){old.remove();continue}old.classList.add('gone',up?'out-up':'out-dn');setTimeout(()=>old.remove(),340)}if(olds.length&&!RM)nw.className+=up?' in-up':' in-dn';chBtn.appendChild(nw);chBtn.dataset.who=w}
+    /* a change while the last one is still sliding swaps at once: two faces never share the circle */
+    const busy=RM||performance.now()-(chBtn._t||0)<360;chBtn.querySelectorAll('.chi.gone').forEach(o=>o.remove());chBtn._t=performance.now();
+    for(const old of olds){if(busy){old.remove();continue}old.classList.add('gone',up?'out-up':'out-dn');setTimeout(()=>old.remove(),340)}if(olds.length&&!busy)nw.className+=up?' in-up':' in-dn';chBtn.appendChild(nw);chBtn.dataset.who=w}
   chFaceL=Lnow();
   chBtn.classList.toggle('on',chat.open);chBtn.title=chat.open?'Close':w==='guide'?'About this page':'Talk to '+CHARS[w].name;chBtn.setAttribute('aria-label',chBtn.title)}
 chBtn.addEventListener('click',()=>{if(chat.open){closeChat();return}const w=charFor();if(w)openChat(w)});
