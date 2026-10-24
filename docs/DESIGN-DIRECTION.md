@@ -155,14 +155,16 @@ to a new screen:
 - **Audio only.** The game doesn't export MIDI: committing ideas to audio is part of how it works.
 - **Opening the pack zooms into it**: the whole screen grows around the pack while its flap opens, until you're
   inside it and the inventory is all there is. Zooming out lands you back where you were as the flap shuts.
-- **The inventory**: a grid of sixteen tool slots that is always on show, Zelda style. Found tools fill slots, a tool
-  you've heard of but not found is a silhouette, and the empty slots say how many are still out there ("3 / 16
-  found"). Under it, two pockets: Sounds (in folders; bounces file themselves by location, imports into
+- **The inventory**: a grid of sixteen tool slots that is always on show, Zelda style. Every slot starts empty
+  ("0 / 16 found"); found tools fill slots in the order you find them, and a tool you've heard of but not found is a
+  silhouette. (A switch in the settings puts the demo tools in, for testing. One starting tool may come later.) Under it, two pockets: Sounds (in folders; bounces file themselves by location, imports into
   "Imported"; imports and bounces keep their first two minutes, the most one stored asset holds) and Keepsakes.
   No Patterns pocket: with no MIDI out, notes don't travel. Removing a sound asks you to tap again to confirm.
 - **Tools work two ways.** Some act on what you're working on (the jar of worms eats, darkens and stutters notes on
   the pattern or part you're on). Others are places you take audio to: the Transmitter sends a sound out of the game
   or to the home studio; Slicefield (not met yet) will cut and rearrange audio and hand it back.
+- **Bars move like parts.** On the track view, drag a bar along its track to move it, the way parts are dragged on
+  the part view.
 - **Direction under discussion:** locations are where particular sounds and tools are found; the general DAW tools
   live in the home studio, so a song moves through stages: ideas, development, structure, then commit and polish.
 

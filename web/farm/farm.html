@@ -1777,7 +1777,7 @@ function placeItems(){
     if(!T.vis){el.style.visibility='hidden';continue}
     let x=it.x,w=it.w,iy=it.y,ih=it.h;if(it.roll){x=(x-roll.u0)/roll.vis;w=w/roll.vis}if(it.roll||it.rollY){iy=(iy-rollV.v0)/rollV.vis;ih=ih/rollV.vis}
     let X=T.tx+x*fw*T.sx,Y=T.ty+iy*fh*T.sy;const Wp=w*fw*T.sx,Hp=ih*fh*T.sy,s=T.s||1;
-    if(drag&&drag.on&&it.lay==='A'&&it.bi===drag.i){X+=drag.dx;Y+=drag.dy}
+    if(drag&&drag.on&&it.lay==='A'){if(drag.bar){if(it.kind==='selbox'&&drag.slot===sel[2]&&drag.i===sel[4])X+=drag.dx}else if(it.bi===drag.i){X+=drag.dx;Y+=drag.dy}}
     let show=!(zooming&&it.lay==='A'&&it.bi!=null&&it.bi===selI&&it.kind!=='selbox'),tf='';
     if(it.kind==='lab'){tf=`translate(${X+5*s}px,${Y+5*s}px) scale(${s})`;el.style.maxWidth=Math.max(0,Wp/s-10)+'px';if(Wp<30*s)show=false}
     else if(it.kind==='nlab'){const o=skin==='farm'?Hp+3*s:7*s;tf=`translate(${X+o}px,${Y+Hp/2-5*s}px) scale(${s})`;el.style.maxWidth=Math.max(0,(Wp-o)/s-4)+'px';if(Wp-o<18*s||Hp<11*s)show=false}
@@ -2347,6 +2347,8 @@ stage.addEventListener('pointerdown',e=>{
   if(L===-1){nd={mode:'ROT',x0:e.clientX,y0:e.clientY,lon0:planet.tlon,lat0:planet.tlat,moved:false,id:e.pointerId};try{stage.setPointerCapture(e.pointerId)}catch(_){}return}
   if(L===4){const fg=e.target.closest('#A figure.dr');if(fg){const r=fg.getBoundingClientRect(),ch=noteChain();nd={mode:'FIG',x0:e.clientX,y0:e.clientY,moved:false,id:e.pointerId,w:r.width,h:r.height,left:r.left,top:r.top,kx:fg.dataset.kx,ky:fg.dataset.ky,bars:fg.dataset.bars,sx:fg.dataset.kx?rv(ch,fg.dataset.kx).v:0,sy:fg.dataset.ky?rv(ch,fg.dataset.ky).v:0};try{stage.setPointerCapture(e.pointerId)}catch(_){}}return}
   if(L===0||L===1){const tb=e.target.closest('#A .b.top');if(tb)drag={i:+tb.dataset.i,el:tb,L,x0:e.clientX,y0:e.clientY,dx:0,dy:0,on:false,id:e.pointerId}}
+  /* on the track view a bar can be dragged along its own track, the way parts are dragged in the part view */
+  if(L===2&&!ui.l2){const cl=e.target.closest('#A .cell[data-cp]'),ln=cl&&cl.closest('.b.top');if(ln)drag={bar:true,i:+cl.dataset.bar,slot:+ln.dataset.i,el:cl,L,x0:e.clientX,y0:e.clientY,dx:0,dy:0,on:false,id:e.pointerId}}
   if(L===3){
     const base={x0:e.clientX,y0:e.clientY,moved:false,id:e.pointerId,u0:roll.u0,fw:stage.clientWidth};
     const mm=e.target.closest('.mm'),mv=e.target.closest('.mmv');
@@ -2373,7 +2375,7 @@ stage.addEventListener('pointermove',e=>{
   if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pinch&&ptrs.size>=2){const[a,b]=[...ptrs.values()],my=(a.y+b.y)/2;rollV.v0=clampV(pinch.cy0-(my-pinch.sr.top)/pinch.sr.height*rollV.vis);applyRoll();return}
   if(drag&&e.pointerId===drag.id){
-    drag.dx=e.clientX-drag.x0;drag.dy=e.clientY-drag.y0;
+    drag.dx=e.clientX-drag.x0;drag.dy=drag.bar?0:e.clientY-drag.y0;
     if(!drag.on){if(Math.hypot(drag.dx,drag.dy)<9)return;drag.on=true;tap=null;drag.el.classList.add('lift');drag.mk=document.createElement('div');drag.mk.className='ins';A.appendChild(drag.mk)}
     drag.el.style.transform=`translate(${drag.dx}px,${drag.dy}px)`;
     dragTarget(e);placeItems();return;
@@ -2428,6 +2430,10 @@ function dragStart(e){const right=nd.gl+nd.steps*nd.cw,lane=curLane(),S=nd.steps
   if(lane.bars[b]!==nd.nbar){const i=nd.nbar.notes.indexOf(n);if(i>=0)nd.nbar.notes.splice(i,1);padLane(lane,b+1);nd.nbar=lane.bars[b];nd.nbar.notes.push(n)}
   n.step=a-b*S;n.len=nd.end-a;sortN(nd.nbar.notes);const ix=curTrack().notes.indexOf(n);sel[3]=ix>=0?ix:null;dirty=true;setZ(z)}
 function dragTarget(e){
+  if(drag.bar){const lr=laneRects()[drag.slot],cr=cellRects(secLen(curSec())).map(c=>sub(lr,c)),fx=stageFrac(e.clientX);
+    let best=0,bd=1e9;cr.forEach((rc,i)=>{const d=Math.abs(fx-(rc.x+rc.w/2));if(d<bd){bd=d;best=i}});
+    const rc=cr[best],after=fx>rc.x+rc.w/2;let ins=best+(after?1:0);if(ins>drag.i)ins--;drag.ins=clampi(ins,0,cr.length-1);
+    const mx=after?rc.x+rc.w+GAP*lr.w*.5:rc.x-GAP*lr.w*.5;Object.assign(drag.mk.style,{left:mx*100+'%',top:rc.y*100+'%',height:rc.h*100+'%'});return}
   const L=drag.L,kids=kidsAt(sel.slice(0,L)),rects=layoutAt(L),fx=stageFrac(e.clientX),r=stage.getBoundingClientRect(),fy=(e.clientY-r.top)/r.height;
   let best=0,bd=1e9;rects.forEach((rc,i)=>{const d=Math.hypot(fx-(rc.x+rc.w/2),(fy-(rc.y+rc.h/2))*.6);if(d<bd){bd=d;best=i}});
   const off=L===0?songsOnPage().off:L===1?(curSecIdx()[0]||0):0,rc=rects[best],after=fx>rc.x+rc.w/2;let ins=off+best+(after?1:0);if(ins>drag.i)ins--;drag.ins=clampi(ins,0,kids.length-1);
@@ -2438,7 +2444,9 @@ function ptrEnd(e){
   if(pinch){if(ptrs.size<2)pinch=null;tap=null;return}
   if(drag&&e.pointerId===drag.id){const d=drag;drag=null;
     if(d.on){d.el.classList.remove('lift');d.el.style.transform='';d.mk&&d.mk.remove();
-      if(e.type==='pointerup'&&d.ins!==undefined&&d.ins!==d.i){checkpoint();const path=sel.slice(0,d.L),ch=chainFor(path);
+      if(d.bar&&e.type==='pointerup'&&d.ins!==undefined&&d.ins!==d.i){checkpoint();const lane=curSec().lanes[d.slot];padLane(lane,Math.max(d.i,d.ins)+1);
+        const[b]=lane.bars.splice(d.i,1);lane.bars.splice(d.ins,0,b);sel[2]=d.slot;sel[4]=d.ins;sel[3]=null;cue=null;awPost({t:'uncue'});changed()}
+      else if(!d.bar&&e.type==='pointerup'&&d.ins!==undefined&&d.ins!==d.i){checkpoint();const path=sel.slice(0,d.L),ch=chainFor(path);
         const arr=kidsOf(ch[d.L],d.L),[it]=arr.splice(d.i,1);arr.splice(d.ins,0,it);
         sel[d.L]=d.ins;if(d.L<1)sel[1]=0;cue=null;awPost({t:'uncue'});changed()}
       else placeItems();
@@ -2778,6 +2786,7 @@ function renderPrefs(){const seg=(k,opts)=>`<div class="pseg">${opts.map(([v,l])
   <div class="prow"><span>Metronome volume</span><input type="range" min="0" max="1" step="0.01" value="${prefs.mvol}" id="mvolR" aria-label="Metronome volume"></div>
   <div class="prow"><span>Interface sounds</span>${seg('ui',[[true,'On'],[false,'Off']])}</div>
   <div class="prow"><span>Critters</span>${seg('critters',[[true,'Show'],[false,'Hide']])}</div>
+  <div class="prow"><span>Demo tools in the pack (for testing)</span>${seg('tools',[[true,'In'],[false,'Out']])}</div>
   <p class="pnote">The count-in plays one bar of the metronome while a robot voice says “get ready”, then recording starts. Interface sounds don’t include the rocket or space.</p>
   <div class="prow rst"><span>Start over</span><button class="key" id="resetAll">Reset every location to its demo songs</button></div>`}
 function openPrefs(){ensureAudio();renderPrefs();prefsEl.hidden=false;uis('in');prefsEl.querySelector('.mx-x').focus()}
@@ -2785,7 +2794,7 @@ function closePrefs(){prefsEl.hidden=true}
 const previewMetro=()=>{if(!ensureAudio())return;const t=ac.currentTime+.02,b=60/curMu().bpm,st=MRATE[prefs.mrate]/12*b;for(let i=0;i<Math.min(8,Math.round(2*b/st));i++)metroClick(t+i*st,i===0?2:(i*st)%b<1e-3?1:0)};
 prefsEl.addEventListener('click',e=>{if(e.target===prefsEl||e.target.closest('.mx-x')){closePrefs();return}
   const rb=e.target.closest('#resetAll');if(rb){confirmThen(rb,()=>{resetAll();closePrefs()});return}
-  const b=e.target.closest('[data-pk]');if(!b)return;const k=b.dataset.pk,raw=b.dataset.pv;prefs[k]=k==='countIn'?+raw:(k==='ui'||k==='critters')?raw==='true':raw;savePrefs();renderPrefs();if(k==='critters'){dirty=true;setZ(z)}
+  const b=e.target.closest('[data-pk]');if(!b)return;const k=b.dataset.pk,raw=b.dataset.pv;prefs[k]=k==='countIn'?+raw:(k==='ui'||k==='critters'||k==='tools')?raw==='true':raw;savePrefs();renderPrefs();if(k==='critters'){dirty=true;setZ(z)}
   if(k==='countIn'&&prefs.countIn)prepVoice();if(k==='msound'||k==='mrate')previewMetro();else uis('tab')});
 prefsEl.addEventListener('input',e=>{if(e.target.id==='mvolR'){prefs.mvol=+e.target.value;savePrefs()}});
 prefsEl.addEventListener('change',e=>{if(e.target.id==='mvolR')previewMetro()});
@@ -2811,8 +2820,11 @@ function padLane(lane,n){while(lane.bars.length<n)lane.bars.push({notes:[]})}
 /* paging is a sideways walk across the farm: the old view slides out as the new one slides in */
 function panTo(dir,fn){if(RM||!settled()||!dir){fn();return}const fw=stage.clientWidth,ghost=document.createElement('div');ghost.className='pan-ghost';ghost.setAttribute('aria-hidden','true');
   const a=A.cloneNode(true),t=TL.cloneNode(true);a.removeAttribute('id');t.removeAttribute('id');t.style.cssText='position:absolute;inset:0;overflow:hidden;pointer-events:none';ghost.append(a,t);stage.insertBefore(ghost,B);
+  /* the stage behind wears the view's own ground while the two slide, so a frame where Safari hasn't painted the
+     copied view yet (a note dragged across bars rebuilds the view mid-slide) shows soil, not the farm's sky */
+  ghost.style.background=A.style.background;stage.style.background=A.style.background;
   fn();const o={duration:380,easing:'cubic-bezier(.3,.7,.2,1)'};
-  ghost.animate([{transform:'translateX(0)'},{transform:`translateX(${-dir*fw}px)`}],o).onfinish=()=>ghost.remove();
+  ghost.animate([{transform:'translateX(0)'},{transform:`translateX(${-dir*fw}px)`}],o).onfinish=()=>{ghost.remove();if(!stage.querySelector('.pan-ghost'))stage.style.background=''};
   for(const el of [A,TL])el.animate([{transform:`translateX(${dir*fw}px)`},{transform:'translateX(0)'}],o)}
 function pageBar(d){const n=secLen(curSec()),b=clampi(sel[4]+d,0,n-1);if(b===sel[4])return;panTo(d,()=>{padLane(curLane(),b+1);sel[4]=b;sel[3]=null;ui.lsel.clear();uis('tab');changed()})}
 function pageGo(d){const L=Lnow(),st=pageState();if(!st||!settled())return;const i=st.i+d;if(i<0||i>=st.n)return;ensureAudio();
@@ -3465,10 +3477,10 @@ const GEAR=[{id:'echo-pedal',name:'Echo pedal',from:'demo gear',desc:'Adds an ec
 const bagEl=$('#bagM');
 const BAG_SPR=['....KKKKKKKK....','...KssssssssK...','..KsSSSSSSSSsK..','.KKKKKKKKKKKKKK.','.KSSSSSSSSSSSSK.','.KSbbbbSSOOOOSK.','.KSbllbSSOooOSK.','.KSbbbbSSOOOOSK.','.KSSSSSSSSSSSSK.','KKKKKKKKKKKKKKKK','KdSSSSSSSSSSSSdK','KdSKKKKKKKKKKSdK','KdSKssssssssKSdK','KdSKKKKKKKKKKSdK','.KSSSSSSSSSSSSK.','..KKKKKKKKKKKK..'];
 $('#bag').innerHTML=pix(BAG_SPR,{S:'#8a96a8',s:'#c3ccd8',d:'#4a5466',b:'#3cbcfc',l:'#a4e4fc',O:'#f87800',o:'#fca044'})+'<i class="bag-n" hidden></i>';
-async function bagLoad(){if(!cloud.db)return;try{const d=await cloud.db.doc(cloud.col+'/backpack').get();if(!d.exists)return;bag.items=d.data().items||[];bag.folders=d.data().folders||[];
+async function bagLoad(){if(!cloud.db)return;try{const d=await cloud.db.doc(cloud.col+'/backpack').get();if(!d.exists)return;const bd=JSON.parse(JSON.stringify(d.data()));bag.items=bd.items||[];bag.folders=bd.folders||[];bag.found=bd.found||[];
   for(const it of bag.items){if(it.kind==='pattern'||!it.asset)continue;try{const r=await fetch('/_blob/'+it.asset);if(!r.ok)continue;const j=await r.json();bag.data.set(it.id,{rate:j.rate,pcm:decodePCM(j.pcm)})}catch(e){}}
   bagSendAll();if(!bagEl.hidden)renderBag()}catch(e){console.warn('backpack unavailable:',e)}}
-async function bagStore(){if(!cloud.db)return;try{await cloud.db.doc(cloud.col+'/backpack').set({items:bag.items,folders:bagFolders()})}catch(e){console.warn('backpack save failed:',e)}}
+async function bagStore(){if(!cloud.db)return;try{await cloud.db.doc(cloud.col+'/backpack').set({items:bag.items,folders:bagFolders(),found:bag.found||[]})}catch(e){console.warn('backpack save failed:',e)}}
 function encodePCM(f){const i16=new Int16Array(f.length);for(let i=0;i<f.length;i++)i16[i]=Math.max(-32768,Math.min(32767,Math.round(f[i]*32767)));
   const b=new Uint8Array(i16.buffer);let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)}
 function decodePCM(b64){const s=atob(b64),b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=s.charCodeAt(i);const i16=new Int16Array(b.buffer),f=new Float32Array(i16.length);for(let i=0;i<i16.length;i++)f[i]=i16[i]/32768;return f}
@@ -3508,15 +3520,17 @@ const canShare=()=>!!(navigator.canShare&&navigator.share);
 const WORM_ICON=pix(['............','............','....aab.....','..aab.aeb...','.abbaabbc...','abc..cc.....','............'],{a:'#d2b6ff',b:'#8d5cf2',c:'#4a2a94',e:'#fff'});
 const TX_ICON=pix(['.....KK.....','....KbbK....','.....KK.....','..K..KK..K..','.K.K.KK.K.K.','.K.K.KK.K.K.','..K..KK..K..','.....KK.....','....KSSK....','...KSSSSK...','..KSSSSSSK..','..KKKKKKKK..'],{b:'#3cbcfc',S:'#8a96a8'});
 const SLICE_ICON=pix(['..KKKKKKKK..','.KVVVVVVVVK.','KVvVVVVVVvVK','KVVKVVVVKVVK','KVVVVVVVVVVK','KVlllllllllK','KVVVVVVVVVVK','.KVVVVVVVVK.','..KKVKKVKK..','...KVK.KVK..'],{V:'#6844fc',v:'#b8b8f8',l:'#a4e4fc'});
-/* found tools first; a tool you've heard of but not found shows as a silhouette; the rest of the slots are empty */
+/* the pack starts with every slot empty. Tools you've found fill the slots in the order you found them; one you've
+   heard of but not found shows as a silhouette. The settings can put the demo tools in, for testing. */
 const TOOLS=[
   {id:'echo-pedal',name:'Echo pedal',from:'demo gear',icon:GEAR_ICON,desc:'Builds an echo on the track you’re on.',use:'Use here'},
   {id:'worms',name:'Jar of worms',from:'Solucan',icon:WORM_ICON,desc:'Let them loose on the pattern or part you’re on: they eat some notes, darken some and set a few stuttering.',use:'Let loose'},
   {id:'transmitter',name:'Transmitter',from:'your ship',icon:TX_ICON,desc:'Sends audio out of the game, or to your home studio.',use:'Open'},
   {id:'slicefield',name:'Slicefield',from:'not met yet',icon:SLICE_ICON,desc:'An alien entity that slices and rearranges audio, quickly and precisely. Somewhere out there.',locked:true}];
 function bagFolders(){return bag.folders||(bag.folders=[])}
-function toolsHTML(){const found=TOOLS.filter(t=>!t.locked).length,ti=clampi(bag.tool??0,0,TOOL_SLOTS-1),t=TOOLS[ti];
-  const slots=Array.from({length:TOOL_SLOTS},(_,i)=>{const g=TOOLS[i],on=i===ti;
+const packTools=()=>prefs.tools?TOOLS:TOOLS.filter(t=>(bag.found||[]).includes(t.id));
+function toolsHTML(){const tl=packTools(),found=tl.filter(t=>!t.locked).length,ti=clampi(bag.tool??0,0,TOOL_SLOTS-1),t=tl[ti];
+  const slots=Array.from({length:TOOL_SLOTS},(_,i)=>{const g=tl[i],on=i===ti;
     return `<button class="tslot${g?(g.locked?' seen':''):' unk'}${on?' on':''}" data-tslot="${i}" aria-pressed="${on}" aria-label="${g?esc(g.name)+(g.locked?', not found yet':''):'Empty slot'}">${g?g.icon:'<i>?</i>'}</button>`}).join('');
   const det=t?`<span class="gear-ico">${t.icon}</span><div class="tdet-t"><b>${esc(t.locked?'??? · '+t.name:t.name)}</b><span>${esc(t.desc)}${t.locked?'':' ('+esc(t.from)+')'}</span></div>${t.locked?`<span class="bi-d">${sc('Not found')}</span>`:`<button class="key" data-tool="${t.id}" ${toolReady(t.id)?'':'disabled'}>${sc(t.use)}</button>`}`
     :`<div class="tdet-t"><b>${sc('Empty slot')}</b><span>${TOOL_SLOTS-found} tools are still out there, on the planets and in space: some you’re given, some you find, some you earn.</span></div>`;
@@ -3655,7 +3669,7 @@ async function saveFile(blob,fn){try{if(typeof claude!=='undefined'&&claude.use)
 
 /* ================= metronome, count-in, preferences ================= */
 const PREF_STORE='fractal-groovebox-prefs';
-const prefs=Object.assign({countIn:1,mvol:.6,msound:'wood',mrate:'1/4',ui:true,metro:false,critters:true},(()=>{try{return JSON.parse(localStorage.getItem(PREF_STORE)||'{}')}catch(e){return{}}})());
+const prefs=Object.assign({countIn:1,mvol:.6,msound:'wood',mrate:'1/4',ui:true,metro:false,critters:true,tools:false},(()=>{try{return JSON.parse(localStorage.getItem(PREF_STORE)||'{}')}catch(e){return{}}})());
 const savePrefs=()=>{try{localStorage.setItem(PREF_STORE,JSON.stringify(prefs))}catch(e){}};
 function metroClick(t,acc){if(!ac)return;const v=prefs.mvol*prefs.mvol*(acc===2?1:acc?.75:.5),g=ac.createGain();g.connect(ac.destination);
   if(prefs.msound==='wood'){const o=osc('sine',acc===2?1250:acc?1050:880,t,t+.08),bp=biq('bandpass',acc===2?1250:950,8),n=noise(t,.03),ng=gainN(.6);o.connect(g);n.connect(bp);bp.connect(ng);ng.connect(g);env(g.gain,t,v*.9,.018)}
