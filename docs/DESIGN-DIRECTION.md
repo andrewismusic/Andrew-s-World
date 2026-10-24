@@ -91,11 +91,14 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
 - **No triplet grid.** Bars are straight sixteenths; triplet feels come from ratcheting a note at 1/24. Older triplet
   bars convert to the nearest sixteenths.
 - **The pattern view stays on the bar you chose** while the part keeps playing; a marker shows which bar is playing.
-  Loop still holds playback to the one bar.
+  Loop holds playback to the bar you're on, on the track view as well as the pattern view; on the part view it holds
+  playback to the selected part.
 - **Melodic notes can run past the bar line** into the bars after it: an arrow marks where a note continues, and the
-  next bar shows its tail, faded.
+  next bar shows the rest of it, drawn as solid as any other note.
 - **Bars are added and duplicated at the track level only**, where you can see what happens; the pattern level has no
   plus or duplicate.
+- **Buttons live in the pane of the level they work on.** Plus and duplicate sit in the song, part and track panes;
+  the lasso sits in the pattern pane. The strip under the map keeps paging, transport and the bin.
 - **Randomizing notes:** an empty bar gets a fresh pattern; a bar with notes is reworked around them. Some notes go,
   some move to another pitch at the same moment, some move to another step, and a few new ones join. A bigger roll
   changes more. The fuller the bar, the more notes go and the fewer join, so rolling again and again doesn't fill it
@@ -110,8 +113,12 @@ Decisions from the creative director, October 2026. Where this disagrees with `H
   pins the value at this level. With notes lassoed in the pattern view, faders and Clear locks work on those notes;
   turning the lasso off deselects.
 - **Edits are heard while you drag**, including on notes already sounding (level, mix, filter, LFOs, effects, sends).
-- **Dragging a note's end past the bar's edge turns the page** to the next bar, and the end stays under your finger.
-  The faded tail in the next bar can be grabbed to change where the note ends.
+- **Dragging a note's end past the bar's edge turns the page** to the next bar, sliding across the way the page arrows
+  do, and the end stays under your finger. A note carried over from an earlier bar can be grabbed by either end on
+  the bar you're looking at: its left end moves where the note starts (the note moves into this bar if its start
+  does), as if the whole note were on this page.
+- **Clear locks with no notes lassoed clears the whole pattern**: the track's locks and every note's.
+- **The dice read 1% the moment you pick them up**, so a tap without a drag still rolls.
 - **Row names sit in a gutter** at the left of every bar, so they never cover a step.
 - **Moving to another level ends a recording.**
 - **LFO critters keep their size**: the mushroom grows out of the log and back in time with its LFO. On the track view
@@ -141,13 +148,18 @@ to a new screen:
 
 ## The backpack (decided)
 
-- **One tap to bounce.** The arrow beside the pack renders what you're looking at (the note, the bar of a track, the
-  part, the song) to audio in the background while you keep working. The arrow fills as it renders; when it's done a
+- **One tap to bounce.** The tape beside the pack renders what you're looking at (the note, the bar of a track, the
+  part, the song) to audio in the background while you keep working. It's a cassette, not an arrow (arrows are undo
+  and redo), labelled with what a tap will bounce ("Bass bar 2", "Part A", "Whole song"). It fills as it renders; when it's done a
   little sound flies into the pack, the pack jumps with a chime and counts what's new. No dialog, no pause.
 - **Audio only.** The game doesn't export MIDI: committing ideas to audio is part of how it works.
-- **Opening the pack zooms into it**: a fixed, full-screen inventory with pockets for Sounds (in folders; bounces
-  file themselves by location, imports into "Imported"; imported audio keeps its first minute), Patterns (found, not
-  made), Tools and Keepsakes.
+- **Opening the pack zooms into it**: the whole screen grows around the pack while its flap opens, until you're
+  inside it and the inventory is all there is. Zooming out lands you back where you were as the flap shuts.
+- **The inventory**: a grid of sixteen tool slots that is always on show, Zelda style. Found tools fill slots, a tool
+  you've heard of but not found is a silhouette, and the empty slots say how many are still out there ("3 / 16
+  found"). Under it, two pockets: Sounds (in folders; bounces file themselves by location, imports into
+  "Imported"; imports and bounces keep their first two minutes, the most one stored asset holds) and Keepsakes.
+  No Patterns pocket: with no MIDI out, notes don't travel. Removing a sound asks you to tap again to confirm.
 - **Tools work two ways.** Some act on what you're working on (the jar of worms eats, darkens and stutters notes on
   the pattern or part you're on). Others are places you take audio to: the Transmitter sends a sound out of the game
   or to the home studio; Slicefield (not met yet) will cut and rearrange audio and hand it back.

@@ -35,7 +35,7 @@ int32_t aw_engine_set_location(aw_engine *engine, const char *location_json, con
 int32_t aw_engine_set_song(aw_engine *engine, int32_t index, const char *song_json);
 
 /// Where the player is, as the transport sees it: the zoom level (0 song … 4 note), the selection and the
-/// pattern level's Loop switch. The sequencer follows this the way the prototype's advance() follows `sel`.
+/// Loop switch (the part, track and pattern levels). The sequencer follows this the way the prototype's advance() follows `sel`.
 typedef struct aw_context {
     int32_t level;
     int32_t song;

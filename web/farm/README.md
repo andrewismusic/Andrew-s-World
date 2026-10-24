@@ -8,9 +8,9 @@ phone build. It starts from the prototype's workflow (`reference/fractal-grooveb
   Interface sounds, ambience and scale previews still use Web Audio. Edits post just the song that changed
   (`aw_engine_set_song`), so dragging a control is heard as you drag.
 - **Songs are kept in the artifact's private storage** (`db`, under the viewer's own folder), as well as in the browser.
-- **The backpack**: one tap on the arrow bounces what you're looking at to audio in a worker (`render-worker.js`, the
-  same engine) and drops it in the pack. The inventory holds sounds (in folders, stored with the artifact), patterns,
-  tools and keepsakes; the Transmitter sends a sound out as a WAV (zipped inside Claude, whose downloads don't take
+- **The backpack**: one tap on the tape bounces what you're looking at to audio in a worker (`render-worker.js`, the
+  same engine) and drops it in the pack. Opening the pack dives into it; the inventory shows sixteen tool slots and
+  holds sounds (in folders, stored with the artifact) and keepsakes; the Transmitter sends a sound out as a WAV (zipped inside Claude, whose downloads don't take
   .wav).
 
 `farm.html` is now the source for this build; it no longer tracks the prototype. Decisions made here are the spec

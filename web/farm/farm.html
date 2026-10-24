@@ -222,7 +222,7 @@ body:not([data-skin="farm"]) .grid{background-image:radial-gradient(circle,rgba(
 body:not([data-skin="farm"]) .ph{width:2px;background:var(--go);box-shadow:0 0 8px var(--go)}
 
 /* overlay labels: they move with the map but never scale or blur */
-.lab{position:absolute;left:0;top:0;transform-origin:0 0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 4px}
+.lab{z-index:2;position:absolute;left:0;top:0;transform-origin:0 0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 4px}
 body[data-skin="farm"] .lab{font:700 14px/1.15 var(--f-disp);text-shadow:2px 0 0 var(--edge),-2px 0 0 var(--edge),0 2px 0 var(--edge),0 -2px 0 var(--edge),1.5px 1.5px 0 var(--edge),-1.5px 1.5px 0 var(--edge),1.5px -1.5px 0 var(--edge),-1.5px -1.5px 0 var(--edge),0 3px 0 var(--edge)}
 body[data-skin="classic"] .lab{font:600 11px/1.3 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 body[data-skin="cockpit"] .lab,body[data-skin="solucan"] .lab{font:700 10px/1.3 'B612 Mono',ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.9)}
@@ -535,7 +535,7 @@ body[data-skin="classic"] .rt{left:1px;right:1px;font-size:7.5px!important;paddi
 
 /* ===== v10 ===== */
 /* selection outline: drawn in the overlay so it is always on top of every block */
-.selbox{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;border:3px solid var(--sel);border-radius:10px;box-shadow:0 0 0 2px rgba(255,255,255,.55);margin:-8px 0 0 -8px;padding:5px;box-sizing:content-box}
+.selbox{z-index:1;position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;border:3px solid var(--sel);border-radius:10px;box-shadow:0 0 0 2px rgba(255,255,255,.55);margin:-8px 0 0 -8px;padding:5px;box-sizing:content-box}
 body:not([data-skin="farm"]) .selbox{border-width:2px;border-radius:4px;box-shadow:none;margin:-5px 0 0 -5px;padding:3px}
 .plot.top.sel{box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
 /* bars inside a track row */
@@ -646,12 +646,11 @@ body[data-skin="farm"] .mbox{border-width:2.5px;box-shadow:0 5px 0 var(--edge),0
 .mbody{display:flex;flex-direction:column;gap:12px}
 /* backpack */
 /* notes that carry locks are hatched in pink (like an empty bar's hatching); notes that run past the bar line show an
-   arrow; tails from the bars before are faded, and their end can be dragged */
+   arrow; a note carried over from an earlier bar is drawn as solid as one that starts here, and both its ends can be dragged */
 .crop.ls,body[data-skin="farm"] .top.crop.ls{outline:2px dashed var(--sel);outline-offset:2px;border-radius:3px;background-color:color-mix(in srgb,var(--sel) 22%,transparent)!important}
 .crop .lkx{position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:3;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--lock) 85%,transparent) 0 2.5px,transparent 2.5px 6px);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--lock) 70%,transparent)}
 .crop:not(.top) .lkx{background:repeating-linear-gradient(135deg,var(--lock) 0 1.5px,transparent 1.5px 4px);box-shadow:none}
 .crop .cont{position:absolute;right:16%;top:50%;width:10px;height:13px;margin-top:-6.5px;z-index:5;pointer-events:none}.crop .cont svg{display:block;width:100%;height:100%}
-.crop.tail{opacity:.45;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%);mask-image:linear-gradient(90deg,transparent,#000 40%)}
 /* a drum crop is drawn whole inside its step */
 body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!important;background-position:center center,left center!important}
 
@@ -676,6 +675,21 @@ body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!impor
 .fchip i{font-style:normal;font-size:10px;opacity:.7}.fchip.on{background:#f8b800;color:#1b212c}.fchip.add{background:none;border:1.5px dashed #5a6b82}
 .inv-fa{display:flex;gap:6px}.inv-move{height:32px;max-width:110px;border-radius:9px;background:#26303f;color:#e8eef6;border:1px solid #3c4a5e;font:600 12px var(--f-ui)}
 .inv-add{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.inv-add span{font:600 12px var(--f-ui);color:#9fb2c8}
+#bagM .bag-item .key.arm{color:#fff!important}
+/* the tool grid: sixteen slots, always on show, like a Zelda inventory */
+.tools{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
+.tools-h{display:flex;align-items:baseline;gap:10px}.tools-h b{font:400 11px 'Press Start 2P',monospace;color:#f8b800}.tools-h span{font:600 12px var(--f-ui);color:#9fb2c8}
+.tgrid{display:grid;grid-template-columns:repeat(4,minmax(0,62px));gap:7px;justify-content:center}
+.tslot{aspect-ratio:1;border-radius:8px;background:#232b38;box-shadow:inset 0 0 0 2px #3c4a5e;display:grid;place-items:center;padding:17%}
+.tslot svg{width:100%;height:100%;display:block;image-rendering:pixelated}
+.tslot.on{background:#2c3646;box-shadow:inset 0 0 0 2px #f8b800,0 0 0 2px #f8b800}
+.tslot.unk i{font:400 11px 'Press Start 2P',monospace;font-style:normal;color:#3c4a5e}
+.tslot.seen svg{filter:brightness(0);opacity:.55}
+.tdet{display:flex;align-items:center;gap:10px;min-height:58px;padding:8px 10px;border-radius:10px;background:#232b38;border:1px solid #3c4a5e}
+.tdet-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.tdet-t b{font:700 14px var(--f-disp);color:#e8eef6}.tdet-t span{font:600 12px/1.3 var(--f-ui);color:#9fb2c8}
+.tdet .key{height:32px;padding:0 12px}
+@media (orientation:landscape) and (max-height:560px){.tgrid{grid-template-columns:repeat(8,minmax(0,40px));gap:5px}.tdet{min-height:0;padding:5px 8px}}
+@media (max-height:700px) and (orientation:portrait){.tgrid{grid-template-columns:repeat(4,minmax(0,50px))}}
 .top #gear{margin-right:auto}
 .sendbox{width:min(460px,100%)}
 .send-where{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -689,7 +703,6 @@ body[data-skin="farm"] .roll .top.crop.e-drums{background-size:contain,0 0!impor
 .bag-tab i{font-style:normal;font-size:10px;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:rgba(110,67,22,.15)}
 .bag-tab.on{background:#b5762c;color:#fff}.bag-tab.on i{background:rgba(255,255,255,.25)}
 body[data-skin="farm"] .bagbox{background:linear-gradient(#fbf1dc,#f4e2bf)}
-.pat-ico{width:32px;height:32px;display:grid;gap:2px;padding:3px;border-radius:6px;background:#3a2d27}.pat-ico i{border-radius:2px}
 .pan-ghost{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .pan-ghost>*{position:absolute;inset:0}
 /* the backpack is always to hand: a brown pixel pack in the top bar, bigger than the icon buttons and not boxed in */
@@ -701,8 +714,14 @@ body[data-skin="farm"] .bagbox{background:linear-gradient(#fbf1dc,#f4e2bf)}
 /* the bounce arrow fills like a clock while the engine renders */
 .bnc{position:relative}
 .bnc.busy{background:conic-gradient(color-mix(in srgb,var(--sel) 45%,var(--card)) calc(var(--p,0) * 1turn),var(--card) 0)}
-.bnc.busy svg{animation:bncNudge .6s ease-in-out infinite alternate}
-@keyframes bncNudge{to{transform:translateX(2px)}}
+.ib.bnc{width:auto;min-width:32px;padding:0 9px 0 7px;gap:5px;max-width:150px}
+.bnc-l{font:700 11.5px var(--f-disp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bnc-l:empty{display:none}
+body:not([data-skin="farm"]) .bnc-l{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.bnc .reel{transform-box:fill-box;transform-origin:center}
+.bnc.busy .reel{animation:reel .8s linear infinite}
+@keyframes reel{to{transform:rotate(360deg)}}
+@media (max-width:370px){.ib.bnc{max-width:116px}}
 .bounce-fly{position:fixed;z-index:95;width:22px;height:22px;pointer-events:none;image-rendering:pixelated}
 .bounce-fly svg{width:100%;height:100%;display:block}
 .bagb:hover{transform:translateY(-2px) rotate(-4deg)}.bagb:active{transform:translateY(1px) scale(.95)}
@@ -951,7 +970,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
     <button class="ib" id="gear" aria-label="Preferences" title="Preferences"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.30 8.00L15.10 8.00M11.75 11.75L13.02 13.02M8.00 13.30L8.00 15.10M4.25 11.75L2.98 13.02M2.70 8.00L0.90 8.00M4.25 4.25L2.98 2.98M8.00 2.70L8.00 0.90M11.75 4.25L13.02 2.98" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/></svg></button>
     <button class="ib" id="undo" aria-label="Undo" title="Undo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3 1.5 6l3 3M2 6h6.5a3.5 3.5 0 0 1 0 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <button class="ib" id="redo" aria-label="Redo" title="Redo"><svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M9.5 3l3 3-3 3M12 6H5.5a3.5 3.5 0 0 0 0 7H8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button class="ib bnc" id="bnc" aria-label="Bounce to the backpack" title="Bounce what you’re looking at to audio, into your backpack"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h9.5M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button>
+    <button class="ib bnc" id="bnc" aria-label="Bounce to the backpack" title="Bounce what you’re looking at to audio, into your backpack"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.2" y="3" width="13.6" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><g class="reel"><circle cx="5.4" cy="7.4" r="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></g><g class="reel"><circle cx="10.6" cy="7.4" r="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></g><path d="M4.4 13l1.1-2.2h5l1.1 2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="bnc-l" id="bncL"></span></button><button class="bagb" id="bag" aria-label="Backpack" title="Backpack"></button>
     <div class="ag dz">
       <div class="dsl" data-a="rsound" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Sound</span><span class="dk"></span></div>
       <div class="dsl" data-a="rnotes" tabindex="0" role="button"><span class="dfill"></span><span class="dl">Notes</span><span class="dk"></span></div>
@@ -982,7 +1001,7 @@ body[data-skin="solucan"] .rt{background:var(--paper);color:var(--sel);border:1.
       <div class="arg"> <button class="ib" id="metro" aria-label="Metronome" aria-pressed="false" title="Metronome"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.6 1.8h4.8L13.5 14H2.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 10.5l4.2-6.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4.2 10.8h7.6" stroke="currentColor" stroke-width="1.4"/><circle cx="10.4" cy="6.6" r="1.3" fill="currentColor"/></svg></button>
         <button class="key play" id="play" aria-label="Play"><svg width="14" height="14" viewBox="0 0 12 12" aria-hidden="true"><path id="playIco" d="M2.5 1.5v9l8-4.5z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></button>
         <button class="key rec" id="rec" aria-label="Record" aria-pressed="false" title="Record from your keyboard or the on-screen keys (track, pattern and note views)"><svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="currentColor"/></svg></button></div>
-      <div class="arg ed"><button class="ib wormb" data-a="worms" hidden></button><button class="ib" data-a="lasso" aria-pressed="false"></button><button class="ib" data-a="add"></button><button class="ib" data-a="dup"></button><button class="ib" data-a="del"></button></div>
+      <div class="arg ed"><button class="ib wormb" data-a="worms" hidden></button><button class="ib" data-a="del"></button></div>
     </div>
   </div>
 
@@ -1825,15 +1844,15 @@ function viewHTML(L,lay){
     if(!(skin==='farm'&&eng==='drums'))item('nlab',esc(noteName(mu,eng,c.pitch)),r,{bi:i,roll:true});if(sel[3]===i&&lay==='A')item('selbox','',r,{bi:i,roll:true});
     if(viewL===3)for(const cr of crittersFor(ch.concat(c),sel[2],eng,c))item('crit',cr,r,{roll:true,bi:i});
     blocks+=`<div class="${cls}" data-nid="${c.id}" data-i="${i}" style="${st}">${eng==='chords'?DUCKS:''}${hasLocks(c)?'<i class="lkx"></i>':''}${eng==='drums'?'':'<span class="hl"></span><span class="hr"></span>'}${c.step+c.len>steps?'<i class="cont" aria-hidden="true"><svg viewBox="0 0 8 10"><path d="M1 1l6 4-6 4z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg></i>':''}</div>`});
-  const lane3=curLane();for(let pb=sel[4]-1;pb>=0;pb--){const pbar=lane3.bars[pb],off=(sel[4]-pb)*steps;if(!pbar)continue;
-    pbar.notes.forEach(c=>{const tail=c.step+c.len-off;if(tail<=0||c.step>=steps)return;const r=noteRects([{step:0,len:Math.min(tail,steps),pitch:c.pitch}],eng,steps)[0];
-      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}${hasLocks(c)?' lk':''}${tail>steps?' over':''}" data-tb="${pb}" data-tid="${c.id}" aria-hidden="true" title="Drag to change where this note ends" style="${pct(r)};background-color:${engCol(eng)}">${eng==='chords'?DUCKS:''}${hasLocks(c)?'<i class="lkx"></i>':''}<span class="hr"></span></div>`})}
+  const lane3=curLane();let carried=false;for(let pb=sel[4]-1;pb>=0;pb--){const pbar=lane3.bars[pb],off=(sel[4]-pb)*steps;if(!pbar)continue;
+    pbar.notes.forEach(c=>{const tail=c.step+c.len-off;if(tail<=0||c.step>=steps)return;const r=noteRects([{step:0,len:Math.min(tail,steps),pitch:c.pitch}],eng,steps)[0];carried=true;
+      blocks+=`<div class="b crop top tail e-${eng}${noteLook(ch.concat(c),sel[2],eng,c)}${hasLocks(c)?' lk':''}${tail>steps?' over':''}" data-tb="${pb}" data-tid="${c.id}" aria-hidden="true" title="Drag either end to change where this note starts or ends" style="${pct(r)};background-color:${engCol(eng)}">${eng==='chords'?DUCKS:''}${hasLocks(c)?'<i class="lkx"></i>':''}<span class="hl"></span><span class="hr"></span></div>`})}
   let h=`<div class="roll l-${eng}" style="${rollStyle()}${bandStyle(rows,beatLines(mu))}">${gridHTML(eng,steps,mu,bar)}${blocks}<div class="ph" data-cp="${cp}" hidden></div></div>`;
   const nsc=scLen(mu);for(let p=0;p<rows;p++)if(eng==='drums'||p%nsc===0)item('row',eng==='drums'?vShort(p):noteName(mu,eng,p),{x:0,y:PAD+(rows-1-p)*rh,w:PXL,h:rh},{rollY:true});
   h+=`<div class="mm"${roll.vis>=.999?' hidden':''}><i style="left:${roll.u0*100}%;width:${roll.vis*100}%"></i></div>`;
   h+=`<div class="mmv"${rollV.vis>=.999?' hidden':''}><i style="top:${rollV.v0*100}%;height:${rollV.vis*100}%"></i></div>`;
   const bi=bldIcons(song,sel[2]);if(bi)item('corner',bi,FULL);
-  if(!bar.notes.length)item('center',sc('Empty bar · tap or drag to plant notes'),FULL);
+  if(!bar.notes.length&&!carried)item('center',sc('Empty bar · tap or drag to plant notes'),FULL);
   return h;
 }
 /* the pattern view is a window onto a wider roll: roll.vis = visible fraction of the bar, roll.u0 = where the window starts */
@@ -2337,8 +2356,10 @@ stage.addEventListener('pointerdown',e=>{
       const g=A.querySelector('.grid');if(!g)return;const gr=g.getBoundingClientRect(),tr=curTrack(),rows=ROWS[curEng()];
       const steps=curSteps();Object.assign(base,{cw:gr.width/steps,ch:gr.height/rows,rows,steps,gl:gr.left,gt:gr.top,drums:curEng()==='drums',spill:secLen(curSec())-sel[4],nbar:tr,off:0,off0:0});
       const nb=e.target.closest('.crop.top'),nn=nb&&tr.notes[+nb.dataset.i],tl=e.target.closest('.crop.tail');
-      /* the tail of a note from an earlier bar: drag it to move where that note ends */
+      /* a note carried over from an earlier bar: its left handle moves where the note starts (from right here, without
+         going back to the bar it starts in); anywhere else moves where it ends */
       if(tl&&!ui.lasso){const pb=+tl.dataset.tb,pbar=curLane().bars[pb],n=pbar&&pbar.notes.find(x=>x.id===+tl.dataset.tid);
+        if(n&&e.target.closest('.hl')){nd=Object.assign(base,{mode:'TL',note:n,nbar:pbar,end:pb*steps+n.step+n.len,armF:true,armB:true});try{stage.setPointerCapture(e.pointerId)}catch(_){}return}
         if(n){nd=Object.assign(base,{mode:'R',note:n,nbar:pbar,off:sel[4]-pb,off0:sel[4]-pb,spill:secLen(curSec())-pb,s0:{step:n.step,pitch:n.pitch,len:n.len}});try{stage.setPointerCapture(e.pointerId)}catch(_){}return}}
       if(ui.lasso&&!(nn&&ui.lsel.has(nn.id)&&!e.target.closest('.hl,.hr'))){const sr=stage.getBoundingClientRect();nd=Object.assign(base,{mode:'LASSO',sr,add:e.shiftKey,tapNote:nn||null})}
       else if(nn&&ui.lsel.has(nn.id)&&ui.lsel.size>1&&!e.target.closest('.hl,.hr')){const grp=tr.notes.filter(n=>ui.lsel.has(n.id));nd=Object.assign(base,{mode:'G',note:nn,grp,g0:grp.map(n=>({step:n.step,pitch:Math.min(n.pitch,rows-1),len:n.len}))})}
@@ -2377,14 +2398,15 @@ stage.addEventListener('pointermove',e=>{
     if(nd.mode==='G'){const ds0=Math.round(dx/nd.cw),dp0=-Math.round(dy/nd.ch),mn=Math.min(...nd.g0.map(q=>q.step)),mx=Math.max(...nd.g0.map(q=>q.step+q.len)),pl=Math.min(...nd.g0.map(q=>q.pitch)),ph=Math.max(...nd.g0.map(q=>q.pitch));
       const ds=clampi(ds0,-mn,nd.steps-mx),dp=clampi(dp0,-pl,nd.rows-1-ph);let ch=false;nd.grp.forEach((n,i)=>{const s=nd.g0[i].step+ds,p=nd.g0[i].pitch+dp;if(s!==n.step||p!==n.pitch){n.step=s;n.pitch=p;ch=true}});
       if(ch){dirty=true;setZ(z)}return}
+    if(nd.mode==='TL'){dragStart(e);return}
     const ds=Math.round(dx/nd.cw),dp=-Math.round(dy/nd.ch),n=nd.note,s0=nd.s0;let st=n.step,pi=n.pitch,le=n.len;
     if(nd.mode==='M'){st=clampi(s0.step+ds,0,nd.steps-Math.min(s0.len,nd.steps));pi=clampi(s0.pitch+dp,0,nd.rows-1)}
     else if(nd.mode==='R'){
       /* past the bar's edge the view turns to the next bar (and back), and the note's end stays under your finger */
       const right=nd.gl+nd.steps*nd.cw,nbi=sel[4]-nd.off;
       if(e.clientX<=right)nd.armF=true;if(e.clientX>=nd.gl)nd.armB=true;
-      if(e.clientX>right+nd.cw*.3&&nd.armF!==false&&!nd.drums&&nbi+nd.off+1<secLen(curSec())){nd.armF=false;nd.off++;padLane(curLane(),sel[4]+2);sel[4]++;sel[3]=null;uis('tab');dirty=true;setZ(z);renderPager()}
-      else if(e.clientX<nd.gl-nd.cw*.3&&nd.armB!==false&&nd.off>0){nd.armB=false;nd.off--;sel[4]--;sel[3]=null;uis('tab');dirty=true;setZ(z);renderPager()}
+      if(e.clientX>right+nd.cw*.3&&nd.armF!==false&&!nd.drums&&nbi+nd.off+1<secLen(curSec())){nd.armF=false;nd.off++;turnBar(1)}
+      else if(e.clientX<nd.gl-nd.cw*.3&&nd.armB!==false&&nd.off>0){nd.armB=false;nd.off--;turnBar(-1)}
       le=clampi(s0.len+ds+(nd.off-nd.off0)*nd.steps,1,nd.steps*nd.spill-s0.step)}
     else{const ns=clampi(s0.step+ds,0,s0.step+s0.len-1);le=s0.step+s0.len-ns;st=ns}
     const first=!nd.shown;nd.shown=true;
@@ -2393,6 +2415,18 @@ stage.addEventListener('pointermove',e=>{
   }
   if(tap&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)>10)tap=null;
 });
+/* turning the page mid-drag slides the bars across, just as the page arrows do */
+function turnBar(d){panTo(d,()=>{if(d>0)padLane(curLane(),sel[4]+2);sel[4]+=d;sel[3]=null;uis('tab');dirty=true;setZ(z);renderPager()})}
+/* the start of a note carried over from an earlier bar follows the finger, measured along the whole track, so it can
+   land in this bar (the note moves here) or, past the left edge, back in the bars before */
+function dragStart(e){const right=nd.gl+nd.steps*nd.cw,lane=curLane(),S=nd.steps;
+  if(e.clientX<=right)nd.armF=true;if(e.clientX>=nd.gl)nd.armB=true;
+  if(e.clientX>right+nd.cw*.3&&nd.armF&&(sel[4]+1)*S<nd.end){nd.armF=false;turnBar(1)}
+  else if(e.clientX<nd.gl-nd.cw*.3&&nd.armB&&sel[4]>0){nd.armB=false;turnBar(-1)}
+  const at=sel[4]*S+Math.round((e.clientX-nd.gl)/nd.cw),a=clampi(at,0,nd.end-1),n=nd.note,b=Math.floor(a/S);
+  if(!nd.moved||(a===nd.a&&nd.shown))return;nd.a=a;nd.shown=true;
+  if(lane.bars[b]!==nd.nbar){const i=nd.nbar.notes.indexOf(n);if(i>=0)nd.nbar.notes.splice(i,1);padLane(lane,b+1);nd.nbar=lane.bars[b];nd.nbar.notes.push(n)}
+  n.step=a-b*S;n.len=nd.end-a;sortN(nd.nbar.notes);const ix=curTrack().notes.indexOf(n);sel[3]=ix>=0?ix:null;dirty=true;setZ(z)}
 function dragTarget(e){
   const L=drag.L,kids=kidsAt(sel.slice(0,L)),rects=layoutAt(L),fx=stageFrac(e.clientX),r=stage.getBoundingClientRect(),fy=(e.clientY-r.top)/r.height;
   let best=0,bd=1e9;rects.forEach((rc,i)=>{const d=Math.hypot(fx-(rc.x+rc.w/2),(fy-(rc.y+rc.h/2))*.6);if(d<bd){bd=d;best=i}});
@@ -2474,13 +2508,13 @@ let lastW=0;new ResizeObserver(()=>{const w=stage.clientWidth;if(w!==lastW){last
 const acts=$('#acts');
 const AB=a=>document.querySelector(`[data-a="${a}"]`);
 document.querySelectorAll('.dsl .dk').forEach(s=>s.innerHTML=ICON.dice);
-['lasso','add','dup','del','worms'].forEach(a=>AB(a).innerHTML=ICON[a]);
+['del','worms'].forEach(a=>AB(a).innerHTML=ICON[a]);
 /* only the global reset still asks twice; everything else can be undone */
 let armed=null;
 function disarm(){if(armed){armed.classList.remove('arm');armed.innerHTML=armed._ico;clearTimeout(armed._t);armed=null}}
 function confirmThen(btn,fn){if(armed===btn){disarm();fn();return}disarm();armed=btn;btn._ico=btn.innerHTML;btn.classList.add('arm');btn.style.minWidth=btn.offsetWidth+'px';btn.innerHTML=sc('Confirm');btn._t=setTimeout(()=>{disarm()},2600)}
-function actState(){
-  const L=Lnow(),o={};
+function actState(L=Lnow()){
+  const o={};
   if(L<0){for(const a of ['rsound','rnotes','rlocks','lasso','add','dup','del','worms'])o[a]=[false,''];return o}
   const kind=ELAB[curEng()].toLowerCase(),song=curSong(),sec=curSec(),lane=curLane(),ns=ui.lsel.size,nb=lane.bars.length,bar=curBar(),fxp=L===2&&ui.l2;
   o.rsound=[L>=1,['','Randomize the song’s sound','Randomize every track’s sound in this part (as locks)',`Randomize the ${kind} sound in this part (as locks)`,curEng()==='drums'?'Randomize this drum hit (as locks)':'Randomize this note’s sound (as locks)'][L]];
@@ -2495,28 +2529,38 @@ function actState(){
   o.del=[L<=1?n>1:L===2?!fxp&&secLen(sec)>1:L===3?(ns>0||!!(bar&&bar.notes.length)):L===4,L===0?'Delete this song':L===1?'Delete this part':L===2?`Delete bar ${sel[4]+1} on every track`:L===3?(ns?`Delete ${ns} selected note${ns>1?'s':''}`:'Clear the notes in this bar'):'Delete this note'];
   return o;
 }
-function renderActs(){const st=actState();for(const a in st){const b=AB(a);const on=st[a][0];if(b.classList.contains('dsl')){b.classList.toggle('dis',!on);b.setAttribute('aria-disabled',!on);b.querySelector('.dl').textContent=sc(b._lab||b.querySelector('.dl').textContent)}else b.disabled=!on;b.title=st[a][1]||'Not available here';b.setAttribute('aria-label',st[a][1]||a)}
+/* plus, duplicate and the lasso live in the pane of the level they work on (song, part and track; the pattern) */
+const PANE_ACTS={0:['add','dup'],1:['add','dup'],2:['add','dup'],3:['lasso']};
+const paneActs=L=>(PANE_ACTS[L]||[]).map(a=>`<button class="ib${a==='lasso'&&ui.lasso?' on':''}" data-pa="${a}"${a==='lasso'?` aria-pressed="${ui.lasso}"`:''}>${ICON[a]}</button>`).join('');
+const loopB=L=>`<button class="mod tripb${ui.loop?' on':''}" data-loop aria-pressed="${ui.loop}" title="${L===1?'Loop just this part':'Loop just this bar'} while you work on it">${sc('Loop')}</button>`;
+function bounceWhat(L=Lnow()){if(L<0||!curSong())return '';const tr=sc(ELAB[DEF_ENG[sel[2]]]);
+  if(L>=4&&curNote())return `${noteName(curMu(),DEF_ENG[sel[2]],curNote().pitch)} ${sc('note')}`;if(L>=3)return `${tr} ${sc('bar')} ${sel[4]+1}`;if(L===2)return `${sc('Part')} ${curSec().name}`;return sc('Whole song')}
+function renderBnc(){const w=bounceWhat(),b=$('#bnc');$('#bncL').textContent=w;b.disabled=!w;const t=w?`Bounce ${w.toLowerCase()} to audio, into your backpack`:'Nothing to bounce out here';b.title=t;b.setAttribute('aria-label',t)}
+function renderPaneActs(){pcol.querySelectorAll('[data-pa]').forEach(b=>{const s=actState(slideOf(b))[b.dataset.pa]||[false,''];b.disabled=!s[0];b.title=s[1]||'Not available here';b.setAttribute('aria-label',s[1]||b.dataset.pa);
+  if(b.dataset.pa==='lasso'){b.classList.toggle('on',ui.lasso);b.setAttribute('aria-pressed',ui.lasso)}})}
+function renderActs(){const st=actState();for(const a in st){const b=AB(a);if(!b||panel.contains(b))continue;const on=st[a][0];if(b.classList.contains('dsl')){b.classList.toggle('dis',!on);b.setAttribute('aria-disabled',!on);b.querySelector('.dl').textContent=sc(b._lab||b.querySelector('.dl').textContent)}else b.disabled=!on;b.title=st[a][1]||'Not available here';b.setAttribute('aria-label',st[a][1]||a)}
   AB('worms').hidden=!(skin==='solucan'&&(Lnow()===2||Lnow()===3));
-  const lb=AB('lasso');if(Lnow()!==3){ui.lasso=false;ui.lsel.clear()}lb.classList.toggle('on',ui.lasso);lb.setAttribute('aria-pressed',ui.lasso);renderPager()}
-acts.addEventListener('click',e=>{
-  const b=e.target.closest('button[data-a]');if(!b||b.disabled||Lnow()<0)return;const act=b.dataset.a;
+  if(Lnow()!==3){ui.lasso=false;ui.lsel.clear()}renderPaneActs();renderBnc();renderPager()}
+function doAct(act){if(Lnow()<0)return;
   if(act==='lasso'){ui.lasso=!ui.lasso;if(!ui.lasso&&ui.lsel.size){ui.lsel.clear();changed()}uis('tab');renderActs();return}
   if(act==='worms'){runWorms();return}
-  runAct(act);
-});
+  runAct(act)}
+acts.addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(b&&!b.disabled)doAct(b.dataset.a)});
 /* dice sliders: drag the die right (or tap anywhere along the slot); on release it rolls home and the amount is how far it got.
    Touches never focus the slider or scroll the page, so nothing moves under your finger. */
+/* a die picked up already reads 1%: even a tap without a drag rolls something */
+const DMIN=.01;
 document.querySelectorAll('.dsl').forEach(el=>{
   let d=null;const W=()=>el.clientWidth-30;
-  const setK=a=>{el.style.setProperty('--w',el.clientWidth+'px');el.style.setProperty('--amt',a);el.querySelector('.dl').textContent=d?Math.round(a*100)+'%':sc(el._lab)};
+  const setK=a=>{el.style.setProperty('--w',el.clientWidth+'px');el.style.setProperty('--amt',a);el.querySelector('.dl').textContent=d?Math.max(1,Math.round(a*100))+'%':sc(el._lab)};
   el._lab=el.querySelector('.dl').textContent;
   const ap=$('.app');let keep=null;
   const hold=()=>{if(!keep)return;if(ap.scrollTop!==keep.a)ap.scrollTop=keep.a;if(scrollY!==keep.w)scrollTo(0,keep.w)};
   el.addEventListener('touchstart',e=>{if(e.cancelable)e.preventDefault()},{passive:false});
   el.addEventListener('pointerdown',e=>{if(el.classList.contains('dis')||Lnow()<0)return;e.preventDefault();keep={a:ap.scrollTop,w:scrollY};el.setPointerCapture(e.pointerId);el.classList.remove('rolling');
-    const r=el.getBoundingClientRect(),onDie=e.target.closest('.dk');d={x0:e.clientX,a0:onDie?0:clamp01((e.clientX-r.left-15)/W()),onDie};d.a=d.a0;setK(d.a)});
-  el.addEventListener('pointermove',e=>{if(!d)return;d.a=clamp01(d.a0+(e.clientX-d.x0)/W());setK(d.a);hold()});
-  const up=e=>{if(!d)return;const a=Math.max(.06,d.a),ok=e.type==='pointerup';d=null;el.classList.add('rolling');setK(0);el.style.setProperty('--spin',(-1-Math.round(a*3))*360+'deg');clearTimeout(el._rt);el._rt=setTimeout(()=>{el.classList.remove('rolling');el.style.removeProperty('--spin')},560);
+    const r=el.getBoundingClientRect(),onDie=e.target.closest('.dk');d={x0:e.clientX,a0:onDie?DMIN:Math.max(DMIN,clamp01((e.clientX-r.left-15)/W())),onDie};d.a=d.a0;setK(d.a)});
+  el.addEventListener('pointermove',e=>{if(!d)return;d.a=Math.max(DMIN,clamp01(d.a0+(e.clientX-d.x0)/W()));setK(d.a);hold()});
+  const up=e=>{if(!d)return;const a=Math.max(DMIN,d.a),ok=e.type==='pointerup';d=null;el.classList.add('rolling');setK(0);el.style.setProperty('--spin',(-1-Math.round(a*3))*360+'deg');clearTimeout(el._rt);el._rt=setTimeout(()=>{el.classList.remove('rolling');el.style.removeProperty('--spin')},560);
     try{el.blur()}catch(_){}
     if(ok)runAct(el.dataset.a,a);hold();requestAnimationFrame(()=>{hold();requestAnimationFrame(()=>{hold();keep=null})})};
   el.addEventListener('mousedown',e=>e.preventDefault());
@@ -2906,10 +2950,10 @@ const mmss=t=>Math.floor(t/60)+':'+String(Math.round(t%60)).padStart(2,'0');
 function songFacts(song){const mu=musAt([state.master,song]);let bars=0,secs=0;for(const c of song.sections){const m=musAt([state.master,song,c]),n=secLen(c);bars+=n;secs+=n*barTicks(m)/12*60/m.bpm}
   return `${mu.bpm} bpm · ${NN[mu.key]} ${scaleName(mu.scale)} · ${song.sections.length} part${song.sections.length>1?'s':''} · ${bars} bars · ${mmss(secs)}`}
 function nameHead(name,act,extra,facts){return `<div class="nm-head"><div class="nm-n" title="${esc(name)}">${esc(name)}</div><button class="ib" data-${act} aria-label="Rename" title="Rename">${ICON.pen}</button>${extra}<span class="pn-sp"></span><span class="pn-tag"></span></div>`}
-function libHTML(){const song=curSong();return nameHead(song.name,'rename',`<button class="ib" data-export aria-label="Export" title="Export the song">${ICON.exp}</button>`,songFacts(song))+
+function libHTML(){const song=curSong();return nameHead(song.name,'rename',`<button class="ib" data-export aria-label="Export" title="Export the song">${ICON.exp}</button>`+paneActs(0),songFacts(song))+
   `<div class="fwrap"><div class="hsl">${engKeys('master').map(k=>`<div class="hfd" data-k="${k}"><span class="hfd-l">${sc(P[k].label)}</span><div class="hfd-t" tabindex="0" role="slider" aria-label="${P[k].label}" aria-valuemin="0" aria-valuemax="100"><i class="hfd-f"></i><b class="hfd-k"></b></div><span class="hfd-v"></span></div>`).join('')}</div></div>`}
 function partHead(){const song=curSong(),sec=curSec(),mu=musAt([state.master,song,sec]),n=secLen(sec),t=n*barTicks(mu)/12*60/mu.bpm;
-  return nameHead(sec.name,'prename','',`${sc('PART')} ${sel[1]+1} ${sc('of')} ${song.sections.length} · ${n} bar${n>1?'s':''} · ${mmss(t)} · ${mu.bpm} bpm`)}
+  return nameHead(sec.name,'prename',loopB(1)+paneActs(1),`${sc('PART')} ${sel[1]+1} ${sc('of')} ${song.sections.length} · ${n} bar${n>1?'s':''} · ${mmss(t)} · ${mu.bpm} bpm`)}
 /* rename in place: the song on the song page, the part on the part page */
 function startRename(btn){const box=btn.closest('.nm-head'),n=box&&box.querySelector('.nm-n'),part=btn.hasAttribute('data-prename'),obj=part?curSec():curSong();if(!n||n.querySelector('input'))return;
   n.innerHTML=`<input type="text" maxlength="${part?24:40}" value="${esc(obj.name)}" aria-label="${part?'Part':'Song'} name">`;const inp=n.querySelector('input');inp.focus();inp.select();let done=false;
@@ -2941,14 +2985,14 @@ function slideHTML(L){
   const lk=!dis&&ui.lock;
   return `<div class="pn-head"><button class="mod lockb${lk?' on':''}" data-lock${dis?' disabled':''} aria-pressed="${lk}" title="${dis?'Lock works on tracks, patterns and notes':lk?'Lock is on: changes stay on this '+LEVELS[L].toLowerCase():'Lock is off: changes go where the sound comes from, the song or a lock that is already set'}">${lk?ICON.lock:ICON.unlock}<span>${sc('Lock')}</span></button><button class="mod" data-clear title="Remove every lock on this level">${sc('Clear locks')}</button>
     ${skin==='farm'?'':`<button class="mod allb" data-all title="Hold to move related parameters together. Double-tap to latch.">${sc('All')}</button>`}
-    <button class="mod keysb${ui.keys&&L>=2?' on':''}" data-keys${L>=2?'':' disabled'} aria-pressed="${ui.keys&&L>=2}" aria-label="Keys" title="Play notes on the screen">${ICON.piano}</button>${L===3?`<button class="mod tripb${ui.loop?' on':''}" data-loop aria-pressed="${ui.loop}" title="Loop just this bar while you work on it">${sc('Loop')}</button>`:''}
+    <button class="mod keysb${ui.keys&&L>=2?' on':''}" data-keys${L>=2?'':' disabled'} aria-pressed="${ui.keys&&L>=2}" aria-label="Keys" title="Play notes on the screen">${ICON.piano}</button>${L===2||L===3?loopB(L):''}${paneActs(L)}
     <span class="pn-sp"></span><span class="pn-tag"></span></div>
   ${L===1?'':`<div class="pn-nav"><div class="itabs">${itabs}</div><div class="gchips${mine.length<2?' solo':''}">${chips}</div></div>`}
   <div class="fwrap">${body}</div>`;
 }
 let pvH=0,lastSlideL=null;
-function renderPanel(){if(armed&&panel.contains(armed))armed=null;pcol.innerHTML=SL.map(L=>`<div class="slide${L<0?' sp':''}" data-l="${L}">${slideHTML(L)}</div>`).join('');lastSlideL=null;scrollPanel();refreshPanel();pcol.querySelectorAll('.gchips').forEach(fixChips)}
-function renderSlide(L){const el=pcol.querySelector(`.slide[data-l="${L}"]`);if(!el){renderPanel();return}el.innerHTML=slideHTML(L);refreshPanel(L);const gc=el.querySelector('.gchips');if(gc)fixChips(gc)}
+function renderPanel(){if(armed&&panel.contains(armed))armed=null;pcol.innerHTML=SL.map(L=>`<div class="slide${L<0?' sp':''}" data-l="${L}">${slideHTML(L)}</div>`).join('');lastSlideL=null;scrollPanel();refreshPanel();renderPaneActs();pcol.querySelectorAll('.gchips').forEach(fixChips)}
+function renderSlide(L){const el=pcol.querySelector(`.slide[data-l="${L}"]`);if(!el){renderPanel();return}el.innerHTML=slideHTML(L);refreshPanel(L);renderPaneActs();const gc=el.querySelector('.gchips');if(gc)fixChips(gc)}
 function fixChips(gc){const on=gc.querySelector('.on');if(on&&gc.scrollWidth>gc.clientWidth){const x=on.offsetLeft-gc.offsetLeft;if(x<gc.scrollLeft||x+on.offsetWidth>gc.scrollLeft+gc.clientWidth)gc.scrollLeft=x-24}}
 /* the column scrolls with the zoom: one page height per level */
 function scrollPanel(){const H=pview.clientHeight;if(!H)return;if(H!==pvH){pvH=H;pcol.style.setProperty('--sh',H+'px')}pcol.style.transform=`translate3d(0,${(-(Math.max(-1,z)+1)*H).toFixed(1)}px,0)`;
@@ -3003,8 +3047,8 @@ function refreshPanel(only){
       const[src,ex]=srcText(k,f),below=L>=1&&L<4?countBelow(cx.path,k):0;if(below)ex.push(below+' below');dc.querySelector('.fd-src').textContent=src;dc.querySelector('.fd-ex').textContent=ex.join(' · ')});
     sl.querySelectorAll('.opp').forEach(o=>{const pre=o.dataset.pre,g=k=>fdState(pre+k,L).shown;o.querySelector('.opw').setAttribute('d',wavePath(prismWave(g('sh'),g('fo'))));o.querySelector('.opn').textContent=fmt(pre+'sh',g('sh'))+' · '+sc('FOLD')+' '+Math.round(g('fo')*100)+'%'});
     sl.querySelectorAll('.hbank i').forEach(b=>{const f=fdState(b.dataset.k,L);b.querySelector('b').style.height=(f.shown*100)+'%';b.classList.toggle('lk',f.here||f.rampSet);b.classList.toggle('inh',f.inh)});
-    const ca=sl.querySelector('[data-clear]');if(ca){const sn=L===3?selNotes():[];ca.disabled=sn.length?!sn.some(hasLocks):!(L>=2&&node&&(Object.keys(node.locks||{}).length||(rampOn(L)&&Object.keys(node.ramp).length)));
-      ca.title=sn.length?`Remove the locks on the ${sn.length} selected notes`:'Remove every lock on this level'}
+    const ca=sl.querySelector('[data-clear]');if(ca){const sn=L===3?selNotes():[];const barLk=L===3&&!sn.length&&!rampOn(L)&&!!curBar()&&curBar().notes.some(hasLocks);ca.disabled=sn.length?!sn.some(hasLocks):!(L>=2&&node&&(Object.keys(node.locks||{}).length||barLk||(rampOn(L)&&Object.keys(node.ramp).length)));
+      ca.title=sn.length?`Remove the locks on the ${sn.length} selected notes`:L===3?'Remove every lock in this pattern: the track’s and every note’s':'Remove every lock on this level'}
     const ab=sl.querySelector('[data-all]');if(ab){ab.classList.toggle('on',allOn);ab.classList.toggle('latch',ui.allLatch)}
     const tg=sl.querySelector('.pn-tag');if(tg&&!tg.classList.contains('fl'))tg.textContent=ui.rec&&L>=2?'REC · A–; Q–P · Z/X octave':allOn?sc('ALL'):rampOn(L)?sc('RAMP '+(curNote().rm==='away'?'AWAY':'TOWARDS')):L===3&&ui.lsel.size?ui.lsel.size+' selected':'';
   });
@@ -3096,7 +3140,8 @@ panel.addEventListener('click',e=>{
   const rn=t.closest('[data-rename],[data-prename]');if(rn){startRename(rn);return}
   const ms=t.closest('[data-mute],[data-solo]');if(ms){const song=curSong(),m=ms.hasAttribute('data-mute'),i=+(m?ms.dataset.mute:ms.dataset.solo),a=m?song.mix.m:song.mix.s;checkpoint();a[i]=a[i]?0:1;uis('tab');changed();return}
   if(t.closest('[data-export]')){exportSong();return}
-  if(t.closest('[data-loop]')){ui.loop=!ui.loop;uis('tab');renderSlide(3);return}
+  if(t.closest('[data-loop]')){ui.loop=!ui.loop;uis('tab');renderPanel();placeBarPos();return}
+  const pa=t.closest('[data-pa]');if(pa){if(!pa.disabled&&L===Lnow())doAct(pa.dataset.pa);return}
   const kb=t.closest('[data-keys]');if(kb){if(kb.disabled)return;ui.keys=!ui.keys;uis('tab');renderPanel();return}
   const lb=t.closest('[data-lock]');if(lb){if(lb.disabled)return;ui.lock=!ui.lock;uis('tab');renderPanel();renderTop();return}
   const ko=t.closest('[data-oct]');if(ko){octv=clampi(octv+(+ko.dataset.oct),-1,1);uis('tab');renderPanel();return}
@@ -3107,7 +3152,9 @@ panel.addEventListener('click',e=>{
   if(t.closest('[data-presave]')){const pages=curPages(L),pg=pages[pageIndex(pages,L)];saveUserPreset(pg.slot,L);uis('add');return}
   const yd=t.closest('[data-yard]');if(yd){const[s,i]=yd.dataset.yard.split('.').map(Number),song=curSong(),cur=song.fx[s][i],nx=[null,...BLD_ORDER][([null,...BLD_ORDER].indexOf(cur)+1)%(BLD_ORDER.length+1)];checkpoint();song.fx[s][i]=nx;fxSig='';uis('tab');save();renderPanel();dirty=true;setZ(z);return}
   const ca=t.closest('[data-clear]');if(ca){if(ca.disabled)return;const{node}=ctxNode(L);if(!node)return;checkpoint();const sn=L===3?selNotes():[];
-    if(rampOn(L))node.ramp={};else if(sn.length)sn.forEach(n=>{const r=n.locks['rat.rt'];n.locks={};if(r!==undefined)n.locks['rat.rt']=r});else node.locks={};uis('clear');changed();return}
+    const unlock=n=>{const r=n.locks['rat.rt'];n.locks={};if(r!==undefined)n.locks['rat.rt']=r};
+    /* on the pattern view, with no notes lassoed, every lock in the bar goes: the track's and each note's */
+    if(rampOn(L))node.ramp={};else if(sn.length)sn.forEach(unlock);else{node.locks={};if(L===3)curBar().notes.forEach(unlock)}uis('clear');changed();return}
   const it=t.closest('[data-inst]');if(it){const wasK=ui.keys&&L>=2;ui.keys=false;const pages=curPages(L),insts=[...new Set(pages.map(p=>p.inst))],cur=insts.indexOf(pages[pageIndex(pages,L)].inst),idx=insts.indexOf(it.dataset.inst);uis('tab');if(idx===cur&&!wasK)return;gotoInst(it.dataset.inst,idx>cur?1:idx<cur?-1:0,L,wasK);return}
   const gc=t.closest('[data-g]');if(gc){const wasK=ui.keys&&L>=2;ui.keys=false;const pages=curPages(L),cur=pageIndex(pages,L),idx=pages.findIndex(p=>p.inst===ui.pg[L].inst&&p.g===gc.dataset.g);uis('tab');gotoPage(idx,idx>cur?1:idx<cur?-1:0,L,wasK);return}
 });
@@ -3433,8 +3480,11 @@ async function bagKeep(name,rate,pcm,from){const id='snd-'+Date.now().toString(3
   try{const assets=typeof claude!=='undefined'&&claude.use?await claude.use('assets'):null;
     if(assets){const blob=new Blob([JSON.stringify({rate,pcm:encodePCM(pcm)})],{type:'application/json'});const up=await assets.upload(blob);it.asset=up.id}}catch(e){console.warn('sound not kept:',e)}
   bag.items.push(it);await bagStore();return it}
+/* a sound is stored as one asset: 16-bit mono PCM in JSON (the asset store takes no audio types), and an asset holds
+   at most 20 MiB, which is a little over two and a half minutes at 48 kHz. Imports and bounces keep two minutes. */
+const IMPORT_MIN=2;
 async function bagAdd(file){if(!ensureAudio())return;bag.busy='Packing '+file.name+'…';bag.pocket='sounds';renderBag();
-  try{const buf=await ac.decodeAudioData(await file.arrayBuffer()),n=Math.min(buf.length,Math.round(buf.sampleRate*60)),pcm=new Float32Array(n);
+  try{const buf=await ac.decodeAudioData(await file.arrayBuffer()),n=Math.min(buf.length,Math.round(buf.sampleRate*60*IMPORT_MIN)),pcm=new Float32Array(n);
     for(let c=0;c<buf.numberOfChannels;c++){const d=buf.getChannelData(c);for(let i=0;i<n;i++)pcm[i]+=d[i]/buf.numberOfChannels}
     const fs=bagFolders();let f=fs.find(x=>x.auto==='import');if(!f){f={id:'f'+Date.now().toString(36),name:'Imported',auto:'import'};fs.push(f)}
     const it=await bagKeep(file.name.replace(/\.[^.]+$/,''),buf.sampleRate,pcm,'your files');it.folder=f.id;await bagStore();bag.busy=it.asset?'':'Packed for this visit only: this view can’t keep files.';
@@ -3446,67 +3496,85 @@ function plant(id,row){const song=curSong();checkpoint();song.samples=Object.ass
 function digUp(key){const song=curSong();if(!song.samples)return;checkpoint();const s2=Object.assign({},song.samples);delete s2[key];if(Object.keys(s2).length)song.samples=s2;else delete song.samples;changed();renderBag()}
 function useGear(g){const song=curSong(),slot=Lnow()>=2?sel[2]:null;if(slot==null){flash('Go to a track first');return}
   const fx=song.fx[slot],i=fx.indexOf(null);if(i<0){flash('This track’s effect slots are full');return}checkpoint();fx[i]=g.building;changed();renderBag();flash(g.name+' on')}
-/* patterns: notes carried from somewhere else. Drum patterns plant on drum tracks, melodic ones on any melodic track
-   (as scale steps, so they land in the key of wherever you are). One track plants into this track from the bar
-   you're on; several tracks plant into this part, each on the track of the same kind. */
-const family=e=>e==='drums'?'drums':'melodic';
-function patternFits(p){const L=Lnow();if(L<2)return false;if(p.lanes.length===1)return L>=3&&family(p.lanes[0].eng)===family(curEng());return p.lanes.some(l=>DEF_ENG[l.slot]&&family(DEF_ENG[l.slot])===family(l.eng))}
-function deployPattern(p){if(!patternFits(p))return;checkpoint();const sec=curSec(),start=Lnow()>=3?sel[4]:0;
-  const put=(lane,bars)=>{bars.forEach((notes,i)=>{const b=start+i;if(b>=MAXB)return;padLane(lane,b+1);lane.bars[b].notes=reid(JSON.parse(JSON.stringify(notes)))})};
-  if(p.lanes.length===1)put(curLane(),p.lanes[0].bars);else p.lanes.forEach(l=>{if(DEF_ENG[l.slot]&&family(DEF_ENG[l.slot])===family(l.eng))put(sec.lanes[l.slot],l.bars)});
-  sel[3]=null;uis('add');changed();renderBag();flash('Planted '+p.name)}
 /* ================= the inventory =================
-   Opening the pack zooms you right into it: a fixed, full-screen inventory with four pockets. Sounds can be sorted into
-   folders; tools are things you can use anywhere (some act on what you're working on, some are places you take audio
-   to); keepsakes are what people give you. */
-const POCKETS=[['sounds','Sounds'],['patterns','Patterns'],['tools','Tools'],['keep','Keepsakes']];
+   Opening the pack zooms you right into it: a fixed, full-screen inventory. The tools sit in a grid of sixteen slots
+   that is always on show, so the empty ones tell you how many are still out there to find; under it are two pockets:
+   sounds (in folders) and keepsakes, which are what people give you. Tools work two ways: some act on what you're
+   working on, some are places you take audio to. */
+const POCKETS=[['sounds','Sounds'],['keep','Keepsakes']];
+const TOOL_SLOTS=16;
 const PLAY_ICO='<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>';
 const canShare=()=>!!(navigator.canShare&&navigator.share);
 const WORM_ICON=pix(['............','............','....aab.....','..aab.aeb...','.abbaabbc...','abc..cc.....','............'],{a:'#d2b6ff',b:'#8d5cf2',c:'#4a2a94',e:'#fff'});
 const TX_ICON=pix(['.....KK.....','....KbbK....','.....KK.....','..K..KK..K..','.K.K.KK.K.K.','.K.K.KK.K.K.','..K..KK..K..','.....KK.....','....KSSK....','...KSSSSK...','..KSSSSSSK..','..KKKKKKKK..'],{b:'#3cbcfc',S:'#8a96a8'});
 const SLICE_ICON=pix(['..KKKKKKKK..','.KVVVVVVVVK.','KVvVVVVVVvVK','KVVKVVVVKVVK','KVVVVVVVVVVK','KVlllllllllK','KVVVVVVVVVVK','.KVVVVVVVVK.','..KKVKKVKK..','...KVK.KVK..'],{V:'#6844fc',v:'#b8b8f8',l:'#a4e4fc'});
+/* found tools first; a tool you've heard of but not found shows as a silhouette; the rest of the slots are empty */
 const TOOLS=[
   {id:'echo-pedal',name:'Echo pedal',from:'demo gear',icon:GEAR_ICON,desc:'Builds an echo on the track you’re on.',use:'Use here'},
   {id:'worms',name:'Jar of worms',from:'Solucan',icon:WORM_ICON,desc:'Let them loose on the pattern or part you’re on: they eat some notes, darken some and set a few stuttering.',use:'Let loose'},
   {id:'transmitter',name:'Transmitter',from:'your ship',icon:TX_ICON,desc:'Sends audio out of the game, or to your home studio.',use:'Open'},
   {id:'slicefield',name:'Slicefield',from:'not met yet',icon:SLICE_ICON,desc:'An alien entity that slices and rearranges audio, quickly and precisely. Somewhere out there.',locked:true}];
 function bagFolders(){return bag.folders||(bag.folders=[])}
+function toolsHTML(){const found=TOOLS.filter(t=>!t.locked).length,ti=clampi(bag.tool??0,0,TOOL_SLOTS-1),t=TOOLS[ti];
+  const slots=Array.from({length:TOOL_SLOTS},(_,i)=>{const g=TOOLS[i],on=i===ti;
+    return `<button class="tslot${g?(g.locked?' seen':''):' unk'}${on?' on':''}" data-tslot="${i}" aria-pressed="${on}" aria-label="${g?esc(g.name)+(g.locked?', not found yet':''):'Empty slot'}">${g?g.icon:'<i>?</i>'}</button>`}).join('');
+  const det=t?`<span class="gear-ico">${t.icon}</span><div class="tdet-t"><b>${esc(t.locked?'??? · '+t.name:t.name)}</b><span>${esc(t.desc)}${t.locked?'':' ('+esc(t.from)+')'}</span></div>${t.locked?`<span class="bi-d">${sc('Not found')}</span>`:`<button class="key" data-tool="${t.id}" ${toolReady(t.id)?'':'disabled'}>${sc(t.use)}</button>`}`
+    :`<div class="tdet-t"><b>${sc('Empty slot')}</b><span>${TOOL_SLOTS-found} tools are still out there, on the planets and in space: some you’re given, some you find, some you earn.</span></div>`;
+  return `<section class="tools" aria-label="Tools"><div class="tools-h"><b>${sc('Tools')}</b><span>${found} / ${TOOL_SLOTS} ${sc('found')}</span></div><div class="tgrid">${slots}</div><div class="tdet">${det}</div></section>`}
 function renderBag(){const song=curSong(),planted=Object.entries(song.samples||{}),name=id=>(bag.items.find(x=>x.id===id)||{}).name||'a lost sound',pk=bag.pocket||'sounds',fs=bagFolders();
-  const sounds=bag.items.filter(it=>it.kind!=='pattern'),pats=bag.items.filter(it=>it.kind==='pattern');
+  disarm();const sounds=bag.items.filter(it=>it.kind!=='pattern');
   const head=`<div class="inv-h"><button class="ib inv-x" aria-label="Close the backpack" title="Zoom out">${ZOOM_OUT}</button><b>${bag.view==='tx'?'Transmitter':'Backpack'}</b>${bag.view==='tx'?'<button class="key" data-txback>Back</button>':''}</div>`;
   let body='';
   if(bag.view==='tx'){
     body=`<p class="bag-empty">Pick a sound to transmit. Out of the game it leaves as a WAV file${canShare()?' or through the share sheet':''}. The home studio is where songs get finished; it isn’t built yet.</p>`+
       (sounds.map(it=>`<div class="bag-item"><button class="ib" data-bprev="${esc(it.id)}" aria-label="Hear ${esc(it.name)}">${PLAY_ICO}</button><div style="min-width:0"><div class="bi-n">${esc(it.name)}</div><div class="bi-d">${it.secs}s</div></div>
-        <div class="bi-a"><button class="key" data-tx="${esc(it.id)}" ${bag.data.has(it.id)?'':'disabled'}>${sc('Out of the game')}</button><button class="key" disabled title="The home studio isn’t built yet">${sc('Home studio')}</button></div></div>`).join('')||'<p class="bag-empty">No sounds to send yet. Tap the arrow beside the pack to bounce what you’re working on.</p>')+
+        <div class="bi-a"><button class="key" data-tx="${esc(it.id)}" ${bag.data.has(it.id)?'':'disabled'}>${sc('Out of the game')}</button><button class="key" disabled title="The home studio isn’t built yet">${sc('Home studio')}</button></div></div>`).join('')||'<p class="bag-empty">No sounds to send yet. Tap the tape beside the pack to bounce what you’re working on.</p>')+
       (bag.busy?`<p class="bag-empty" role="status">${esc(bag.busy)}</p>`:'');
     bagEl.querySelector('.mbody').innerHTML=head+`<section class="bag-sec inv-body">${body}</section>`;return}
-  const tabs=`<div class="bag-tabs" role="tablist">${POCKETS.map(([k,l])=>`<button role="tab" class="bag-tab${k===pk?' on':''}" data-pocket="${k}" aria-selected="${k===pk}">${l}<i>${k==='sounds'?sounds.length:k==='patterns'?pats.length:k==='tools'?TOOLS.filter(t=>!t.locked).length:0}</i></button>`).join('')}</div>`;
+  const tabs=`<div class="bag-tabs" role="tablist">${POCKETS.map(([k,l])=>`<button role="tab" class="bag-tab${k===pk?' on':''}" data-pocket="${k}" aria-selected="${k===pk}">${l}<i>${k==='sounds'?sounds.length:0}</i></button>`).join('')}</div>`;
   if(pk==='sounds'){const f=bag.folder||'all',shown=sounds.filter(it=>f==='all'||(it.folder||'')===f),tip=onDrums()?(curNote()?'Plants on the selected note’s row, '+ROWL[clampi(curNote().pitch,0,7)]+'.':'Choose a row to plant on.'):'Go to a drums track to plant a sound on a row.';
     const chips=`<div class="inv-folders"><button class="fchip${f==='all'?' on':''}" data-folder="all">All</button>${fs.map(x=>`<button class="fchip${f===x.id?' on':''}" data-folder="${esc(x.id)}">${esc(x.name)}<i>${sounds.filter(it=>it.folder===x.id).length}</i></button>`).join('')}<button class="fchip add" data-newfolder>+ ${sc('Folder')}</button></div>`+
       (f!=='all'?`<div class="inv-fa"><button class="mod" data-renfolder>${sc('Rename folder')}</button><button class="mod" data-delfolder>${sc('Remove folder')}</button></div>`:'');
     const move=it=>`<select class="inv-move" data-move="${esc(it.id)}" aria-label="Folder for ${esc(it.name)}"><option value="">No folder</option>${fs.map(x=>`<option value="${esc(x.id)}"${it.folder===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
     body=chips+(shown.map(it=>`<div class="bag-item"><button class="ib" data-bprev="${esc(it.id)}" aria-label="Hear ${esc(it.name)}">${PLAY_ICO}</button>
       <div style="min-width:0"><div class="bi-n">${esc(it.name)}</div><div class="bi-d">${it.secs}s${it.from?' · '+esc(it.from):''}${bag.data.has(it.id)?'':' · not loaded'}</div></div>
-      <div class="bi-a">${fs.length?move(it):''}<button class="key" data-bplant="${esc(it.id)}" ${onDrums()&&bag.data.has(it.id)?'':'disabled'}>${sc('Plant')}</button><button class="key" data-bdrop="${esc(it.id)}" aria-label="Remove ${esc(it.name)} from the backpack">×</button></div>
-      ${bag.plantFor===it.id?`<div class="bag-rows">${ROWL.map((l,r)=>`<button class="key" data-brow="${r}">${l}</button>`).join('')}</div>`:''}</div>`).join('')||`<p class="bag-empty">${f==='all'?'No sounds yet. Tap the arrow beside the pack to bounce whatever you’re looking at, or add a file.':'Nothing in this folder yet.'}</p>`)+
-      `<p class="bag-empty">${tip}</p><div class="inv-add"><button class="key" id="bagAddB">${sc('Add a sound file')}</button><span>Imported audio keeps its first minute.</span></div>`+
+      <div class="bi-a">${fs.length?move(it):''}<button class="key" data-bplant="${esc(it.id)}" ${onDrums()&&bag.data.has(it.id)?'':'disabled'}>${sc('Plant')}</button><button class="key" data-bdrop="${esc(it.id)}" aria-label="Remove ${esc(it.name)} from the backpack" title="Remove (tap again to confirm)">×</button></div>
+      ${bag.plantFor===it.id?`<div class="bag-rows">${ROWL.map((l,r)=>`<button class="key" data-brow="${r}">${l}</button>`).join('')}</div>`:''}</div>`).join('')||`<p class="bag-empty">${f==='all'?'No sounds yet. Tap the tape beside the pack to bounce whatever you’re looking at, or add a file.':'Nothing in this folder yet.'}</p>`)+
+      `<p class="bag-empty">${tip}</p><div class="inv-add"><button class="key" id="bagAddB">${sc('Add a sound file')}</button><span>Imported audio keeps its first ${IMPORT_MIN>1?IMPORT_MIN+' minutes':'minute'}.</span></div>`+
       (bag.busy?`<p class="bag-empty" role="status">${esc(bag.busy)}</p>`:'')+
       (planted.length?`<div class="bag-planted">${planted.map(([k,id])=>`<button class="key" data-bdig="${esc(k)}" title="Dig up">${ROWL[+k.split('.')[1]]||k} · ${esc(name(id))} ×</button>`).join('')}</div><p class="bag-empty">Planted in ${esc(song.name)}. Tap one to dig it up.</p>`:'')}
-  else if(pk==='patterns')body=(pats.map(p=>`<div class="bag-item"><span class="pat-ico" aria-hidden="true">${p.lanes.map(l=>`<i style="background:${ECOL[l.eng]||'#ccc'}"></i>`).join('')}</span>
-      <div style="min-width:0"><div class="bi-n">${esc(p.name)}</div><div class="bi-d">${p.lanes.map(l=>sc(ELAB[l.eng])).join(', ')}${p.from?' · from '+esc(p.from):''}</div></div>
-      <div class="bi-a"><button class="key" data-bpat="${esc(p.id)}" ${patternFits(p)?'':'disabled'}>${sc('Plant')}</button><button class="key" data-bdrop="${esc(p.id)}" aria-label="Remove ${esc(p.name)} from the backpack">×</button></div></div>`).join('')||'<p class="bag-empty">Patterns are found on your travels, not made: a melody a character teaches you, a rhythm carved into a rock. Nothing here yet.</p>');
-  else if(pk==='tools')body=TOOLS.map(g=>`<div class="bag-item${g.locked?' locked':''}"><span class="gear-ico" aria-hidden="true">${g.icon}</span><div style="min-width:0"><div class="bi-n">${esc(g.name)}</div><div class="bi-d">${esc(g.desc)} (${esc(g.from)})</div></div>
-      <div class="bi-a">${g.locked?'<span class="bi-d">Not found</span>':`<button class="key" data-tool="${g.id}" ${toolReady(g.id)?'':'disabled'}>${sc(g.use)}</button>`}</div></div>`).join('');
   else body='<p class="bag-empty">Keepsakes are things people give you on your travels. Nothing here yet.</p>';
-  bagEl.querySelector('.mbody').innerHTML=head+tabs+`<section class="bag-sec inv-body" role="tabpanel">${body}</section>`}
+  bagEl.querySelector('.mbody').innerHTML=head+toolsHTML()+tabs+`<section class="bag-sec inv-body" role="tabpanel">${body}</section>`}
 const toolReady=id=>id==='transmitter'||(id==='worms'?(Lnow()===2&&!ui.l2)||Lnow()===3:Lnow()>=2);
-/* the pack opens by zooming: the inventory grows out of the pack's icon to fill the screen, and shrinks back into it */
-function packRect(){const r=$('#bag').getBoundingClientRect();return `translate(${r.left}px,${r.top}px) scale(${r.width/innerWidth},${r.height/innerHeight})`}
-function openBag(){ensureAudio();bag.plantFor=null;bag.view='';bag.fresh=0;showFresh();renderBag();const box=bagEl.querySelector('.mbox');bagEl.hidden=false;uis('in');
-  if(!RM)box.animate([{transform:packRect()},{transform:'none'}],{duration:340,easing:'cubic-bezier(.2,.8,.2,1)'});bagEl.querySelector('.inv-x').focus()}
-function closeBag(){if(bagEl.hidden)return;const box=bagEl.querySelector('.mbox');uis('out');
-  if(RM){bagEl.hidden=true;return}box.animate([{transform:'none'},{transform:packRect()}],{duration:300,easing:'cubic-bezier(.5,0,.8,.4)'}).onfinish=()=>{bagEl.hidden=true}}
+/* the pack opens by zooming: the whole screen grows around the pack while its flap lifts, until you're inside it and
+   the inventory is all there is. Closing pulls back out the same way, and the flap shuts as you land. */
+const BAG_PAL={S:'#8a96a8',s:'#c3ccd8',d:'#4a5466',b:'#3cbcfc',l:'#a4e4fc',O:'#f87800',o:'#fca044',i:'#1b212c'};
+const BAG_LOW=BAG_SPR.slice(9);
+const BAG_AJAR=['...KssssssssK...','..KsSSSSSSSSsK..','.KKKKKKKKKKKKKK.','.KiiiiiiiiiiiiK.',...BAG_SPR.slice(4)];
+const BAG_OPEN=['..KsSSSSSSSSsK..','.KKKKKKKKKKKKKK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.','.KiiiiiiiiiiiiK.',...BAG_LOW];
+function packFrame(f){const sv=$('#bag svg');if(sv)sv.outerHTML=pix(f,BAG_PAL)}
+/* the transforms of the dive, from the screen as it is (u=0) to the pack's open mouth filling it (u=1). The mouth's
+   centre travels to the middle of the screen as everything grows, so you fly into it rather than past it. */
+function packDive(n){const ap=$('.app'),a=ap.getBoundingClientRect(),r=$('#bag').getBoundingClientRect(),
+    mx=r.left+r.width/2,my=r.top+r.height*5.5/16,mw=r.width*12/16,mh=r.height*7/16,k=Math.max(innerWidth/mw,innerHeight/mh)*1.08,
+    cx=innerWidth/2,cy=innerHeight/2,out=[];
+  for(let i=0;i<=n;i++){const u=i/n,e=u*u,sk=Math.exp(Math.log(k)*e),f=Math.log(sk)/Math.log(k),px=mx+(cx-mx)*f,py=my+(cy-my)*f;
+    out.push({transform:`translate(${(px-a.left-sk*(mx-a.left)).toFixed(2)}px,${(py-a.top-sk*(my-a.top)).toFixed(2)}px) scale(${sk.toFixed(4)})`})}
+  return out}
+let packAnim=null;
+function packZoom(open,done){const ap=$('.app');if(packAnim)packAnim.cancel();
+  if(RM){packFrame(open?BAG_OPEN:BAG_SPR);done();return}
+  const fr=packDive(14),T=open?720:620;ap.style.transformOrigin='0 0';ap.style.willChange='transform';ap.style.pointerEvents='none';
+  if(open){packFrame(BAG_SPR);setTimeout(()=>packFrame(BAG_AJAR),T*.12);setTimeout(()=>packFrame(BAG_OPEN),T*.26)}
+  else{packFrame(BAG_OPEN);setTimeout(()=>packFrame(BAG_AJAR),T*.8);setTimeout(()=>packFrame(BAG_SPR),T*.92)}
+  packAnim=ap.animate(open?fr:fr.slice().reverse(),{duration:T,easing:open?'cubic-bezier(.45,0,.75,1)':'cubic-bezier(.25,0,.55,1)',fill:open?'forwards':'none'});
+  packAnim.onfinish=()=>{done();if(open){packAnim.cancel();packFrame(BAG_SPR)}packAnim=null;ap.style.willChange='';ap.style.pointerEvents='';ap.style.transformOrigin=''}}
+function openBag(){if(!bagEl.hidden||packAnim)return;ensureAudio();bag.plantFor=null;bag.view='';bag.fresh=0;showFresh();renderBag();uis('in');
+  packZoom(true,()=>{bagEl.hidden=false;bagEl.querySelector('.inv-x').focus()})}
+function closeBag(){if(bagEl.hidden||packAnim)return;disarm();uis('out');const ap=$('.app');
+  if(RM){bagEl.hidden=true;return}
+  /* the dive's first frame lands before the inventory's absence can be seen, so nothing jumps */
+  bagEl.hidden=true;packZoom(false,()=>{})}
 $('#bag').onclick=openBag;
 function useTool(id){if(id==='echo-pedal')useGear({name:'Echo pedal',building:'well'});
   else if(id==='worms'){closeBag();setTimeout(()=>runWorms(true),RM?0:340)}
@@ -3527,8 +3595,8 @@ bagEl.addEventListener('click',e=>{const t=e.target;if(t===bagEl||t.closest('.in
   if(t.closest('#bagAddB')){$('#bagFile').click();return}
   if(el=q('data-bplant')){const id=g('data-bplant',el);if(curNote())plant(id,clampi(curNote().pitch,0,7));else{bag.plantFor=bag.plantFor===id?null:id;renderBag()}return}
   if(el=q('data-brow')){plant(bag.plantFor,+g('data-brow',el));return}
-  if(el=q('data-bpat')){const p=bag.items.find(x=>x.id===g('data-bpat',el));if(p)deployPattern(p);return}
-  if(el=q('data-bdrop')){const id=g('data-bdrop',el);bag.items=bag.items.filter(x=>x.id!==id);bagStore();renderBag();return}
+  if(el=q('data-tslot')){bag.tool=+g('data-tslot',el);uis('tab');renderBag();return}
+  if(el=q('data-bdrop')){const id=g('data-bdrop',el);confirmThen(el,()=>{bag.items=bag.items.filter(x=>x.id!==id);bag.data.delete(id);uis('del');bagStore();renderBag()});return}
   if(el=q('data-bdig')){digUp(g('data-bdig',el));return}
   if(el=q('data-tool')){useTool(g('data-tool',el))}});
 bagEl.addEventListener('change',e=>{const s=e.target.closest('[data-move]');if(!s)return;const it=bag.items.find(x=>x.id===s.dataset.move);if(!it)return;if(s.value)it.folder=s.value;else delete it.folder;bagStore();renderBag()});
@@ -3563,7 +3631,7 @@ function flyToPack(){const a=$('#bnc').getBoundingClientRect(),b=$('#bag').getBo
   el.animate([{transform:`translate(${x0}px,${y0}px) scale(.6)`},{transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-46}px) scale(1.5) rotate(-20deg)`},{transform:`translate(${x1}px,${y1}px) scale(.5)`}],{duration:620,easing:'cubic-bezier(.3,.6,.4,1)'}).onfinish=done}
 let bouncing=false;
 async function bounce(){if(bouncing){flash('Still bouncing the last one');return}if(Lnow()<0||!ensureAudio())return;const job=bounceJob(),btn=$('#bnc');bouncing=true;btn.classList.add('busy');btn.style.setProperty('--p',0);uis('tab');
-  try{const a=await renderAudio(job,p=>btn.style.setProperty('--p',p.toFixed(3))),[L,R]=trimTail(a.L,a.R,a.rate),n=Math.min(L.length,a.rate*60),m=new Float32Array(n);for(let i=0;i<n;i++)m[i]=(L[i]+R[i])/2;
+  try{const a=await renderAudio(job,p=>btn.style.setProperty('--p',p.toFixed(3))),[L,R]=trimTail(a.L,a.R,a.rate),n=Math.min(L.length,a.rate*60*IMPORT_MIN),m=new Float32Array(n);for(let i=0;i<n;i++)m[i]=(L[i]+R[i])/2;
     const where=state.worlds[state.wsel].name,fs=bagFolders();let f=fs.find(x=>x.auto===where);if(!f){f={id:'f'+Date.now().toString(36),name:'From '+(/^(Farm|Laboratory)$/.test(where)?'the ':'')+where,auto:where};fs.push(f)}
     const it=await bagKeep(job.label,a.rate,m,where);it.folder=f.id;await bagStore();flyToPack();if(!bagEl.hidden)renderBag()}
   catch(e){flash('Couldn’t bounce: '+(e&&e.message||e))}
@@ -3643,8 +3711,8 @@ function advance(mu){
   pos.tk++;if(pos.tk<barTicks(mu))return;pos.tk=0;
   if(cue){pos={s:cue.s,c:cue.c,p:cue.p,tk:0};cue=null;return}
   const L=Lnow();
-  if(L>=4||(L===3&&ui.loop)){pos.s=sel[0];pos.c=sel[1];pos.p=sel[4];return}
-  if(L>=2){if(pos.s!==sel[0]||pos.c!==sel[1]){pos.s=sel[0];pos.c=sel[1];pos.p=0;return}pos.p=(pos.p+1)%secLen(state.songs[pos.s].sections[pos.c]);return}
+  if(L>=4||(L>=2&&ui.loop)){pos.s=sel[0];pos.c=sel[1];pos.p=sel[4];return}
+  if(L>=2||(L===1&&ui.loop)){if(pos.s!==sel[0]||pos.c!==sel[1]){pos.s=sel[0];pos.c=sel[1];pos.p=0;return}pos.p=(pos.p+1)%secLen(state.songs[pos.s].sections[pos.c]);return}
   if(pos.s!==sel[0]){pos.s=sel[0];pos.c=0;pos.p=0;return}
   const so=state.songs[pos.s];pos.p++;if(pos.p>=secLen(so.sections[pos.c])){pos.p=0;pos.c=(pos.c+1)%so.sections.length}
 }

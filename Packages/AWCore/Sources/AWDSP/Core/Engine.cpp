@@ -284,11 +284,12 @@ void Engine::advance() {
         return;
     }
     int L = ctx_.level;
-    if (L >= 4 || (L == 3 && ctx_.loop)) {
+    // looping holds the selected bar on the track and pattern views, and the selected part on the part view
+    if (L >= 4 || (L >= 2 && ctx_.loop)) {
         pos_ = {ctx_.song, ctx_.part, ctx_.bar, 0};
         return;
     }
-    if (L >= 2) {
+    if (L >= 2 || (L == 1 && ctx_.loop)) {
         if (pos_.s != ctx_.song || pos_.c != ctx_.part) {
             pos_ = {ctx_.song, ctx_.part, 0, 0};
             return;
